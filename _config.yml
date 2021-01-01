@@ -1,1 +1,53 @@
-theme: jekyll-theme-cayman
+title: Edward's Incubator
+name: Edward Hu
+user_description: Linux, kernel, OS, GPU, CUDA, virtualization, heterogeneity, anything system. Proud longhorn
+notes_url: "https://bdhu.github.io"
+profile_pic: /assets/img/profile.jpg
+favicon: /assets/img/favicon.ico
+copyright_name: Bodun Hu
+baseurl: "/blog" # the subpath of your site, e.g. /blog
+url: "https://bdhu.github.io" # the base hostname & protocol for your site, e.g. http://example.com
+encoding: utf-8
+
+# Build settings
+theme: null
+plugins:
+  - jekyll-feed 
+  - jekyll-sitemap 
+  - jekyll-seo-tag
+  - jemoji
+
+markdown: kramdown
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  math_engine: mathjax
+  smart_quotes: ["apos", "apos", "quot", "quot"]
+  syntax_highlighter: rouge
+
+sass:
+  style: compressed
+
+collections:
+    notes:
+      output: true
+      permalink: /notes/:title
+
+disqus:
+  shortname: bdhu
+
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: post
+      permalink: /posts/:title
+      content-type: post
+  - scope:
+      path: ""
+      type: notes
+    values:
+      layout: post
+      content-type: notes
