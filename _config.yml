@@ -34,6 +34,7 @@ collections:
       output: true
       permalink: /notes/:title
 
+google_analytics: UA-108144808-1
 disqus:
   shortname: bdhu
 
