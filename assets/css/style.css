@@ -84,13 +84,13 @@ h6 {
 
 h1, h2, h3, h4, h5, h6 {
     color: #555555;
-    font-family:  Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family:  -apple-system, BlinkMacSystemFont, Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-weight: 600;
 }  
 
 a, p, ul, li, ol, table, span, blockquote {
     color: #555555;
-    font-family:  'IBM Plex Sans', Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family:  -apple-system, BlinkMacSystemFont, 'IBM Plex Sans', Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-size: 16px;  /* Let's set the font-size to something old-man friendly */
 }
 
