@@ -39,8 +39,8 @@
                     json: '{{site.baseurl}}/search_notes.json',
                     searchResultTemplate: '<li class="search_res" style="list-style: none;"><a href="{{ site.url }}{{ site.baseurl }}{url}" style="text-decoration: none; color: #333333;"><p style="font-size: 1.0rem; font-family: "Inter !important"; font-weight: 600;">{title}</p></a></li>',
                     noResultsText: 'No results found',
-                    fuzzy: false,
-                    limit: 4
+                    fuzzy: true,
+                    limit: 6
                     })
     </script>
     {%- if page.permalink == "/notes" -%}
@@ -154,7 +154,7 @@
                     searchResultTemplate: '<li class="search_res" style="list-style: none;"><a href="{{ site.url }}{{ site.baseurl }}{url}" style="text-decoration: none; color: #555555;"><p style="font-size: 1.0rem; font-family: "Inter !important"; font-weight: 600;">{title}</p></a></li>',
                     noResultsText: 'No results found',
                     fuzzy: false,
-                    limit: 4
+                    limit: 6
                     })   
     </script>
     {%- if page.layout != "default" -%}

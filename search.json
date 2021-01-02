@@ -7,7 +7,10 @@
 
       "title"    : "{{ post.title | strip_html | escape }}",
       "url"      : "{{ post.url }}",
-      "content"  : {{ post.content | strip_html | strip_newline | strip | jsonify }}
+      "content"  : {{ post.content | strip_html | strip_newline | strip | jsonify }},
+      "tags"     : "{{ post.tags | join: ', ' }}",
+      "category" : "{{ post.category }}",
+      "date"     : "{{ post.date }}"
 
     },
   {% endfor %}
