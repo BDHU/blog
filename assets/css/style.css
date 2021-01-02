@@ -1424,3 +1424,22 @@ label.margin-toggle:not(.sidenote-number) {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+.loadMore {
+    /* @extend %textButton; */
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    
+    &.loading {
+      &::after {
+        position: absolute;
+        left: 0;
+        right: 0;
+        background-color: white;
+        width: 100%;
+        content: 'Loading...';
+        color: #bcbcbc;
+      }
+    } 
+  }

@@ -19,7 +19,7 @@ content-type: eg
 
 <main>
     {% assign postsByDay = 
-    site.posts | group_by_exp:"post", "post.date | date: '%d-%B-%Y'" %}
+    site.posts | group_by_exp:"post", "post.date | date: '%Y'" %}
     
     {% for day in postsByDay %}
       <h3 id="{{ day.name }}">{{ day.name }}</h3>

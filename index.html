@@ -1,0 +1,46 @@
+---
+# Feel free to add content and custom Front Matter to this file.
+# To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults
+
+<!-- layout: post -->
+layout: default
+<!-- permalink: / -->
+<!-- pagination: 
+  enabled: true -->
+---
+
+{% if paginator.page %}
+  {% assign offset = paginator.page | minus:1 | times:paginator.per_page %}
+  {% assign currentPage = paginator.page %}
+{% else %}
+  {% assign offset = 0 %}
+  {% assign currentPage = 1 %}
+{% endif %}
+
+<div id="blogContainer" class="postContainer" data-page="{{ currentPage }}" data-totalPages="{{ paginator.total_pages }}">
+{%- for item in site.posts -%}
+    <div class="feed-title-excerpt-block disable-select" data-url="{{site.url}}{{item.url}}">
+        <a href="{{ item.url | prepend:site.baseurl }}" style="text-decoration: none; color: #555555;">
+        {%- if item.status == "Ongoing" or item.status == "ongoing" -%}
+        <ul style="padding-left: 20px; margin-top: 20px;" class="tags">
+        <li style="padding: 0 5px; border-radius: 10px;" class="tag"><b>Status: </b>{{item.status | capitalize }}</li>
+        </ul>
+        <p style="margin-top: 0px;" class="feed-title">{{ item.title }}</p>
+        {%- else -%}
+        <p class="feed-title">{{ item.title }}</p>
+        {%- endif -%}
+        <p class="feed-excerpt">{{ item.content | strip_html | strip | escape | truncate: 200}}</p>
+        </a>
+    </div>
+{%- endfor -%}
+</div>
+
+<!-- {% assign postCount = site.posts | size %}
+{% assign postsCovered = site.paginate | plus:offset %}
+{% if postsCovered < postCount %}
+  <button class="loadMore">Load more posts</button>
+{% endif %}
+
+<script>
+    {% include js/pagination.js %}
+  </script> -->

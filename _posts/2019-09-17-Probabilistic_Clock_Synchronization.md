@@ -108,7 +108,7 @@ Now we've narrowed down our focus to \\(min+\beta\\). The time interval between 
 
 The upper bound of the interval will be \\((min+\beta)(1+\rho)\\), assuming no time is wasted for \\(Q\\) to wait until it starts processing the request from P. The time required will be \\(min+\beta\\) and we need to take Q's drift rate \\(\rho\\) into account. We can also see that the total round-trip real time is \\(2d=2min+\alpha+\beta\\). Thus we get:
 
-\\[beta=2d-2min-\alpha \leq 2d-2min\\]
+\\[\beta=2d-2min-\alpha \leq 2d-2min\\]
 
 With this equation, we can see that the upper bound measured from Q(t)=T is also bounded. Thus, we have:
 
