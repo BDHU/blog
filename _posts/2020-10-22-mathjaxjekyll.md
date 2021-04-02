@@ -21,7 +21,7 @@ markdown: kramdown
 <script>
 MathJax = {
   tex: {
-    inlineMath: [['$', '$'], ['\\(', '\\)']]
+    inlineMath: [ ['$', '$'], ['\\(', '\\)'] ]
   }
   ,svg: {
     fontCache: 'global'
@@ -43,7 +43,7 @@ MathJax = {
 
 * Now you can write in-line math equations in your markdown file like:
 ```text
-\\f(x) = x^2\\)
+\\(f(x) = x^2\\)
 ```
 or
 ```text
