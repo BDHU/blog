@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Add MathJax v3 Support to Jekyll"
-last_modified_at: 25 Oct, 2020
+last_modified_at: 02 April, 2021
 categories: "2020"
 description: "I was using Mathjax v2 for a while and I heard v3 perform significantly better than v2. Many great tutorials explains explains how to add Mathjax support to Jekyll websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website."
 tags: web other how-to
