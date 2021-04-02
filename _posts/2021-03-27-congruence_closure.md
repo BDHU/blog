@@ -15,9 +15,8 @@ This is a summary of how to compute congruence closure.
 ## Equivalence Relation
 
 Equivalence relation has three properties: reflexive, symmatric, and transitive.
-For example, a binary relation $$R$$ over a set $$S$$ meeting these three properties can be expressed as:  
-
 [[E.g. $$\geq$$ is not an equivalence relation because it break the symmetric property. $$4 \geq 6$$ does not imply that $$6 \geq 4$$::rmn]]  
+For example, a binary relation $$R$$ over a set $$S$$ meeting these three properties can be expressed as:
 
 * Reflexive: $$\forall s \in S.\ sRs$$
 * Symmetric : $$\forall s_1, s_2 \in S.\ s_1 R s_2 \rightarrow s_2 R s_1$$
