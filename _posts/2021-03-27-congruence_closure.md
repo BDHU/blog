@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Congruence Closure"
-last_modified_at: 27 March, 2021
+last_modified_at: 08 April, 2021
 categories: "2021"
 description: "congruence closure algorithm
 "
@@ -9,7 +9,7 @@ tags: algorithm theory
 comments: true
 ---
 
-This is a summary of how to compute congruence closure.
+This is a summary of how to compute congruence closure. I implemented the algorithm to compute congruence closure and thought I'd never forget it. But my memory starts to get blurry just after two days. So I figured I'd put things down so I don't have to watch the entire lecture again the next time I need it.
 <!--description-->
 
 ## Equivalence Relation
@@ -39,3 +39,55 @@ This is illustrated through an example. Given a set $$S = \{a, b, c\}$$ and bina
 
 Naturally, congruence closure $$R^C$$ would be the smallest set that contains congruence relation $$R$$. What this means is $$R^C$$ contains $$R^E$$ (the equivlance closure we derived before), and any element generated from $$R^E$$ by a given function that produces element which also satisfies equivelance relation. For example, Given $$S = \{a, b, c\}$$ and function $$f$$ such that $$f(a) = b$$, $$f(b) = c$$, $$f(c) = c$$, the congruence closure would contain nine elments in total. First, we
 would use the procedure above to generated equivalence closure. Then, because $$f(a) = b$$ and $$f(b) = c$$ due to congruence relation, we know $$b = c$$, now we apply the procure for generating equivalence closure again.
+
+## Algorithm to Computer Congruence Closure
+
+The high-level description of the algorithm is as following:  
+
+To decide satisfiability of $$T_{=}$$ (equality theory) formula:
+
+\\[F\ : \ s_1 = t_1 \land ... s_m = t_m \land s_{m+1} \neq t_{m+1} \land ... s_n \neq t_n\\]
+
+1. Compute subterms and construct initial DAG (each node’s representative is itself)
+2. For each $$i \in [1,m]$$, process equality $$s_i= t_i$$ as described. (Essentially, process all equiv expression first)
+3. For each $$i \in [m + 1,n]$$, check if $$Rep(s_i) =Rep(t_i)$$. (Check if any nequiv expression contradicts any equiv expression)
+4. If there exists some $$i \in [m + 1, n]$$, for which $$Rep(s_i) =Rep(t_i)$$, return UNSAT
+5. if for all $i$, $$Rep(s_i) \neq Rep(t_i)$$, return SAT
+
+This is an example for illustration purpose borrowed from Prof. Dillig's slides:
+
+Given formula $$F\ : \ f^3(a) = a \land f^5(a) = a \land f(a) \neq a$$
+
+The initial DAG would be:  
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG.png">
+</p>
+
+
+Process equality $$f^3(a) = a$$ gives us:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_1.png">
+</p>
+
+Recursively merging the parents results in:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_2.png">
+</p>
+
+Process equality $$f^5(a) = a$$ give us:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_3.png">
+</p>
+
+Now in this step, $$f^2(a)$$ and $$a$$ are in the same congruence class, thus we will perform the same opertion on their parents, processing equality $$f^3(a) = f(a)$$:
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_5.png">
+</p>
+
+The we find $$f(a) \neq a$$ has a conflict because node $a$'s representative is $f$(a)$$, indicating they are in the same congruence class, meeting congruence relation.
+ Thus the formula is UNSAT.
