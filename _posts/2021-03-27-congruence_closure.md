@@ -77,17 +77,17 @@ Recursively merging the parents results in:
   <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_2.png">
 </p>
 
-Process equality $$f^5(a) = a$$ give us:
+Process equality $$f^5(a) = a$$ gives us:
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_3.png">
 </p>
 
-Now in this step, $$f^2(a)$$ and $$a$$ are in the same congruence class, thus we will perform the same opertion on their parents, processing equality $$f^3(a) = f(a)$$:
+Now in this step, $$f^2(a)$$ and $$a$$ are in the same congruence class, thus we will perform the same operation on their parents, processing equality $$f^3(a) = f(a)$$:
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_5.png">
 </p>
 
-The we find $$f(a) \neq a$$ has a conflict because node $a$'s representative is $$f(a)$$, indicating they are in the same congruence class, meeting congruence relation.
+We find $$f(a) \neq a$$ has a conflict because node $a$'s representative is $$f(a)$$, indicating they are in the same congruence class, meeting congruence relation.
  Thus the formula is UNSAT.
