@@ -5,7 +5,7 @@ last_modified_at: 08 April, 2021
 categories: "2021"
 description: "congruence closure algorithm
 "
-tags: algorithm theory
+tags: algorithm theory PL
 comments: true
 ---
 
@@ -40,7 +40,7 @@ This is illustrated through an example. Given a set $$S = \{a, b, c\}$$ and bina
 Naturally, congruence closure $$R^C$$ would be the smallest set that contains congruence relation $$R$$. What this means is $$R^C$$ contains $$R^E$$ (the equivlance closure we derived before), and any element generated from $$R^E$$ by a given function that produces element which also satisfies equivelance relation. For example, Given $$S = \{a, b, c\}$$ and function $$f$$ such that $$f(a) = b$$, $$f(b) = c$$, $$f(c) = c$$, the congruence closure would contain nine elments in total. First, we
 would use the procedure above to generated equivalence closure. Then, because $$f(a) = b$$ and $$f(b) = c$$ due to congruence relation, we know $$b = c$$, now we apply the procure for generating equivalence closure again.
 
-## Algorithm to Computer Congruence Closure
+## Algorithm to Compute Congruence Closure
 
 The high-level description of the algorithm is as following:  
 
@@ -89,5 +89,5 @@ Now in this step, $$f^2(a)$$ and $$a$$ are in the same congruence class, thus we
   <img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_5.png">
 </p>
 
-The we find $$f(a) \neq a$$ has a conflict because node $a$'s representative is $f$(a)$$, indicating they are in the same congruence class, meeting congruence relation.
+The we find $$f(a) \neq a$$ has a conflict because node $a$'s representative is $$f(a)$$, indicating they are in the same congruence class, meeting congruence relation.
  Thus the formula is UNSAT.
