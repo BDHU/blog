@@ -22,7 +22,7 @@ content-type: eg
     site.posts | group_by_exp:"post", "post.date | date: '%Y'" %}
     
     {% for day in postsByDay %}
-      <h3 id="{{ day.name }}">{{ day.name }}</h3>
+      <h3 id="{{ day.name }}">{{ day.name }}<hr /></h3>
           {% for post in day.items %}
             <li id="date-content" style="padding-bottom: 0.6em; list-style: none;"><a href="{{ post.url | prepend:site.baseurl }}">{{ post.title }}</a></li>
           {% endfor %}

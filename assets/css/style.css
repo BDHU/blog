@@ -90,7 +90,7 @@ h1, h2, h3, h4, h5, h6 {
 
 a, p, ul, li, ol, table, span, blockquote {
     color: #555555;
-    font-family:  -apple-system, BlinkMacSystemFont, 'IBM Plex Sans', Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family:  -apple-system, Inter, BlinkMacSystemFont, 'IBM Plex Sans', Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-size: 16px;  /* Let's set the font-size to something old-man friendly */
 }
 
@@ -151,7 +151,7 @@ code {
     background-color: #f7f7f7;
     border-radius: 5px;
     border: none;
-    font-family: 'IBM Plex Sans', Inter, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+    font-family: 'IBM Plex Sans', Inter,'IBM Plex Sans', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
 }
 
 .serif code {
@@ -720,7 +720,7 @@ hr {
     margin-left: 20px;
     margin-right: 50px;
     font-size: 16px;
-    font-family:  Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-weight: 600;
 }
 
@@ -729,7 +729,7 @@ hr {
     margin-top: -12px;
     margin-left: 20px !important;
     margin-right: 30px;
-    font-family:  'IBM Plex Sans', Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    font-family: Inter, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     font-size: 15px;
 }
 
@@ -771,7 +771,7 @@ hr {
 .mn-right {
     float: right;
     clear: right;
-    font-family: 'IBM Plex Sans', Inter, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+    font-family: Inter, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
     font-size: 14px;
     margin-right: -45%;
     width: 40%;
@@ -786,7 +786,7 @@ hr {
 .mn-left {
     float: left;
     clear: left;
-    font-family: 'IBM Plex Sans', Inter, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+    font-family: Inter, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
     font-size: 14px;
     margin-left: -45%;
     width: 40%;
@@ -804,7 +804,7 @@ hr {
 .sidenote-number:after,
 .sn-left:before,
 .sn-right:before {
-    font-family: 'IBM Plex Sans', Inter, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
+    font-family: Inter, 'IBM Plex Sans', 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif !important;
     position: relative;
     vertical-align: baseline; 
 }
