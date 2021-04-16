@@ -15,7 +15,7 @@ This is a summary of how to compute congruence closure. I implemented the algori
 ## Equivalence Relation
 
 Equivalence relation has three properties: reflexive, symmatric, and transitive.
-[[E.g. $$\geq$$ is not an equivalence relation because it break the symmetric property. $$4 \geq 6$$ does not imply that $$6 \geq 4$$::rmn]]  
+(E.g. $$\geq$$ is not an equivalence relation because it break the symmetric property. $$4 \geq 6$$ does not imply that $$6 \geq 4$$)
 For example, a binary relation $$R$$ over a set $$S$$ meeting these three properties can be expressed as:
 
 * Reflexive: $$\forall s \in S.\ sRs$$
@@ -26,14 +26,14 @@ For example, a binary relation $$R$$ over a set $$S$$ meeting these three proper
 
 Given a set $$S$$ equipped with functions $$F = \{f_1, ..., f_n\}$$, a relation $$R$$ over $$S$$ is a congruence relation if $$R$$ is an equivalence relation and for every $$n$$'ary function $$f \in F$$ we have:
 
-[[A counter example would be given $$R(x, y)$$ defined as $$\|x\| = \|y\|$$ on all integers. If we have $$R = \{2, 2\}$$ and $$f(x) = x + 1$$ (successor function), then we know it violates the equivalence relation we mentioned above::lmn]]
-
 \\[\forall \overset{\rightarrow}{s}, \overset{\rightarrow}{t}.\ \bigwedge\limits_{i=1}^{n}s_i R t_i \rightarrow f(\overset{\rightarrow}{s}) R f(\overset{\rightarrow}{t})\\]
+
+A counter example would be given $$R(x, y)$$ defined as $$\|x\| = \|y\|$$ on all integers. If we have $$R = \{2, 2\}$$ and $$f(x) = x + 1$$ (successor function), then we know it violates the equivalence relation we mentioned above
 
 ## Equivalence Closure
 
-In short, the equivalence closure $$R^E$$ is the smallest equivalence realtion that includes $$R$$.[[$$R^E$$ is a superset of $$R$$::rsn]]
-This is illustrated through an example. Given a set $$S = \{a, b, c\}$$ and binary relation $$R:\{\langle a, b \rangle , \langle b, c \rangle, \langle d, d \rangle\}$$, $$R^E$$ would contain all elements extended from $$R$$ based on the three properties of equivlance relation.
+In short, the equivalence closure $$R^E$$ is the smallest equivalence relation that includes $$R$$.
+This is illustrated through an example. Given a set $$S = \{a, b, c\}$$ and binary relation $$R:\{\langle a, b \rangle , \langle b, c \rangle, \langle d, d \rangle\}$$, $$R^E$$ would contain all elements extended from $$R$$ based on the three properties of equivalence relation.
 
 ## Congruence Closure
 
