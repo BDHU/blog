@@ -1,1 +1,43 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>linux on std::bodun::blog</title><link>https://www.bodunhu.com/blog/tags/linux/</link><description>Recent content in linux on std::bodun::blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><copyright>Copyright © 2017-present, Bodun. All Rights Reserved</copyright><lastBuildDate>Tue, 03 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://www.bodunhu.com/blog/tags/linux/index.xml" rel="self" type="application/rss+xml"/><item><title>Program Loading and Memory Mapping in Linux</title><link>https://www.bodunhu.com/blog/posts/programloadingandmemorymappinginlinux/</link><pubDate>Tue, 03 Nov 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/programloadingandmemorymappinginlinux/</guid><description>The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux.</description></item><item><title>Linux Program Measurement and mmap</title><link>https://www.bodunhu.com/blog/posts/linuxkernelmeasurementandmmap/</link><pubDate>Wed, 23 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/linuxkernelmeasurementandmmap/</guid><description>This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to cpu world.</description></item><item><title>Start Linux Kernel Hacking</title><link>https://www.bodunhu.com/blog/posts/kernelhacking/</link><pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/kernelhacking/</guid><description>This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel.</description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>linux on std::bodun::blog</title>
+    <link>https://www.bodunhu.com/blog/tags/linux/</link>
+    <description>Recent content in linux on std::bodun::blog</description>
+    <image>
+      <url>https://www.bodunhu.com/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://www.bodunhu.com/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Tue, 03 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://www.bodunhu.com/blog/tags/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Program Loading and Memory Mapping in Linux</title>
+      <link>https://www.bodunhu.com/blog/posts/programloadingandmemorymappinginlinux/</link>
+      <pubDate>Tue, 03 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.bodunhu.com/blog/posts/programloadingandmemorymappinginlinux/</guid>
+      <description>The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux.
+ execve Syscall The operating system, as one of itsd basic services, loads programs into memory for them to execute. Programs rely on execve syscall to get the OS to load the program into memory and start it executing as a process. The kernel version we used to testing is 5.</description>
+    </item>
+    
+    <item>
+      <title>Linux Program Measurement and mmap</title>
+      <link>https://www.bodunhu.com/blog/posts/linuxkernelmeasurementandmmap/</link>
+      <pubDate>Wed, 23 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.bodunhu.com/blog/posts/linuxkernelmeasurementandmmap/</guid>
+      <description>This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to cpu world. This is the system spec:
+   Attribute Value     Processor name (BIOS) Intel(R) Core(TM) i7-6800K CPU @ 3.40GHz   Cores 6   Logical processors 12   TLB/Cache details 64-byte Prefetching Data TLB: 1-GB pages, 4-way set associative, 4 entries Data TLB: 4-KB Pages, 4-way set associative, 64 entries Instruction TLB: 4-KByte pages, 8-way set associative, 64 entries L2 TLB: 1-MB, 4-way set associative, 64-byte line size Shared 2nd-Level TLB: 4-KB / 2-MB pages, 6-way associative, 1536 entries.</description>
+    </item>
+    
+    <item>
+      <title>Start Linux Kernel Hacking</title>
+      <link>https://www.bodunhu.com/blog/posts/kernelhacking/</link>
+      <pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.bodunhu.com/blog/posts/kernelhacking/</guid>
+      <description>This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well.</description>
+    </item>
+    
+  </channel>
+</rss>
