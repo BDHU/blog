@@ -17,7 +17,7 @@
       
       <guid>https://www.bodunhu.com/blog/posts/programloadingandmemorymappinginlinux/</guid>
       <description>The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux.
- execve Syscall The operating system, as one of itsd basic services, loads programs into memory for them to execute. Programs rely on execve syscall to get the OS to load the program into memory and start it executing as a process. The kernel version we used to testing is 5.</description>
+ execve Syscall One of operating systems&#39; basic sevices is to load programs into memory for them to execute. Programs rely on execve syscall to get the OS to load the program into memory and start it executing as a process. The kernel version we used to testing is 5.</description>
     </item>
     
     <item>
