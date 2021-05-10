@@ -155,7 +155,7 @@ Kernel Level Threads Pros/Cons  Good functionality, system wide integration Thre
       <pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate>
       
       <guid>https://www.bodunhu.com/blog/posts/svd/</guid>
-      <description>Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are convered in Advanced Linear Algebra: Foundations to Frontiers taught by professor Robert van de Geijn. This is a brief summary over the important concepts covered in Chapter 2.
+      <description>Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor Robert van de Geijn. This is a brief summary over the important concepts covered in Chapter 2.
  Components in the direction of a vector By Pythagorean theorem, we know that \(b = \chi a + c\) where \(a\) is a unit vector orthogonal to \(c\) and \(\chi\) is a scaler.</description>
     </item>
     
