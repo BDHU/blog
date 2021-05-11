@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+  <channel>
+    <title>graduate-school on std::bodun::blog</title>
+    <link>https://www.bodunhu.com/blog/tags/graduate-school/</link>
+    <description>Recent content in graduate-school on std::bodun::blog</description>
+    <image>
+      <url>https://www.bodunhu.com/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
+      <link>https://www.bodunhu.com/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
+    </image>
+    <generator>Hugo -- gohugo.io</generator>
+    <lastBuildDate>Mon, 10 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://www.bodunhu.com/blog/tags/graduate-school/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Reflections on my CS PhD Application Process</title>
+      <link>https://www.bodunhu.com/blog/posts/applying-cs-phd-program/</link>
+      <pubDate>Mon, 10 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://www.bodunhu.com/blog/posts/applying-cs-phd-program/</guid>
+      <description>I applied for CS Ph.D. programs this past fall and had interviews with schools from late December all the way to March. Now that the semester has ended, I decided to put down some reflections on this process. This post is not intended to be the most comprehensive CS Ph.D. application tutorial in the world, but merely a half-guide half-memoir of journey towards a PhD. Of course, you should take this post with a grain of salt, since I don&amp;#39;t work on admission committees, and am no where near an expert in the application process.</description>
+    </item>
+    
+  </channel>
+</rss>
