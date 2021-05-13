@@ -173,7 +173,8 @@ nav.navigation a.button {
   nav.navigation a {
     top: 8px;
     right: 6px;
-    padding: 8px 8px;
+    padding: 8px 6px;
+    /* padding: 8px 8px; */
     color: #5badf0;
     font-size: 13px;
     line-height: 1.35;
@@ -181,7 +182,8 @@ nav.navigation a.button {
   }
 }
 
-@media (max-width: 324px) {
+/* @media (max-width: 324px) { */
+@media (max-width: 375px) {
   nav.navigation a.button {
     display: none;
   }
@@ -514,4 +516,19 @@ nav.navigation a.button {
 
 .utterances {
   max-width: 100%;
+}
+
+.top-link {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  border-radius: 30px;
+  background-color: transparent;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  color: #555;
+  outline: none;
+  border: none;
+  overflow: hidden;
+  font-size: 18px;
 }
