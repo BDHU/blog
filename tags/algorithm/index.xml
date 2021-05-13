@@ -1,62 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
-  <channel>
-    <title>algorithm on std::bodun::blog</title>
-    <link>https://www.bodunhu.com/blog/tags/algorithm/</link>
-    <description>Recent content in algorithm on std::bodun::blog</description>
-    <image>
-      <url>https://www.bodunhu.com/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</url>
-      <link>https://www.bodunhu.com/blog/%3Clink%20or%20path%20of%20image%20for%20opengraph,%20twitter-cards%3E</link>
-    </image>
-    <generator>Hugo -- gohugo.io</generator>
-    <lastBuildDate>Sat, 17 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://www.bodunhu.com/blog/tags/algorithm/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Hoare Logic</title>
-      <link>https://www.bodunhu.com/blog/posts/hoarelogic/</link>
-      <pubDate>Sat, 17 Apr 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.bodunhu.com/blog/posts/hoarelogic/</guid>
-      <description>Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we will first consider a smaller imperative programming language IMP.</description>
-    </item>
-    
-    <item>
-      <title>Congruence Closure</title>
-      <link>https://www.bodunhu.com/blog/posts/congruence_closure/</link>
-      <pubDate>Sat, 27 Mar 2021 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.bodunhu.com/blog/posts/congruence_closure/</guid>
-      <description>This is a summary of how to compute congruence closure. I implemented the algorithm to compute congruence closure and thought I’d never forget it. But my memory starts to get blurry just after two days. So I figured I’d put things down so I don’t have to watch the entire lecture again the next time I need it.</description>
-    </item>
-    
-    <item>
-      <title>Performance Anamoly of 802.11b</title>
-      <link>https://www.bodunhu.com/blog/posts/wireless_anomaly/</link>
-      <pubDate>Sun, 13 Sep 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.bodunhu.com/blog/posts/wireless_anomaly/</guid>
-      <description>This research is conducted by Martin Heusse, Franck Rousseau, Cilles Berger-Sabbatel, Andrzej Duda on analyzing the performance of the IEEE 802.11b wireless local area networks. Degraded transmitting rate is caused by CSMA/CA channel access method.
- Overview The performance of the IEEE 802.11b wireless local area networks have degraded performances when some mobile hosts use a lower bit rate than the others, which is caused by CSMA/CA channel access method. When one host changes it modulation type which degrades bit rate, it occupies the channel for a longer time, causing other hosts still using higher bit rate to be penalized.</description>
-    </item>
-    
-    <item>
-      <title>Singular Value Decomposition</title>
-      <link>https://www.bodunhu.com/blog/posts/svd/</link>
-      <pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.bodunhu.com/blog/posts/svd/</guid>
-      <description>Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor Robert van de Geijn. This is a brief summary over the important concepts covered in Chapter 2.
- Components in the direction of a vector By Pythagorean theorem, we know that \(b = \chi a + c\) where \(a\) is a unit vector orthogonal to \(c\) and \(\chi\) is a scaler.</description>
-    </item>
-    
-    <item>
-      <title>Understanding Probabilistic Clock Synchronization</title>
-      <link>https://www.bodunhu.com/blog/posts/probabilistic_clock_synchronization/</link>
-      <pubDate>Tue, 17 Sep 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://www.bodunhu.com/blog/posts/probabilistic_clock_synchronization/</guid>
-      <description>This post is meant to discuss the probabilistic clock synchronization technique. The main goal of this technique is to bound the difference between systems by setting up an upper bound. In short, \(|P(t)-Q(t)|\leq \varepsilon\). We will discuss what these symbols represent later.
- Perfect Synchronization The motivation behind this technique is that synchronization always involves overheads. In a perfect environment where network delay and request processing time are both 0, the clocks can be synchronized with ease.</description>
-    </item>
-    
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>algorithm on std::bodun::blog</title><link>https://www.bodunhu.com/blog/tags/algorithm/</link><description>Recent content in algorithm on std::bodun::blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Sat, 17 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://www.bodunhu.com/blog/tags/algorithm/index.xml" rel="self" type="application/rss+xml"/><item><title>Hoare Logic</title><link>https://www.bodunhu.com/blog/posts/hoare-logic/</link><pubDate>Sat, 17 Apr 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/hoare-logic/</guid><description>Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we will first consider a smaller imperative programming language &lt;strong>IMP&lt;/strong></description></item><item><title>Congruence Closure</title><link>https://www.bodunhu.com/blog/posts/congruence-closure/</link><pubDate>Sat, 27 Mar 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/congruence-closure/</guid><description>This is a summary of how to compute congruence closure. I implemented the algorithm to compute congruence closure and thought I&amp;rsquo;d never forget it. But my memory starts to get blurry just after two days. So I figured I&amp;rsquo;d put things down so I don&amp;rsquo;t have to watch the entire lecture again the next time I need it</description></item><item><title>Performance Anamoly of 802.11b</title><link>https://www.bodunhu.com/blog/posts/performance-anamoly-of-802.11b/</link><pubDate>Sun, 13 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/performance-anamoly-of-802.11b/</guid><description>This research is conducted by Martin Heusse, Franck Rousseau, Cilles Berger-Sabbatel, Andrzej Duda on analyzing the performance of the IEEE 802.11b wireless local area networks. Degraded transmitting rate is caused by CSMA/CA channel access method</description></item><item><title>Singular Value Decomposition</title><link>https://www.bodunhu.com/blog/posts/singular-value-decomposition/</link><pubDate>Mon, 10 Feb 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/singular-value-decomposition/</guid><description>Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor &lt;a
+href="https://www.cs.utexas.edu/~rvdg/"
+target="_blank"
+rel="noopener"
+>
+Robert van de Geijn
+&lt;/a>. This is a brief summary over the important concepts covered in Chapter 2</description></item><item><title>Understanding Probabilistic Clock Synchronization</title><link>https://www.bodunhu.com/blog/posts/understanding-probabilistic-clock-synchronization/</link><pubDate>Tue, 17 Sep 2019 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/understanding-probabilistic-clock-synchronization/</guid><description>This post is meant to discuss the probabilistic clock synchronization technique. The main goal of this technique is to bound the difference between systems by setting up an upper bound. Formally, we define the problem as \(|P(t)-Q(t)|\leq \varepsilon\), or the difference between clocks across the network. We will go over the technical detains and discuss what these symbols represent in later sections. Most of these materials are from Prof. Mok &amp;rsquo;s slides on his dependable systems classes.</description></item></channel></rss>
