@@ -182,8 +182,8 @@ nav.navigation a.button {
   }
 }
 
-/* @media (max-width: 324px) { */
-@media (max-width: 375px) {
+@media (max-width: 324px) {
+/* @media (max-width: 375px) { */
   nav.navigation a.button {
     display: none;
   }
@@ -534,4 +534,13 @@ nav.navigation a.button {
   border: none;
   overflow: hidden;
   font-size: 18px;
+}
+
+img[src$='#center']
+{
+    display: block;
+    margin: 0.7rem auto; /* you can replace the vertical '0.7rem' by
+                            whatever floats your boat, but keep the
+                            horizontal 'auto' for this to work */
+    /* whatever else styles you fancy here */
 }
