@@ -518,6 +518,13 @@ nav.navigation a.button {
   color: #bbb;
 }
 
+@media (max-width: 560px) {
+  #page-404 .date {
+    display: none;
+    visibility: hidden;
+  }
+}
+
 .utterances {
   max-width: 100%;
 }
