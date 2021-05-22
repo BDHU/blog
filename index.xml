@@ -1,4 +1,22 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/</link><description>Recent content on std::bodun::blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 21 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://www.bodunhu.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>How SAT Solver works</title><link>https://www.bodunhu.com/blog/posts/how-sat-solver-works/</link><pubDate>Fri, 21 May 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/how-sat-solver-works/</guid><description>The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux</description></item><item><title>Experience on Dafny Programming</title><link>https://www.bodunhu.com/blog/posts/experience-on-dafny-programming/</link><pubDate>Sun, 16 May 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/experience-on-dafny-programming/</guid><description>Due to Prof. Dillig &amp;rsquo;s class , I finally got the chance to try out Dafny , a language made by Microsoft Research , with built-in support for formal specification through preconditions , postconditions , loop invariants and loop variants . I often think, what if we write programs in a verification language, would there be much less bugs and will it make our lives much easier than sitting in front a screen for hours grinding at bugs.</description></item><item><title>Ethereum</title><link>https://www.bodunhu.com/blog/posts/ethereum/</link><pubDate>Fri, 14 May 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/ethereum/</guid><description>In my previous &lt;a
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/</link><description>Recent content on std::bodun::blog</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><lastBuildDate>Fri, 21 May 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://www.bodunhu.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>How SAT Solver works</title><link>https://www.bodunhu.com/blog/posts/how-sat-solver-works/</link><pubDate>Fri, 21 May 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/how-sat-solver-works/</guid><description>This is a summary over the high-level design of &lt;a
+href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem"
+target="_blank"
+rel="noopener"
+>
+SAT solver
+&lt;/a> covered in Prof. &lt;a
+href="https://www.cs.utexas.edu/~isil/"
+target="_blank"
+rel="noopener"
+>
+Dillig
+&lt;/a>&amp;rsquo;s &lt;a
+href="https://www.cs.utexas.edu/~isil/cs389L/"
+target="_blank"
+rel="noopener"
+>
+Automated Logical Reasoning
+&lt;/a> class. It&amp;rsquo;s meant to cover the basic steps towards determining whether a given boolean formula is satisfiable or not</description></item><item><title>Experience on Dafny Programming</title><link>https://www.bodunhu.com/blog/posts/experience-on-dafny-programming/</link><pubDate>Sun, 16 May 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/experience-on-dafny-programming/</guid><description>Due to Prof. Dillig &amp;rsquo;s class , I finally got the chance to try out Dafny , a language made by Microsoft Research , with built-in support for formal specification through preconditions , postconditions , loop invariants and loop variants . I often think, what if we write programs in a verification language, would there be much less bugs and will it make our lives much easier than sitting in front a screen for hours grinding at bugs.</description></item><item><title>Ethereum</title><link>https://www.bodunhu.com/blog/posts/ethereum/</link><pubDate>Fri, 14 May 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/ethereum/</guid><description>In my previous &lt;a
 href="https://www.bodunhu.com/blog/blog/posts/reflections-on-my-cs-phd-application-process/"
 >
 post
