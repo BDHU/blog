@@ -258,6 +258,8 @@ nav.navigation a.button {
   font-weight: 300;
   color: #757575;
   margin-top: 0;
+  margin: 0 auto;
+  padding: 0 24px;
   max-width: 580px;
   text-align: center;
   display: inline-block;
