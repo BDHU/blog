@@ -51,37 +51,32 @@ Oct 8, 2017
 <summary accesskey=c title="(Alt + C)">
 <div class=details>Table of Contents</div>
 </summary>
-<div class=inner><ul>
-<li>
-<a href=#three-goals-of-vm aria-label="Three Goals of VM 🔗">Three Goals of VM <a href=#three-goals-of-vm class=anchor>🔗</a></a></li>
-<li>
-<a href=#basic-concept-address-space aria-label="Basic Concept: Address Space 🔗">Basic Concept: Address Space <a href=#basic-concept-address-space class=anchor>🔗</a></a></li>
-<li>
-<a href=#how-does-an-address-get-generated aria-label="How does an address get generated 🔗">How does an address get generated <a href=#how-does-an-address-get-generated class=anchor>🔗</a></a><ul>
-<li>
-<a href=#relocation aria-label="Relocation 🔗">Relocation <a href=#relocation class=anchor>🔗</a></a></li></ul>
+<div class=inner>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#three-goals-of-vm>Three Goals of VM</a></li>
+<li><a href=#basic-concept-address-space>Basic Concept: Address Space</a></li>
+<li><a href=#how-does-an-address-get-generated>How does an address get generated</a>
+<ul>
+<li><a href=#relocation>Relocation</a></li>
+</ul>
 </li>
-<li>
-<a href=#how-to-minimize-external-fragmentation aria-label="How to minimize external fragmentation? 🔗">How to minimize external fragmentation? <a href=#how-to-minimize-external-fragmentation class=anchor>🔗</a></a></li>
-<li>
-<a href=#policies aria-label="Policies 🔗">Policies <a href=#policies class=anchor>🔗</a></a><ul>
-<li>
-<a href=#first-fit-policy aria-label="First-Fit policy 🔗">First-Fit policy <a href=#first-fit-policy class=anchor>🔗</a></a></li>
-<li>
-<a href=#best-fit-policy aria-label="Best-Fit policy 🔗">Best-Fit policy <a href=#best-fit-policy class=anchor>🔗</a></a></li>
-<li>
-<a href=#worst-fit-policy aria-label="Worst-Fit policy 🔗">Worst-Fit policy <a href=#worst-fit-policy class=anchor>🔗</a></a></li></ul>
+<li><a href=#how-to-minimize-external-fragmentation>How to minimize external fragmentation?</a></li>
+<li><a href=#policies>Policies</a>
+<ul>
+<li><a href=#first-fit-policy>First-Fit policy</a></li>
+<li><a href=#best-fit-policy>Best-Fit policy</a></li>
+<li><a href=#worst-fit-policy>Worst-Fit policy</a></li>
+</ul>
 </li>
-<li>
-<a href=#dynamic-relocation aria-label="Dynamic Relocation 🔗">Dynamic Relocation <a href=#dynamic-relocation class=anchor>🔗</a></a><ul>
-<li>
-<a href=#advantages aria-label="Advantages 🔗">Advantages <a href=#advantages class=anchor>🔗</a></a></li>
-<li>
-<a href=#disadvantages aria-label="Disadvantages 🔗">Disadvantages <a href=#disadvantages class=anchor>🔗</a></a>
-</li>
+<li><a href=#dynamic-relocation>Dynamic Relocation</a>
+<ul>
+<li><a href=#advantages>Advantages</a></li>
+<li><a href=#disadvantages>Disadvantages</a></li>
 </ul>
 </li>
 </ul>
+</nav>
 </div>
 </details>
 </div>
@@ -95,11 +90,11 @@ Oct 8, 2017
 <p>Physical address space: it is merely a collection of physical addresses used by the hardware. The value of the address can range from 0 to the MAX<sub>sys</sub>. The address is actually utilized by the physical memory to fetch the contents inside.</p>
 <p>Logical/Virtual address: It a collection of address a process is able to access (the process is not aware of the actual physical location). It can be bigger than physical address due a technique called <strong>paging</strong> which will be discussed later.</p>
 <p>Segment: A chunk of memory assigned to the process to use.</p>
-<p><p class=markdown-image>
+<p><a href=https://en.wikipedia.org/wiki/Memory_management_unit target=_blank rel=noopener>
+<p class=markdown-image>
 <img src=https://upload.wikimedia.org/wikipedia/commons/d/dc/MMU_principle_updated.png alt=memory-management>
-</p></p>
-<p align=center>
-<a href=https://en.wikipedia.org/wiki/Memory_management_unit>Image source</a></p>
+</p>
+</a></p>
 <h2 id=how-does-an-address-get-generated>How does an address get generated <a href=#how-does-an-address-get-generated class=anchor>🔗</a></h2><p>Uniprogramming: This is a very simple scenario, there&rsquo;s only one process executing at the moment, its address always starts at 0 and the OS is loaded in a fixed part of the memory. The process executes in contiguous section of memory. The process is able to use the all the available portions of the memory as long as it doesn&rsquo;t touch the OS&rsquo;s property.</p>
 <h3 id=relocation>Relocation <a href=#relocation class=anchor>🔗</a></h3><p>Same as uniprogramming, the OS locates at the highest location in the memory. The OS allocates a contiguous segment of memory for processes to use. If it doesn&rsquo;t have enough space, it simply wait the process to terminate. The relocation address (also known as base address) is the first physical address a process can use. Limit address is the largest physical address the process can use.</p>
 <p>Also note there&rsquo;re two types of relocation:</p>

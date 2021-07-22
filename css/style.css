@@ -539,7 +539,7 @@ nav.navigation a.button {
 
 .toc details summary {
   cursor: zoom-in;
-  margin-inline-start: 16px;
+  margin-inline-start: 14px;
 }
 
 .toc details[open] summary {
@@ -556,7 +556,7 @@ nav.navigation a.button {
 }
 
 .toc li ul {
-  margin-inline-start: auto;
+  margin-inline-start: -20px;
 }
 
 .toc summary:focus {
