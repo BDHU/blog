@@ -556,7 +556,7 @@ nav.navigation a.button {
 }
 
 .toc li ul {
-  margin-inline-start: -20px;
+  margin-inline-start: auto;
 }
 
 .toc summary:focus {
