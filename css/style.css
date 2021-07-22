@@ -363,6 +363,7 @@ nav.navigation a.button {
   text-align: left;
   color: #8c8c8c;
   margin-top: 0px;
+  margin-bottom: 36px;
   /* margin-top: 18px; */
   font-size: 14px;
 }
@@ -525,6 +526,41 @@ nav.navigation a.button {
     display: none;
     visibility: hidden;
   }
+}
+
+
+.toc {
+  margin: auto;
+  /* border: 1px solid #333; */
+  background: #f8f8f8;
+  border-radius: 0;
+  padding: 0.4em;
+}
+
+.toc details summary {
+  cursor: zoom-in;
+  margin-inline-start: 16px;
+}
+
+.toc details[open] summary {
+  cursor: zoom-out;
+}
+
+.toc .details {
+  display: inline;
+  font-weight: 500;
+}
+
+.toc .inner {
+  margin: 0 0;
+}
+
+.toc li ul {
+  margin-inline-start: -20px;
+}
+
+.toc summary:focus {
+  outline: 0;
 }
 
 .utterances {
