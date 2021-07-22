@@ -109,9 +109,11 @@ Oct 8, 2017
 <p>Problem with relocation:</p>
 <p>Even though the concept of relocation is easy to understand, it can easily lead to problems with unused memory space. The biggest problem is <strong>external fragmentation</strong>. When a process finished executing and the memory it occupied is deallocated, it will leave a &ldquo;hole&rdquo; behind and become available for other process to use. The problem is, as the size of the emory of the previously running process can be any random number, the &ldquo;hole&rdquo; it leaves behind may be too small for other processes to fit in. Even if it is big enough for other processes to fit in, they may eventually lead to smaller fragments that are too small for a process to use, which leads to external fragmentation. There&rsquo;s also another problem called <strong>internal fragmentation</strong>, but it won&rsquo;t be discussed here.</p>
 <h2 id=how-to-minimize-external-fragmentation>How to minimize external fragmentation? <a href=#how-to-minimize-external-fragmentation class=anchor>🔗</a></h2><p>As we can see, relocation leaves rooms for external fragmentation, which can be a problem since unused spaces will be a waste. Are there any methods we can use to reduce the external fragmentation to minimize external fragmentation and better utilize the free blocks? There&rsquo;re three policies we will discuss that can be used to achieve our goals. A reminder is that they can&rsquo;t completely eliminate external fragmentation but merely minimize it to a certain level.</p>
-<p><p class=markdown-image>
-<img src="https://developer.brewmp.com/sites/default/files/resources/Fragmentation%20and%20low%20memory%20conditions=GUID-99171083-12C5-4E13-8CF6-7500737A188E=1=en=.xml/seq_allocation_deallocation=GUID-0C6A1777-6986-446E-9BC1-771B96F21B68=1=en=Low.png#center" alt=fragmentation>
-</p></p>
+<p><a href=http://www.differencebetween.net/technology/difference-between-internal-fragmentation-and-external-fragmentation/ target=_blank rel=noopener>
+<p class=markdown-image>
+<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/virtual-memory-overview/extermnal-frag.png#center alt=external-fragmentation>
+</p>
+</a></p>
 <h2 id=policies>Policies <a href=#policies class=anchor>🔗</a></h2><h3 id=first-fit-policy>First-Fit policy <a href=#first-fit-policy class=anchor>🔗</a></h3><p>Finding the first free block that can hold the requested amount of memory.</p>
 <p><strong>Requirements</strong>:</p>
 <ul>
