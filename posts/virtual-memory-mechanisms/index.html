@@ -75,7 +75,7 @@ Oct 19, 2017
 </details>
 </div>
 <div class=content>
-<p>As we can see in the <a href=https://bdhu.github.io/2017/10/08/virtualaddress/ target=_blank rel=noopener>
+<p>As we can see in the <a href=/blog/posts/virtual-memory-overview/>
 previous post
 </a>,
 all allocation algorithms we discussed lead to external fragmentation. As time goes by, external fragmentation is going to get worse and we need solutions for the problem. We can use swap areas to swap out memory onto the disk, or move allocated memory together(a process named memory compaction), leaving empty spaces together. Even these approaches can reduce external fragmentation and allow a higher degree of multiprogramming, they are not perfect. In addition, it is possible to have a single process that is just too big to fit into memory. We are going to discuss methods used to completely eliminate external fragmentation. More than that, we will discuss how to make memory sharing possible and how to allow more processes to execute at once.</p>
@@ -88,9 +88,9 @@ all allocation algorithms we discussed lead to external fragmentation. As time g
 o - page offset (difference between the byte address to search and the start of the page, <sub>MAX</sub> indicates the total number of entries in a table)<br>
 Virtual Address calculation: o<sub>MAX</sub> x p + o (here o is the offset in the last page)</p>
 <p>The frame size is equal to that of a page. It&rsquo;s easy to understand since we need to put everything stored in a page into the frame, we need them both to be equally sized. Note that since virtual address space can be bigger than physical memory, the number of frames can be smaller than the number of pages, which means the number of bits reserved for frame number can be smaller than the number of bits used to indicate the number of pages.</p>
-<p align=center>
-<img src=https://www.bottomupcs.com/chapter05/figures/virtaddress.png>
-</p>
+<p><p class=markdown-image>
+<img src=https://www.bottomupcs.com/chapter05/figures/virtaddress.png#center alt=virtual-address>
+</p></p>
 <p align=center>
 <a href=https://www.bottomupcs.com/virtual_addresses.xhtml>source</a></p>
 <h2 id=from-virtual-to-physical-allocation-policy>From Virtual to Physical: Allocation Policy <a href=#from-virtual-to-physical-allocation-policy class=anchor>🔗</a></h2><p>We&rsquo;ve discussed how that a process&rsquo;s virtual address space can be divided into pages and mapped to frames in physical memory. Here we are going to discuss some policies used to implement the mapping process. I&rsquo;m going to leave three questions to think here as well: why pages are arbitrarily located in physical memory? How do we find them if they are arbitrarily located in physical memory? Why aren&rsquo;t all pages mapped to frames? These questions will become more clear as we progress into further discussion.</p>
