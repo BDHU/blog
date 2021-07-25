@@ -589,4 +589,5 @@ img[src$='#center']
                             whatever floats your boat, but keep the
                             horizontal 'auto' for this to work */
     /* whatever else styles you fancy here */
+    max-width: 100%;
 }
