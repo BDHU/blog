@@ -362,9 +362,9 @@ nav.navigation a.button {
 #single .tip {
   text-align: center;
   color: #8c8c8c;
-  margin-top: 0px;
+  /* margin-top: 0px; */
   margin-bottom: 36px;
-  /* margin-top: 18px; */
+  margin-top: 18px;
   font-size: 14px;
 }
 #single .tip .split {
