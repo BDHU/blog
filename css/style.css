@@ -445,7 +445,7 @@ nav.navigation a.button {
 #tags {
   max-width: 700px;
   margin: 48px auto 0 auto;
-  /* padding: 0 12px; */
+  padding: 0 12px;
   text-align: center;
 }
 #tags .tag {
@@ -464,7 +464,8 @@ nav.navigation a.button {
 
 #tags .tag a {
   background: #f2f2f2;
-  padding: 4px 7px;
+  /* padding: 4px 7px; */
+  padding: 4px;
   color: #757575;
   color: #404040;
   font-size: 14px;
