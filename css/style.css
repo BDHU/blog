@@ -445,7 +445,7 @@ nav.navigation a.button {
 #tags {
   max-width: 700px;
   margin: 48px auto 0 auto;
-  padding: 0 12px;
+  /* padding: 0 12px; */
   text-align: center;
 }
 #tags .tag {
