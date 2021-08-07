@@ -38,7 +38,7 @@
 </header>
 <section id=archive>
 <style>input{all:unset;color:#404040;height:100%;width:100%;padding:6px 10px;text-align:left;font:15px/1.5em '-apple-system',BlinkMacSystemFont,helvetica neue,Helvetica,Arial,sans-serif}::placeholder{color:#757575;opacity:.7;text-align:left}input[type=search]::-ms-clear{display:none;width:0;height:0}input[type=search]::-ms-reveal{display:none;width:0;height:0}input[type=search]::-webkit-search-decoration,input[type=search]::-webkit-search-cancel-button,input[type=search]::-webkit-search-results-button,input[type=search]::-webkit-search-results-decoration{display:none}</style>
-<form role=search id=form style=margin-top:24px;background-color:#f2f2f2;width:100%;height:34px;border-radius:5px;display:flex;flex-direction:row;align-items:center>
+<form role=search id=form style=max-width:580px;margin-top:24px;background-color:#f2f2f2;width:100%;height:34px;border-radius:5px;display:flex;flex-direction:row;align-items:center>
 <input type=search id=query name=q placeholder=Search... aria-label="Search through site content">
 </form>
 <script>const f=document.getElementById('form'),q=document.getElementById('query'),google='https://www.google.com/search?q=site%3A',site='bodunhu.com/blog/posts/';function submitted(a){a.preventDefault();const b=google+site+'+'+q.value,c=window.open(b,'_self');c.focus()}f.addEventListener('submit',submitted)</script>
