@@ -45,20 +45,20 @@ Nov 3, 2020
 </span>
 </div>
 <div class=content>
-<p>The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux.</p>
-<h2 id=execve-syscall>execve Syscall <a href=#execve-syscall class=anchor>🔗</a></h2><p>One of operating systems' basic sevices is to load programs into memory for them to execute. Programs rely on <code>execve</code> syscall to get the OS to load the program into memory and start it executing as a process. The kernel version we used to testing is 5.4.0. Doing a quick search inside <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/exec.c#L1956 target=_blank rel=noopener>
+<p>This is a summary over program loading, dynamical paging, signal handling, and memory mapping in Linux.</p>
+<h2 id=execve-syscall>execve Syscall <a href=#execve-syscall class=anchor>🔗</a></h2><p>One of operating systems' basic services is to load programs into memory to execute. Programs rely on <code>execve</code> syscall to get the OS to load the program into memory and start it executing as a process. The kernel version we used to testing is 5.4.0. Doing a quick search inside <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/exec.c#L1956 target=_blank rel=noopener>
 Elixir
 </a> gives us:</p>
 <div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>SYSCALL_DEFINE3(execve,
-		<span style=color:#a2f;font-weight:700>const</span> <span style=color:#0b0;font-weight:700>char</span> __user <span style=color:#666>*</span>, filename,
-		<span style=color:#a2f;font-weight:700>const</span> <span style=color:#0b0;font-weight:700>char</span> __user <span style=color:#666>*</span><span style=color:#a2f;font-weight:700>const</span> __user <span style=color:#666>*</span>, argv,
-		<span style=color:#a2f;font-weight:700>const</span> <span style=color:#0b0;font-weight:700>char</span> __user <span style=color:#666>*</span><span style=color:#a2f;font-weight:700>const</span> __user <span style=color:#666>*</span>, envp)
+        <span style=color:#a2f;font-weight:700>const</span> <span style=color:#0b0;font-weight:700>char</span> __user <span style=color:#666>*</span>, filename,
+        <span style=color:#a2f;font-weight:700>const</span> <span style=color:#0b0;font-weight:700>char</span> __user <span style=color:#666>*</span><span style=color:#a2f;font-weight:700>const</span> __user <span style=color:#666>*</span>, argv,
+        <span style=color:#a2f;font-weight:700>const</span> <span style=color:#0b0;font-weight:700>char</span> __user <span style=color:#666>*</span><span style=color:#a2f;font-weight:700>const</span> __user <span style=color:#666>*</span>, envp)
 {
-	<span style=color:#a2f;font-weight:700>return</span> do_execve(getname(filename), argv, envp);
+    <span style=color:#a2f;font-weight:700>return</span> do_execve(getname(filename), argv, envp);
 }
 </code></pre></div><p>Follow the function call, we will eventually reach the call to <code>__do_execve_file</code>, the comment of this function says &ldquo;sys_execve() executes a new program&rdquo;, which is pretty straightforward. This function first checks the <code>filename</code> pointer. Then it checks the flags of the current process that limit of running processes is not exceeded:</p>
 <div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#a2f;font-weight:700>if</span> (IS_ERR(filename))
-		<span style=color:#a2f;font-weight:700>return</span> PTR_ERR(filename);
+    <span style=color:#a2f;font-weight:700>return</span> PTR_ERR(filename);
 
 <span style=color:#080;font-style:italic>/*
 </span><span style=color:#080;font-style:italic> * We move the actual failure in case of RLIMIT_NPROC excess from
@@ -79,8 +79,8 @@ current<span style=color:#666>-&gt;</span>flags <span style=color:#666>&amp;=</s
 here
 </a>. This structure is used to hold the arguments that are used when loading binaries.</p>
 <div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>bprm <span style=color:#666>=</span> kzalloc(<span style=color:#a2f;font-weight:700>sizeof</span>(<span style=color:#666>*</span>bprm), GFP_KERNEL);
-	<span style=color:#a2f;font-weight:700>if</span> (<span style=color:#666>!</span>bprm)
-		<span style=color:#a2f;font-weight:700>goto</span> out_files;
+    <span style=color:#a2f;font-weight:700>if</span> (<span style=color:#666>!</span>bprm)
+        <span style=color:#a2f;font-weight:700>goto</span> out_files;
 </code></pre></div><p>Next, the function performs a seireis of tasks to prepare the <code>bprm</code> struct. Refer to the <a href=https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html target=_blank rel=noopener>
 linux-insides
 </a> book to find more information on how exactly the <code>bprm</code> structure is filled up.</p>
@@ -200,7 +200,7 @@ linux-insides
 <div class=tags>
 <a href=https://www.bodunhu.com/blog/tags/os>os</a>
 <a href=https://www.bodunhu.com/blog/tags/kernel>kernel</a>
-<a href=https://www.bodunhu.com/blog/tags/mm>mm</a>
+<a href=https://www.bodunhu.com/blog/tags/memory>memory</a>
 <a href=https://www.bodunhu.com/blog/tags/linux>linux</a>
 </div>
 <script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>

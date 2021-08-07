@@ -5,7 +5,7 @@
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
 <meta name=viewport content="width=device-width,minimum-scale=1">
 <meta name=description content="VMWare ESX Server  is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to VMware Workstation , is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.
-  Memory Virtualization is done by interposing an extra abstraction layer between a physical address from the VM&rsquo;s point of view, and a machine address which represents the actual hardware memory.">
+ Memory Virtualization is done by interposing an extra abstraction layer between a physical address from the VM&rsquo;s point of view, and a machine address which represents the actual hardware memory.">
 <meta name=generator content="Hugo 0.87.0">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link rel=stylesheet href=/blog/css/style.css>
@@ -18,7 +18,7 @@
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Memory Resource Management in VMware ESX Server">
 <meta name=twitter:description content="VMWare ESX Server  is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to VMware Workstation , is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.
-  Memory Virtualization is done by interposing an extra abstraction layer between a physical address from the VM&rsquo;s point of view, and a machine address which represents the actual hardware memory.">
+ Memory Virtualization is done by interposing an extra abstraction layer between a physical address from the VM&rsquo;s point of view, and a machine address which represents the actual hardware memory.">
 <meta name=twitter:site content="@https://twitter.com/BodunHu">
 <script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
 </head>
@@ -61,11 +61,11 @@ VMware Workstation
 <p><strong>Ballooning</strong> is a technique used by the server to achieve memory reclamation. As its name suggests, the hypervisor inflates the balloon by instructing the balloon driver module to allocate pinned physical pages and deflates it by instructing it to deallocate previously-allocated pages. The idea behind this technique is that the hypervisor is unaware of the specific usage patterns of policies of its guests, therefore the making page replacement decisions is best done in the guest VM. When the hypervisor over commits memory, it needs some way to claim memories from the VMs. By consuming some of the memory that the guest OS believes is physically present in the virtual machine. The guest OS will then swap memory to disk reducing the load on the host&rsquo;s physical memory. The host will them reallocate that memory to other VMs. A details description of ballooning can be found in this <a href=https://www.vladan.fr/what-is-vmware-memory-ballooning/ target=_blank rel=noopener>
 post
 </a>.</p>
-<p align=center>
-<a href=https://www.vmware.com/pdf/usenix_resource_mgmt.pdf>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ESXServer/pghash.png width=70%>
-</a>
+<p><a href=https://www.vmware.com/pdf/usenix_resource_mgmt.pdf target=_blank rel=noopener>
+<p class=markdown-image>
+<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ESXServer/pghash.png#center alt=vmware-esx-server-page-coloring>
 </p>
+</a></p>
 <blockquote>
 <p>Page Coloring can be used to reduce cache misses or partition resources. But it might complicates memory management, especially with the presence of huge pages. Because coloring enforces ownership, thus might result in distinct L2 cache entries.</p>
 </blockquote>

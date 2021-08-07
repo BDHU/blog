@@ -47,7 +47,7 @@ May 14, 2021
 <div class=content>
 <p>In my previous <a href=/blog/posts/reflections-on-my-cs-phd-application-process/>
 post
-</a>, we&rsquo;ve gone over the high-level structure of blockchain and its corresponding attributes. This post is going to cover <a href=https://ethereum.org/en/ target=_blank rel=noopener>
+</a>, we&rsquo;ve gone over the high-level structure of blockchain and its attributes. This post covers <a href=https://ethereum.org/en/ target=_blank rel=noopener>
 Ethereum
 </a> and explore how blockchain can be used not only for money transfer but also application development.</p>
 <h2 id=more-than-money>More Than Money <a href=#more-than-money class=anchor>🔗</a></h2><p>The idea behind Ethereum was proposed by <a href=https://vitalik.ca/ target=_blank rel=noopener>
@@ -75,14 +75,14 @@ Zastrin
 Metamask
 </a> to mitigate the problem so your storage space won&rsquo;t be saturated. But the high-level concept holds.</p>
 <p>A Ethereum blockchain consists of two components:</p>
-<ol>
+<ul>
 <li>
 <p>Database: this is similar to the database we use in the traditional client/server architecture. The difference lies in how the data is represented and stored. Ethereum stores events as transactions which are exactly the same as BTC transactions, but are much more general as they can store anything ranging from a git commit message to a blog post. It can even be used to represent something more abstract such as ownership of artwork in the form of non-fungible tokens. Because Ethereum is a public blockchain, all the data stored in the blockchain will be visible to the public.</p>
 </li>
 <li>
 <p>Smart Contract: this is fancy name for application code. The code is compiled into Ethereum Byte Code and then executed by the EVM.</p>
 </li>
-</ol>
+</ul>
 <p>The interesting part is the association between contract and code. &lsquo;&lsquo;Contract&rsquo;&rsquo; implies some form of agreement enforced by certain rules. &lsquo;&lsquo;Code&rsquo;&rsquo; on the other hand can be much more flexible. The reason behind this is that code deployed on the Ethereum blockchain can enforce the agreement because, <strong>once deployed, it can not be terminated or modified</strong>. The beauty behind this is that the smart contract is deployed in a distributed network. A successful tampering attempt can only be achieved through agreement from majority, which is hard to achieve.</p>
 <h3 id=how-is-identity-established>How is identity established? <a href=#how-is-identity-established class=anchor>🔗</a></h3><p>In a traditional server/client application, for example, like GitHub, a user account is identified using the username. To managed an account, a user must have the corresponding password to access and modify the information in the account. The notion of account in Ethereum is also similar. An account have a Ethereum address which is visible to the entire network just like a GitHub username. The private key is used to control an the account and is not meant to be shared publicly, which corresponds to your GitHub account password. The exception is the contract account. Intuitively, ths makes sense because it is meant to be accessed by all parties in the contract.</p>
 <h2 id=not-a-silver-bullet>Not a Silver Bullet <a href=#not-a-silver-bullet class=anchor>🔗</a></h2><p>There has been a lot of hype around Ethereum and blockchain in the business world. However, Ethereum is not meant to be the solution for all problems.</p>

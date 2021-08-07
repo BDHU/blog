@@ -77,7 +77,7 @@ Apr 17, 2021
 </details>
 </div>
 <div class=content>
-<p>Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we will first consider a smaller imperative programming
+<p>Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we first consider a smaller imperative programming
 language <strong>IMP</strong>.</p>
 <p>In IMP, we have three program constructs: expressions, conditionals, and statements:</p>
 <ul>
@@ -182,7 +182,7 @@ while i &lt; n do
 <p>Automating Hoare logic is based on generating verification conditions (VC). Essentially, a verification condition is formula \(\phi\) s.t. program is correct iff \(\phi\) is valid.</p>
 <p>There are two way to generate verification conditions: forwards and backwards.</p>
 <p>As their name suggests, a forwards analysis starts from precondition and generates formulas to prove post-condition. Forwards technique computes <strong>strongest post-conditions (sp)</strong>. In contrast, backwards analysis starts from post-condition and tries to prove precondition. Backwards technique computes <strong>weakest preconditions (wp)</strong>.</p>
-<p>Here, we start from backwards method.</p>
+<p>Here, we start from the backwards method.</p>
 <h3 id=weakest-preconditions>Weakest Preconditions <a href=#weakest-preconditions class=anchor>🔗</a></h3><p>Formally, we define the weakest precondition of \(Q\) with respect to \(S\) as \(wp(S, Q)\).</p>
 <p>\(wp(S, Q)\) has the property that it is the weakest condition (least amount of information we need to have) that guarantees \(Q\) holds after \(S\) in any execution.</p>
 <p>Thus, Hoare triple \( \{P\}S\{Q\} \) is valid iff \( P\Rightarrow wp(S, Q) \).</p>
