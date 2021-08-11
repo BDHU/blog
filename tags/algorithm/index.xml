@@ -10,7 +10,7 @@ target="_blank"
 rel="noopener"
 >
 Dillig
-&lt;/a>&amp;rsquo;s &lt;a
+&lt;/a>&amp;lsquo;s &lt;a
 href="https://www.cs.utexas.edu/~isil/cs389L/"
 target="_blank"
 rel="noopener"
@@ -22,4 +22,4 @@ target="_blank"
 rel="noopener"
 >
 Robert van de Geijn
-&lt;/a>. This is a brief summary over the important concepts covered in Chapter 2</description></item><item><title>Understanding Probabilistic Clock Synchronization</title><link>https://www.bodunhu.com/blog/posts/understanding-probabilistic-clock-synchronization/</link><pubDate>Tue, 17 Sep 2019 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/understanding-probabilistic-clock-synchronization/</guid><description>This post is meant to discuss the probabilistic clock synchronization technique. The main goal of this technique is to bound the difference between systems by setting up an upper bound. Formally, we define the problem as \(|P(t)-Q(t)|\leq \varepsilon\), or the difference between clocks across the network. We will go over the technical detains and discuss what these symbols represent in later sections. Most of these materials are from Prof. Mok &amp;rsquo;s slides on dependable systems classes.</description></item></channel></rss>
+&lt;/a>. This is a brief summary over the important concepts covered in Chapter 2</description></item><item><title>Understanding Probabilistic Clock Synchronization</title><link>https://www.bodunhu.com/blog/posts/understanding-probabilistic-clock-synchronization/</link><pubDate>Tue, 17 Sep 2019 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/understanding-probabilistic-clock-synchronization/</guid><description>This post is meant to discuss the probabilistic clock synchronization technique. The main goal of this technique is to bound the difference between systems by setting up an upper bound. Formally, we define the problem as \(|P(t)-Q(t)|\leq \varepsilon\), or the difference between clocks across the network. We will go over the technical detains and discuss what these symbols represent in later sections. Most of these materials are from Prof. Mok &amp;lsquo;s slides on dependable systems classes.</description></item></channel></rss>
