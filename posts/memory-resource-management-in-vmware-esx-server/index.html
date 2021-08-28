@@ -1,90 +1,13 @@
-<!doctype html><html lang=en-us>
-<head>
-<title>Memory Resource Management in VMware ESX Server | std::bodun::blog</title>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="VMWare ESX Server is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to VMware Workstation, is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.
- Memory Virtualization is done by interposing an extra abstraction layer between a physical address from the VM&rsquo;s point of view, and a machine address which represents the actual hardware memory.">
-<meta name=generator content="Hugo 0.87.0">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Memory Resource Management in VMware ESX Server">
-<meta name=twitter:description content="VMWare ESX Server is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to VMware Workstation, is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.
- Memory Virtualization is done by interposing an extra abstraction layer between a physical address from the VM&rsquo;s point of view, and a machine address which represents the actual hardware memory.">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
-</head>
-<body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
+<!doctype html><html lang=en-us><head><title>Memory Resource Management in VMware ESX Server | std::bodun::blog</title><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="VMWare ESX Server is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to VMware Workstation, is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.
+ Memory Virtualization is done by interposing an extra abstraction layer between a physical address from the VM&rsquo;s point of view, and a machine address which represents the actual hardware memory."><meta name=generator content="Hugo 0.83.0"><meta name=ROBOTS content="INDEX, FOLLOW"><link rel=stylesheet href=/blog/css/style.css><link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script><script async src=https://www.google-analytics.com/analytics.js></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script><meta name=twitter:card content="summary"><meta name=twitter:title content="Memory Resource Management in VMware ESX Server"><meta name=twitter:description content="VMWare ESX Server is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to VMware Workstation, is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.
+ Memory Virtualization is done by interposing an extra abstraction layer between a physical address from the VM&rsquo;s point of view, and a machine address which represents the actual hardware memory."><meta name=twitter:site content="@https://twitter.com/BodunHu"><script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script></head><body><nav class=navigation><a href=/blog/><span class=arrow>←</span>Home</a>
 <a href=/blog/posts>Archive</a>
 <a href=/blog/tags>Tags</a>
 <a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Memory Resource Management in VMware ESX Server</h1>
-<div class=tip>
-<time datetime="2020-09-21 00:00:00 +0000 UTC">Sep 21, 2020</time>
-<span class=split>
-·
-</span>
-<span>
-3 minute read
-</span>
-</div>
-<div class=content>
-<p><a href=https://www.vmware.com/products/esxi-and-esx.html target=_blank rel=noopener>VMWare ESX Server</a> is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to <a href=https://www.vmware.com/products/workstation-pro.html target=_blank rel=noopener>VMware Workstation</a>, is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.</p>
-<blockquote>
-<p>Memory Virtualization is done by interposing an extra abstraction layer between a <code>physical address</code> from the VM&rsquo;s point of view, and a <code>machine address</code> which represents the actual hardware memory. ESX Server maintains a <em>pmap</em> data structure for each VM to translate PPMs to MPNs. A separate <em>shadow page table</em>, consistent with the physical-to-machine mappings, is used to map virtual-to-machine page mappings. This avoids additional overheads as the hardware TLB will cache direct virtual-to-machine address translations read from the shadow page table.</p>
-</blockquote>
-<h2 id=key-features>Key features <a href=#key-features class=anchor>🔗</a></h2><p><p class=markdown-image>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ESXServer/ballooning.png alt=vmware-esx-server-memory>
-</p></p>
-<p><strong>Ballooning</strong> is a technique used by the server to achieve memory reclamation. As its name suggests, the hypervisor inflates the balloon by instructing the balloon driver module to allocate pinned physical pages and deflates it by instructing it to deallocate previously-allocated pages. The idea behind this technique is that the hypervisor is unaware of the specific usage patterns of policies of its guests, therefore the making page replacement decisions is best done in the guest VM. When the hypervisor over commits memory, it needs some way to claim memories from the VMs. By consuming some of the memory that the guest OS believes is physically present in the virtual machine. The guest OS will then swap memory to disk reducing the load on the host&rsquo;s physical memory. The host will them reallocate that memory to other VMs. A details description of ballooning can be found in this <a href=https://www.vladan.fr/what-is-vmware-memory-ballooning/ target=_blank rel=noopener>post</a>.</p>
-<p><a href=https://www.vmware.com/pdf/usenix_resource_mgmt.pdf target=_blank rel=noopener><p class=markdown-image>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ESXServer/pghash.png#center alt=vmware-esx-server-page-coloring>
-</p></a></p>
-<blockquote>
-<p>Page Coloring can be used to reduce cache misses or partition resources. But it might complicates memory management, especially with the presence of huge pages. Because coloring enforces ownership, thus might result in distinct L2 cache entries.</p>
-</blockquote>
-<p><strong>Sharing memory</strong> is achieved by comparing the content of each page, since modifying guest operating system internals is not possible. Because comparing each page would be \(O(n^2)\), hashing is used to identify pages to make the progress more efficiently. By letting VMs share pages based the contents, the host can potentially save spaces dramatically. For example, the presence of zero pages is a great opportunity for page sharing by mapping one zero page to multiple VMs. Hint is hash hit, but it doesn&rsquo;t guarantee the content of the page doesn&rsquo;t change at that moment.</p>
-<p><strong>Idle Memory</strong> presents a problem in pure proportional-share algorithms because they do not incorporate any information about active memory usage. More specifically, the memory demand might change dynamically. ESX Server collects <em>idle memory tax</em> from VMs to mitigate this issue. A client is charged more for an idle page than the active one. The cost of idle memory is inflated by tax rate. The metrics of idles pages in guests is collected by hypervisor without guests' involvement. The idle page information in virtual page table inside VMs is periodically sampled on random bases.</p>
-<h2 id=questions>Questions <a href=#questions class=anchor>🔗</a></h2><p>a. What is the overhead of ballooning? Triggering memory management in the VM by &ldquo;tricking&rdquo; it into thinking the the memory resource is scarce/plentiful may have unexpected behaviors.<br>
-b. Do content-based sharing pose security vulnerabilities?<br>
-c. Remapping hot I/O pages to low memory can be a bottleneck if the page number is high. How does modern hypervisor solution cope with this issue?</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/os>os</a>
+<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a></nav><main class=main><section id=single><h1 class=title>Memory Resource Management in VMware ESX Server</h1><div class=tip><time datetime="2020-09-21 00:00:00 +0000 UTC">Sep 21, 2020</time>
+<span class=split>·</span>
+<span>3 minute read</span></div><div class=content><p><a href=https://www.vmware.com/products/esxi-and-esx.html target=_blank rel=noopener>VMWare ESX Server</a> is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to <a href=https://www.vmware.com/products/workstation-pro.html target=_blank rel=noopener>VMware Workstation</a>, is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.</p><blockquote><p>Memory Virtualization is done by interposing an extra abstraction layer between a <code>physical address</code> from the VM&rsquo;s point of view, and a <code>machine address</code> which represents the actual hardware memory. ESX Server maintains a <em>pmap</em> data structure for each VM to translate PPMs to MPNs. A separate <em>shadow page table</em>, consistent with the physical-to-machine mappings, is used to map virtual-to-machine page mappings. This avoids additional overheads as the hardware TLB will cache direct virtual-to-machine address translations read from the shadow page table.</p></blockquote><h2 id=key-features>Key features <a href=#key-features class=anchor>🔗</a></h2><p><p class=markdown-image><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ESXServer/ballooning.png alt=vmware-esx-server-memory></p></p><p><strong>Ballooning</strong> is a technique used by the server to achieve memory reclamation. As its name suggests, the hypervisor inflates the balloon by instructing the balloon driver module to allocate pinned physical pages and deflates it by instructing it to deallocate previously-allocated pages. The idea behind this technique is that the hypervisor is unaware of the specific usage patterns of policies of its guests, therefore the making page replacement decisions is best done in the guest VM. When the hypervisor over commits memory, it needs some way to claim memories from the VMs. By consuming some of the memory that the guest OS believes is physically present in the virtual machine. The guest OS will then swap memory to disk reducing the load on the host&rsquo;s physical memory. The host will them reallocate that memory to other VMs. A details description of ballooning can be found in this <a href=https://www.vladan.fr/what-is-vmware-memory-ballooning/ target=_blank rel=noopener>post</a>.</p><p><a href=https://www.vmware.com/pdf/usenix_resource_mgmt.pdf target=_blank rel=noopener><p class=markdown-image><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ESXServer/pghash.png#center alt=vmware-esx-server-page-coloring></p></a></p><blockquote><p>Page Coloring can be used to reduce cache misses or partition resources. But it might complicates memory management, especially with the presence of huge pages. Because coloring enforces ownership, thus might result in distinct L2 cache entries.</p></blockquote><p><strong>Sharing memory</strong> is achieved by comparing the content of each page, since modifying guest operating system internals is not possible. Because comparing each page would be \(O(n^2)\), hashing is used to identify pages to make the progress more efficiently. By letting VMs share pages based the contents, the host can potentially save spaces dramatically. For example, the presence of zero pages is a great opportunity for page sharing by mapping one zero page to multiple VMs. Hint is hash hit, but it doesn&rsquo;t guarantee the content of the page doesn&rsquo;t change at that moment.</p><p><strong>Idle Memory</strong> presents a problem in pure proportional-share algorithms because they do not incorporate any information about active memory usage. More specifically, the memory demand might change dynamically. ESX Server collects <em>idle memory tax</em> from VMs to mitigate this issue. A client is charged more for an idle page than the active one. The cost of idle memory is inflated by tax rate. The metrics of idles pages in guests is collected by hypervisor without guests' involvement. The idle page information in virtual page table inside VMs is periodically sampled on random bases.</p><h2 id=questions>Questions <a href=#questions class=anchor>🔗</a></h2><p>a. What is the overhead of ballooning? Triggering memory management in the VM by &ldquo;tricking&rdquo; it into thinking the the memory resource is scarce/plentiful may have unexpected behaviors.<br>b. Do content-based sharing pose security vulnerabilities?<br>c. Remapping hot I/O pages to low memory can be a bottleneck if the page number is high. How does modern hypervisor solution cope with this issue?</p></div><div class=tags><a href=https://www.bodunhu.com/blog/tags/os>os</a>
 <a href=https://www.bodunhu.com/blog/tags/virtualization>virtualization</a>
-<a href=https://www.bodunhu.com/blog/tags/mm>mm</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div class=copyright>
-©
+<a href=https://www.bodunhu.com/blog/tags/mm>mm</a></div><div id=comment><script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></section></main><footer id=footer><div class=copyright>©
 2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
-</footer>
-</body>
-</html>
+<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.</div><div class=powerby>Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a></div><a href=#top aria-label="go to top" title="Go to Top (Alt + G)"><button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button></a></footer></body></html>

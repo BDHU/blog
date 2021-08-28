@@ -1,70 +1,17 @@
-<!doctype html><html lang=en-us>
-<head>
-<title>Deploy Hugo Site to GitHub Pages | std::bodun::blog</title>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="This post assume the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for GitHub Pages.
+<!doctype html><html lang=en-us><head><title>Deploy Hugo Site to GitHub Pages | std::bodun::blog</title><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="This post assume the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for GitHub Pages.
  Test Hugo site by executing hugo server in the source code directory to make sure the site is generated properly.
  Then, we need to generate a pair of keys by using the following command:
-ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N &#34;&#34; This will create two files: deployment and deployment.">
-<meta name=generator content="Hugo 0.87.0">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Deploy Hugo Site to GitHub Pages">
-<meta name=twitter:description content="This post assume the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for GitHub Pages.
+ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N &#34;&#34; This will create two files: deployment and deployment."><meta name=generator content="Hugo 0.83.0"><meta name=ROBOTS content="INDEX, FOLLOW"><link rel=stylesheet href=/blog/css/style.css><link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script><script async src=https://www.google-analytics.com/analytics.js></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script><meta name=twitter:card content="summary"><meta name=twitter:title content="Deploy Hugo Site to GitHub Pages"><meta name=twitter:description content="This post assume the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for GitHub Pages.
  Test Hugo site by executing hugo server in the source code directory to make sure the site is generated properly.
  Then, we need to generate a pair of keys by using the following command:
-ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N &#34;&#34; This will create two files: deployment and deployment.">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
-</head>
-<body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
+ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N &#34;&#34; This will create two files: deployment and deployment."><meta name=twitter:site content="@https://twitter.com/BodunHu"><script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script></head><body><nav class=navigation><a href=/blog/><span class=arrow>←</span>Home</a>
 <a href=/blog/posts>Archive</a>
 <a href=/blog/tags>Tags</a>
 <a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Deploy Hugo Site to GitHub Pages</h1>
-<div class=tip>
-<time datetime="2021-08-27 00:00:00 +0000 UTC">Aug 27, 2021</time>
-<span class=split>
-·
-</span>
-<span>
-2 minute read
-</span>
-</div>
-<div class=content>
-<p>This post assume the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for <a href=https://pages.github.com/ target=_blank rel=noopener>GitHub Pages</a>.</p>
-<blockquote>
-<p>Test Hugo site by executing <code>hugo server</code> in the source code directory to make sure the site is generated properly.</p>
-</blockquote>
-<p>Then, we need to generate a pair of keys by using the following command:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ssh-keygen -t rsa -b <span style=color:#666>4096</span> -C <span style=color:#b44>&#34;</span><span style=color:#a2f;font-weight:700>$(</span>git config user.email<span style=color:#a2f;font-weight:700>)</span><span style=color:#b44>&#34;</span> -f deployment -N <span style=color:#b44>&#34;&#34;</span>
-</code></pre></div><p>This will create two files: <code>deployment</code> and <code>deployment.pub</code>, which corresponds to a private key and a public key.</p>
-<p>Next, execute <code>cat deployment</code> and copy the private key. Navigate to the private <em>source repository -> Settings -> Secrets -> New repository secret</em>. Paste the private key and save the change.</p>
-<p><p class=markdown-image>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-actions-secrets.png alt=Github-actions-secrets>
-</p></p>
-<p>I&rsquo;ve already added the private key to the source directory and named it <code>PRIVATE_KEY</code>. You can named it however you want.</p>
-<p>Then, we go to the public repository for hosting our website. Navigate to the public <em>site repository -> Settings -> Deploy keys -> Add deploy key</em>. Execute <code>cat deployment.pub</code> and copy paste the result. You should see a SSH key added:</p>
-<p><p class=markdown-image>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-keys.png alt=Github-keys>
-</p></p>
-<p>Finally, create a directory in the private repository in the following directory: <code>.github/workflows/deploy.yml</code>.</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>github pages<span style=color:#bbb>
+<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a></nav><main class=main><section id=single><h1 class=title>Deploy Hugo Site to GitHub Pages</h1><div class=tip><time datetime="2021-08-27 00:00:00 +0000 UTC">Aug 27, 2021</time>
+<span class=split>·</span>
+<span>2 minute read</span></div><div class=content><p>This post assume the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for <a href=https://pages.github.com/ target=_blank rel=noopener>GitHub Pages</a>.</p><blockquote><p>Test Hugo site by executing <code>hugo server</code> in the source code directory to make sure the site is generated properly.</p></blockquote><p>Then, we need to generate a pair of keys by using the following command:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ssh-keygen -t rsa -b <span style=color:#666>4096</span> -C <span style=color:#b44>&#34;</span><span style=color:#a2f;font-weight:700>$(</span>git config user.email<span style=color:#a2f;font-weight:700>)</span><span style=color:#b44>&#34;</span> -f deployment -N <span style=color:#b44>&#34;&#34;</span>
+</code></pre></div><p>This will create two files: <code>deployment</code> and <code>deployment.pub</code>, which corresponds to a private key and a public key.</p><p>Next, execute <code>cat deployment</code> and copy the private key. Navigate to the private <em>source repository -> Settings -> Secrets -> New repository secret</em>. Paste the private key and save the change.</p><p><p class=markdown-image><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-actions-secrets.png alt=Github-actions-secrets></p></p><p>I&rsquo;ve already added the private key to the source directory and named it <code>PRIVATE_KEY</code>. You can named it however you want.</p><p>Then, we go to the public repository for hosting our website. Navigate to the public <em>site repository -> Settings -> Deploy keys -> Add deploy key</em>. Execute <code>cat deployment.pub</code> and copy paste the result. You should see a SSH key added:</p><p><p class=markdown-image><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-keys.png alt=Github-keys></p></p><p>Finally, create a directory in the private repository in the following directory: <code>.github/workflows/deploy.yml</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>github pages<span style=color:#bbb>
 </span><span style=color:#bbb>
 </span><span style=color:#bbb></span><span style=color:green;font-weight:700>on</span>:<span style=color:#bbb>
 </span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>push</span>:<span style=color:#bbb>
@@ -98,30 +45,7 @@ ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N
 </span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>external_repository</span>:<span style=color:#bbb> </span>your_username/public_repository_name<span style=color:#bbb>
 </span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>publish_branch</span>:<span style=color:#bbb> </span>branch_to_publish<span style=color:#bbb>
 </span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>publish_dir</span>:<span style=color:#bbb> </span>./public<span style=color:#bbb>
-</span></code></pre></div><p>Finally, make sure you create a file named <code>.nojekyll</code> in the root directory of the public repository to prevent GitHub Pages from building the site using Jekyll.</p>
-<p>Every time you make commits to the private repository, the site will be automatically generated and published on the public repository.</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/hugo>hugo</a>
-<a href=https://www.bodunhu.com/blog/tags/how-to>how-to</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div class=copyright>
-©
+</span></code></pre></div><p>Finally, make sure you create a file named <code>.nojekyll</code> in the root directory of the public repository to prevent GitHub Pages from building the site using Jekyll.</p><p>Every time you make commits to the private repository, the site will be automatically generated and published on the public repository.</p></div><div class=tags><a href=https://www.bodunhu.com/blog/tags/hugo>hugo</a>
+<a href=https://www.bodunhu.com/blog/tags/how-to>how-to</a></div><div id=comment><script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></section></main><footer id=footer><div class=copyright>©
 2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
-</footer>
-</body>
-</html>
+<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.</div><div class=powerby>Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a></div><a href=#top aria-label="go to top" title="Go to Top (Alt + G)"><button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button></a></footer></body></html>

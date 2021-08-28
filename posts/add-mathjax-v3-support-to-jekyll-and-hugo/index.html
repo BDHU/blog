@@ -1,55 +1,11 @@
-<!doctype html><html lang=en-us>
-<head>
-<title>Add MathJax v3 Support to Jekyll and Hugo | std::bodun::blog</title>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="I was using Mathjax v2 for a while and I heard v3 perform significantly better than v2. Many great tutorials explains explains how to add Mathjax support to Jekyll websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website (Recently I've migrated to Hugo but adding support to Hugo is also pretty similar)">
-<meta name=generator content="Hugo 0.87.0">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Add MathJax v3 Support to Jekyll and Hugo">
-<meta name=twitter:description content="I was using Mathjax v2 for a while and I heard v3 perform significantly better than v2. Many great tutorials explains explains how to add Mathjax support to Jekyll websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website (Recently I've migrated to Hugo but adding support to Hugo is also pretty similar)">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
-</head>
-<body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
+<!doctype html><html lang=en-us><head><title>Add MathJax v3 Support to Jekyll and Hugo | std::bodun::blog</title><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="I was using Mathjax v2 for a while and I heard v3 perform significantly better than v2. Many great tutorials explains explains how to add Mathjax support to Jekyll websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website (Recently I've migrated to Hugo but adding support to Hugo is also pretty similar)"><meta name=generator content="Hugo 0.83.0"><meta name=ROBOTS content="INDEX, FOLLOW"><link rel=stylesheet href=/blog/css/style.css><link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script><script async src=https://www.google-analytics.com/analytics.js></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script><meta name=twitter:card content="summary"><meta name=twitter:title content="Add MathJax v3 Support to Jekyll and Hugo"><meta name=twitter:description content="I was using Mathjax v2 for a while and I heard v3 perform significantly better than v2. Many great tutorials explains explains how to add Mathjax support to Jekyll websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website (Recently I've migrated to Hugo but adding support to Hugo is also pretty similar)"><meta name=twitter:site content="@https://twitter.com/BodunHu"><script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script></head><body><nav class=navigation><a href=/blog/><span class=arrow>←</span>Home</a>
 <a href=/blog/posts>Archive</a>
 <a href=/blog/tags>Tags</a>
 <a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Add MathJax v3 Support to Jekyll and Hugo</h1>
-<div class=tip>
-<time datetime="2020-10-22 00:00:00 +0000 UTC">Oct 22, 2020</time>
-<span class=split>
-·
-</span>
-<span>
-2 minute read
-</span>
-</div>
-<div class=content>
-<p>I was using Mathjax v2 for a while and I heard v3 perform significantly better than v2. Many great tutorials explains explains how to add Mathjax support to <a href=https://jekyllrb.com/ target=_blank rel=noopener>Jekyll</a> websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website (Recently I&rsquo;ve migrated to <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> but adding support to Hugo is also pretty similar).</p>
-<ul>
-<li>In the <code>_config.yml</code> located in your root directory, add this line:</li>
-</ul>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>markdown: kramdown
-</code></pre></div><ul>
-<li>Create a file called <code>mathjax.html</code> insides <code>_includes/</code>, add these lines (these settings come from the Mathjax <a href=https://docs.mathjax.org/en/latest/web/configuration.html target=_blank rel=noopener>documentation</a>):</li>
-</ul>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>&lt;script&gt;
+<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a></nav><main class=main><section id=single><h1 class=title>Add MathJax v3 Support to Jekyll and Hugo</h1><div class=tip><time datetime="2020-10-22 00:00:00 +0000 UTC">Oct 22, 2020</time>
+<span class=split>·</span>
+<span>2 minute read</span></div><div class=content><p>I was using Mathjax v2 for a while and I heard v3 perform significantly better than v2. Many great tutorials explains explains how to add Mathjax support to <a href=https://jekyllrb.com/ target=_blank rel=noopener>Jekyll</a> websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website (Recently I&rsquo;ve migrated to <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a> but adding support to Hugo is also pretty similar).</p><ul><li>In the <code>_config.yml</code> located in your root directory, add this line:</li></ul><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>markdown: kramdown
+</code></pre></div><ul><li>Create a file called <code>mathjax.html</code> insides <code>_includes/</code>, add these lines (these settings come from the Mathjax <a href=https://docs.mathjax.org/en/latest/web/configuration.html target=_blank rel=noopener>documentation</a>):</li></ul><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>&lt;script&gt;
 MathJax = {
   tex: {
     inlineMath: [ [&#39;$&#39;, &#39;$&#39;], [&#39;\\(&#39;, &#39;\\)&#39;] ]
@@ -63,45 +19,17 @@ MathJax = {
   type=&#34;text/javascript&#34; id=&#34;MathJax-script&#34; async
   src=&#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js&#34;&gt;
 &lt;/script&gt;
-</code></pre></div><p>For Hugo website, the script will be exactly the same. The only difference is instead of putting <code>mathjax.html</code> into <code>_includes/</code>, you would want to put it inside <code>layouts/partials</code>. For example, I put my <code>mathjax.html</code> into the theme directory <code>themes/mini/layouts/partials</code>.</p>
-<p>For Jekyll, add this line in your <code>_includes/head.html</code> before <code>&lt;/head></code>:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>{% include mathjax.html &gt;}}
-</code></pre></div><p>For Hugo, we would add the following line to <code>layouts/partials/header.html</code> before <code>&lt;/head></code> in your theme&rsquo;s <code>layouts/partials/header.html</code>.</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>{{ partial &#34;mathjax.html&#34; . }}
-</code></pre></div><p>Now you can write in-line math equations in your markdown file like:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>\\(f(x) = x^2\\)
-</code></pre></div><p>or</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>$f(x) = x^2$
+</code></pre></div><p>For Hugo website, the script will be exactly the same. The only difference is instead of putting <code>mathjax.html</code> into <code>_includes/</code>, you would want to put it inside <code>layouts/partials</code>. For example, I put my <code>mathjax.html</code> into the theme directory <code>themes/mini/layouts/partials</code>.</p><p>For Jekyll, add this line in your <code>_includes/head.html</code> before <code>&lt;/head></code>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>{% include mathjax.html &gt;}}
+</code></pre></div><p>For Hugo, we would add the following line to <code>layouts/partials/header.html</code> before <code>&lt;/head></code> in your theme&rsquo;s <code>layouts/partials/header.html</code>.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>{{ partial &#34;mathjax.html&#34; . }}
+</code></pre></div><p>Now you can write in-line math equations in your markdown file like:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>\\(f(x) = x^2\\)
+</code></pre></div><p>or</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>$f(x) = x^2$
 </code></pre></div><p>The above text will be render to:
-\(f(x) = x^2\)</p>
-<p>If you are already using Mathjax v2 and wish to just convert it to v3, you may also try this configuration <a href=https://mathjax.github.io/MathJax-demos-web/convert-configuration/convert-configuration.html target=_blank rel=noopener>converter</a>. There is a much more detailed <a href=https://docs.mathjax.org/en/latest/upgrading/v2.html target=_blank rel=noopener>guide</a> but it may contain information unnecessary to average Hugo or Jekyll users.html) how to migrate from mathjax v2 to v3. The most useful resource is the official Mathjax <a href=https://docs.mathjax.org/en/latest/ target=_blank rel=noopener>documentation</a>.</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/web>web</a>
+\(f(x) = x^2\)</p><p>If you are already using Mathjax v2 and wish to just convert it to v3, you may also try this configuration <a href=https://mathjax.github.io/MathJax-demos-web/convert-configuration/convert-configuration.html target=_blank rel=noopener>converter</a>. There is a much more detailed <a href=https://docs.mathjax.org/en/latest/upgrading/v2.html target=_blank rel=noopener>guide</a> but it may contain information unnecessary to average Hugo or Jekyll users.html) how to migrate from mathjax v2 to v3. The most useful resource is the official Mathjax <a href=https://docs.mathjax.org/en/latest/ target=_blank rel=noopener>documentation</a>.</p></div><div class=tags><a href=https://www.bodunhu.com/blog/tags/web>web</a>
 <a href=https://www.bodunhu.com/blog/tags/other>other</a>
 <a href=https://www.bodunhu.com/blog/tags/how-to>how-to</a>
 <a href=https://www.bodunhu.com/blog/tags/jekyll>jekyll</a>
 <a href=https://www.bodunhu.com/blog/tags/hugo>hugo</a>
 <a href=https://www.bodunhu.com/blog/tags/markdown>markdown</a>
-<a href=https://www.bodunhu.com/blog/tags/mathjax>mathjax</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div class=copyright>
-©
+<a href=https://www.bodunhu.com/blog/tags/mathjax>mathjax</a></div><div id=comment><script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></section></main><footer id=footer><div class=copyright>©
 2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
-</footer>
-</body>
-</html>
+<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.</div><div class=powerby>Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a></div><a href=#top aria-label="go to top" title="Go to Top (Alt + G)"><button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button></a></footer></body></html>

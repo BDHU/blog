@@ -1,79 +1,10 @@
-<!doctype html><html lang=en-us>
-<head>
-<title>Singular Value Decomposition | std::bodun::blog</title>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor [Robert van de Geijn](https://www.cs.utexas.edu/~rvdg/). This is a brief summary over the important concepts covered in Chapter 2">
-<meta name=generator content="Hugo 0.87.0">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Singular Value Decomposition">
-<meta name=twitter:description content="Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor [Robert van de Geijn](https://www.cs.utexas.edu/~rvdg/). This is a brief summary over the important concepts covered in Chapter 2">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
-</head>
-<body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
+<!doctype html><html lang=en-us><head><title>Singular Value Decomposition | std::bodun::blog</title><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor [Robert van de Geijn](https://www.cs.utexas.edu/~rvdg/). This is a brief summary over the important concepts covered in Chapter 2"><meta name=generator content="Hugo 0.83.0"><meta name=ROBOTS content="INDEX, FOLLOW"><link rel=stylesheet href=/blog/css/style.css><link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script><script async src=https://www.google-analytics.com/analytics.js></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script><meta name=twitter:card content="summary"><meta name=twitter:title content="Singular Value Decomposition"><meta name=twitter:description content="Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor [Robert van de Geijn](https://www.cs.utexas.edu/~rvdg/). This is a brief summary over the important concepts covered in Chapter 2"><meta name=twitter:site content="@https://twitter.com/BodunHu"><script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script></head><body><nav class=navigation><a href=/blog/><span class=arrow>←</span>Home</a>
 <a href=/blog/posts>Archive</a>
 <a href=/blog/tags>Tags</a>
 <a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Singular Value Decomposition</h1>
-<div class=tip>
-<time datetime="2020-02-10 00:00:00 +0000 UTC">Feb 10, 2020</time>
-<span class=split>
-·
-</span>
-<span>
-2 minute read
-</span>
-</div>
-<div class=content>
-<p>Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor <a href=https://www.cs.utexas.edu/~rvdg/ target=_blank rel=noopener>Robert van de Geijn</a>. This is a brief summary over the important concepts covered in Chapter 2.</p>
-<h2 id=components-in-the-direction-of-a-vector>Components in the direction of a vector <a href=#components-in-the-direction-of-a-vector class=anchor>🔗</a></h2><p>By Pythagorean theorem, we know that \(b = \chi a + c\) where \(a\) is a unit vector orthogonal to \(c\) and \(\chi\) is a scaler. Then we have</p>
-<p>$$a^T (b-\chi a) = 0$$</p>
-<p>Solving it gives us \(\chi = \frac{a^T b}{a^T a}\). We have \(\frac{a^T b}{a^T a}a = \frac{a a^T}{a^T a}b\). And \(\frac{a a^T}{a^T a}\) can map vector \(b\) in the direction of \(a\). The orthogonal component of \(a\) can thus be calculated as \(I-\frac{a a^T}{a^T a}\).</p>
-<p>The linear transformation can be simplified by letting \(\left\lVert a\right\rVert_{2}=1\) because this will render \(a^T a = 1\).</p>
-<h2 id=unitary-matrix>Unitary Matrix <a href=#unitary-matrix class=anchor>🔗</a></h2><p>A matrix \(U\) is said to unitary matrix is if \(U\) is a square matrix and satisfies \(U^H U= I\).</p>
-<p>In addition, unitary matrix has some nice properties. First, the product of a sequence of unitary matrix is also unitary matrix. This can be proven by first explore the product of \((U_0 U_1)^H (U_0 U_1)= I\), showing \(U_0 U_1\) is a unitary matrix, and then perform induction.</p>
-<p>Unitary matrix also preserves <strong>length</strong>. This is done by showing \(\left\lVert Ux \right\rVert 2^2 = (Ux)^H (Ux) = x^H x= \left\lVert x \right\rVert _2^2\).</p>
-<h2 id=change-of-orthonormal-basis>Change of orthonormal basis <a href=#change-of-orthonormal-basis class=anchor>🔗</a></h2><p>We mentioned we can map a vector \(x\) another vector in the same direction as vector \(a\). Now we extend it to express a vector \(x\) using a set of orthonormal basis \(U\).</p>
-<p>We know that \(x = Ix= UU^Tx=U(U^Tx)=u_0^Hxu_0+&mldr;+u_{m-1}^Hxu_{m-1}\). We notice that \(u_0^Hx\) is a scalar so we can write then equation as \(U(U^Tx)=a_0u_0+&mldr;+a_{m-1}u_{m-1}\). We successfully expressed the vector \(x\) based on the orthonormal basis.</p>
-<h2 id=todo>TODO <a href=#todo class=anchor>🔗</a></h2>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/algorithm>algorithm</a>
-<a href=https://www.bodunhu.com/blog/tags/linear-algebra>linear-algebra</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div class=copyright>
-©
+<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a></nav><main class=main><section id=single><h1 class=title>Singular Value Decomposition</h1><div class=tip><time datetime="2020-02-10 00:00:00 +0000 UTC">Feb 10, 2020</time>
+<span class=split>·</span>
+<span>2 minute read</span></div><div class=content><p>Unitary matrices and the Singular Value Decomposition (SVD) are two important concepts in linear algebra. In order to fully understand these concepts, we will need to first discuss orthogonality. Most materials are converted in Advanced Linear Algebra: Foundations to Frontiers taught by professor <a href=https://www.cs.utexas.edu/~rvdg/ target=_blank rel=noopener>Robert van de Geijn</a>. This is a brief summary over the important concepts covered in Chapter 2.</p><h2 id=components-in-the-direction-of-a-vector>Components in the direction of a vector <a href=#components-in-the-direction-of-a-vector class=anchor>🔗</a></h2><p>By Pythagorean theorem, we know that \(b = \chi a + c\) where \(a\) is a unit vector orthogonal to \(c\) and \(\chi\) is a scaler. Then we have</p><p>$$a^T (b-\chi a) = 0$$</p><p>Solving it gives us \(\chi = \frac{a^T b}{a^T a}\). We have \(\frac{a^T b}{a^T a}a = \frac{a a^T}{a^T a}b\). And \(\frac{a a^T}{a^T a}\) can map vector \(b\) in the direction of \(a\). The orthogonal component of \(a\) can thus be calculated as \(I-\frac{a a^T}{a^T a}\).</p><p>The linear transformation can be simplified by letting \(\left\lVert a\right\rVert_{2}=1\) because this will render \(a^T a = 1\).</p><h2 id=unitary-matrix>Unitary Matrix <a href=#unitary-matrix class=anchor>🔗</a></h2><p>A matrix \(U\) is said to unitary matrix is if \(U\) is a square matrix and satisfies \(U^H U= I\).</p><p>In addition, unitary matrix has some nice properties. First, the product of a sequence of unitary matrix is also unitary matrix. This can be proven by first explore the product of \((U_0 U_1)^H (U_0 U_1)= I\), showing \(U_0 U_1\) is a unitary matrix, and then perform induction.</p><p>Unitary matrix also preserves <strong>length</strong>. This is done by showing \(\left\lVert Ux \right\rVert 2^2 = (Ux)^H (Ux) = x^H x= \left\lVert x \right\rVert _2^2\).</p><h2 id=change-of-orthonormal-basis>Change of orthonormal basis <a href=#change-of-orthonormal-basis class=anchor>🔗</a></h2><p>We mentioned we can map a vector \(x\) another vector in the same direction as vector \(a\). Now we extend it to express a vector \(x\) using a set of orthonormal basis \(U\).</p><p>We know that \(x = Ix= UU^Tx=U(U^Tx)=u_0^Hxu_0+&mldr;+u_{m-1}^Hxu_{m-1}\). We notice that \(u_0^Hx\) is a scalar so we can write then equation as \(U(U^Tx)=a_0u_0+&mldr;+a_{m-1}u_{m-1}\). We successfully expressed the vector \(x\) based on the orthonormal basis.</p><h2 id=todo>TODO <a href=#todo class=anchor>🔗</a></h2></div><div class=tags><a href=https://www.bodunhu.com/blog/tags/algorithm>algorithm</a>
+<a href=https://www.bodunhu.com/blog/tags/linear-algebra>linear-algebra</a></div><div id=comment><script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></section></main><footer id=footer><div class=copyright>©
 2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
-</footer>
-</body>
-</html>
+<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.</div><div class=powerby>Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a></div><a href=#top aria-label="go to top" title="Go to Top (Alt + G)"><button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button></a></footer></body></html>
