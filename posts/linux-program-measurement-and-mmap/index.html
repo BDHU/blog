@@ -1,154 +1,10 @@
-<!doctype html><html lang=en-us>
-<head>
-<title>Linux Program Measurement and mmap | std::bodun::blog</title>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to [cpu world](http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html) for more info">
-<meta name=generator content="Hugo 0.87.0">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<link rel=stylesheet href=https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.css integrity=sha384-RZU/ijkSsFbcmivfdRBQDtwuwVqK7GMOw6IMvKyeWL2K5UAlyp6WonmB8m7Jd0Hn crossorigin=anonymous>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/katex.min.js integrity=sha384-pK1WpvzWVBQiP0/GjnvRxV4mOb0oxFuyRxJlk6vVw146n3egcN5C925NCP7a7BY8 crossorigin=anonymous></script>
-<script defer src=https://cdn.jsdelivr.net/npm/katex@0.13.13/dist/contrib/auto-render.min.js integrity=sha384-vZTG03m+2yp6N6BNi5iM4rW4oIwk5DfcNdFfxkk9ZWpDriOkXX8voJBFrAO7MpVl crossorigin=anonymous onload=renderMathInElement(document.body)></script>
-</head>
-<body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
+<!doctype html><html lang=en-us><head><title>Linux Program Measurement and mmap | std::bodun::blog</title><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to [cpu world](http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html) for more info"><meta name=generator content="Hugo 0.83.0"><meta name=ROBOTS content="INDEX, FOLLOW"><link rel=stylesheet href=/blog/css/style.css><link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script><script async src=https://www.google-analytics.com/analytics.js></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script><meta name=twitter:card content="summary"><meta name=twitter:title content="Linux Program Measurement and mmap"><meta name=twitter:description content="This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to [cpu world](http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html) for more info"><meta name=twitter:site content="@https://twitter.com/BodunHu"><script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script></head><body><nav class=navigation><a href=/blog/><span class=arrow>←</span>Home</a>
 <a href=/blog/posts>Archive</a>
 <a href=/blog/tags>Tags</a>
-<a href=/blog/about>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Linux Program Measurement and mmap</h1>
-<div class=tip>
-<time datetime="2020-09-23 00:00:00 +0000 UTC">Sep 23, 2020</time>
-<span class=split>
-·
-</span>
-<span>
-4734 words
-</span>
-<span class=split>
-·
-</span>
-<span>
-23 minute read
-</span>
-</div>
-<aside class=toc>
-<details>
-<summary>Table of Contents
-</summary>
-<div>
-<nav id=TableOfContents>
-<ul>
-<li><a href=#memory-map>Memory Map</a></li>
-<li><a href=#getrusage>getrusage</a></li>
-<li><a href=#perf_event_open>perf_event_open</a></li>
-<li><a href=#monitor-events>Monitor Events</a></li>
-<li><a href=#mmap>mmap</a></li>
-<li><a href=#strace>strace</a></li>
-<li><a href=#competing-for-memory>Competing for Memory</a></li>
-</ul>
-</nav>
-</div>
-</details>
-</aside>
-<div class=content>
-<p>This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to <a href=http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html target=_blank rel=noopener>cpu world</a>. This is the system spec:</p>
-<table>
-<thead>
-<tr>
-<th>Attribute</th>
-<th style=text-align:center>Value</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Processor name (BIOS)</td>
-<td style=text-align:center>Intel(R) Core(TM) i7-6800K CPU @ 3.40GHz</td>
-</tr>
-<tr>
-<td>Cores</td>
-<td style=text-align:center>6</td>
-</tr>
-<tr>
-<td>Logical processors</td>
-<td style=text-align:center>12</td>
-</tr>
-<tr>
-<td>TLB/Cache details</td>
-<td style=text-align:center>64-byte Prefetching Data TLB: 1-GB pages, 4-way set associative, 4 entries Data TLB: 4-KB Pages, 4-way set associative, 64 entries Instruction TLB: 4-KByte pages, 8-way set associative, 64 entries L2 TLB: 1-MB, 4-way set associative, 64-byte line size Shared 2nd-Level TLB: 4-KB / 2-MB pages, 6-way associative, 1536 entries. Plus, 1-GB pages, 4-way, 16 entries</td>
-</tr>
-<tr>
-<td>RAM</td>
-<td style=text-align:center>32GB</td>
-</tr>
-<tr>
-<td>Operating System</td>
-<td style=text-align:center>Ubuntu 20.04.1 LTS</td>
-</tr>
-<tr>
-<td>Kernel Version</td>
-<td style=text-align:center>5.4.0-47-generic</td>
-</tr>
-</tbody>
-</table>
-<p><br></p>
-<blockquote>
-<p>8-way set associative means the CPU cache is made up of sets that can fit 8 blocks each.</p>
-</blockquote>
-<p>Here are the details for the CPU cache, which we will need later:</p>
-<table>
-<thead>
-<tr>
-<th>Cache</th>
-<th>L1 data</th>
-<th>L1 instruction</th>
-<th>L2</th>
-<th>L3</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Size</td>
-<td>6 x 32 KB</td>
-<td>6 x 32 KB</td>
-<td>6 x 256 KB</td>
-<td>15 MB</td>
-</tr>
-<tr>
-<td>Associativity</td>
-<td>8-way set associative</td>
-<td>8-way set associative</td>
-<td>8-way set associative</td>
-<td>20-way set associative</td>
-</tr>
-<tr>
-<td>Line size:</td>
-<td>64 bytes</td>
-<td>64 bytes</td>
-<td>64 bytes</td>
-<td>64 bytes</td>
-</tr>
-<tr>
-<td>Comments:</td>
-<td>Direct-mapped</td>
-<td>Direct-mapped</td>
-<td>Non-inclusive Direct-mapped</td>
-<td>Inclusive Shared between all cores</td>
-</tr>
-</tbody>
-</table>
-<p><br></p>
-<h2 id=memory-map>Memory Map <a href=#memory-map class=anchor>🔗</a></h2><p>To print the <code>/proc/self/maps</code> file for a process, we use the <code>sprintf</code> to construct the file name and then use the <code>system</code> from stdlib to cat the contents of the running process&rsquo;s address space. If we execute the program, it shows (also available on <a href=https://gist.github.com/BDHU/9ad2f0b6353b789cfb7c29c804a6088a#file-proc_mem_map target=_blank rel=noopener>gist</a>)</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>address                   perms offset  dev   inode                      pathname
+<a href=https://www.bodunhu.com/>About</a>
+<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a></nav><main class=main><section id=single><h1 class=title>Linux Program Measurement and mmap</h1><div class=tip><time datetime="2020-09-23 00:00:00 +0000 UTC">Sep 23, 2020</time>
+<span class=split>·</span>
+<span>23 minute read</span></div><aside class=toc><details><summary>Table of Contents</summary><div><nav id=TableOfContents><ul><li><a href=#memory-map>Memory Map</a></li><li><a href=#getrusage>getrusage</a></li><li><a href=#perf_event_open>perf_event_open</a></li><li><a href=#monitor-events>Monitor Events</a></li><li><a href=#mmap>mmap</a></li><li><a href=#strace>strace</a></li><li><a href=#competing-for-memory>Competing for Memory</a></li></ul></nav></div></details></aside><div class=content><p>This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to <a href=http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html target=_blank rel=noopener>cpu world</a>. This is the system spec:</p><table><thead><tr><th>Attribute</th><th style=text-align:center>Value</th></tr></thead><tbody><tr><td>Processor name (BIOS)</td><td style=text-align:center>Intel(R) Core(TM) i7-6800K CPU @ 3.40GHz</td></tr><tr><td>Cores</td><td style=text-align:center>6</td></tr><tr><td>Logical processors</td><td style=text-align:center>12</td></tr><tr><td>TLB/Cache details</td><td style=text-align:center>64-byte Prefetching Data TLB: 1-GB pages, 4-way set associative, 4 entries Data TLB: 4-KB Pages, 4-way set associative, 64 entries Instruction TLB: 4-KByte pages, 8-way set associative, 64 entries L2 TLB: 1-MB, 4-way set associative, 64-byte line size Shared 2nd-Level TLB: 4-KB / 2-MB pages, 6-way associative, 1536 entries. Plus, 1-GB pages, 4-way, 16 entries</td></tr><tr><td>RAM</td><td style=text-align:center>32GB</td></tr><tr><td>Operating System</td><td style=text-align:center>Ubuntu 20.04.1 LTS</td></tr><tr><td>Kernel Version</td><td style=text-align:center>5.4.0-47-generic</td></tr></tbody></table><p><br></p><blockquote><p>8-way set associative means the CPU cache is made up of sets that can fit 8 blocks each.</p></blockquote><p>Here are the details for the CPU cache, which we will need later:</p><table><thead><tr><th>Cache</th><th>L1 data</th><th>L1 instruction</th><th>L2</th><th>L3</th></tr></thead><tbody><tr><td>Size</td><td>6 x 32 KB</td><td>6 x 32 KB</td><td>6 x 256 KB</td><td>15 MB</td></tr><tr><td>Associativity</td><td>8-way set associative</td><td>8-way set associative</td><td>8-way set associative</td><td>20-way set associative</td></tr><tr><td>Line size:</td><td>64 bytes</td><td>64 bytes</td><td>64 bytes</td><td>64 bytes</td></tr><tr><td>Comments:</td><td>Direct-mapped</td><td>Direct-mapped</td><td>Non-inclusive Direct-mapped</td><td>Inclusive Shared between all cores</td></tr></tbody></table><p><br></p><h2 id=memory-map>Memory Map <a href=#memory-map class=anchor>🔗</a></h2><p>To print the <code>/proc/self/maps</code> file for a process, we use the <code>sprintf</code> to construct the file name and then use the <code>system</code> from stdlib to cat the contents of the running process&rsquo;s address space. If we execute the program, it shows (also available on <a href=https://gist.github.com/BDHU/9ad2f0b6353b789cfb7c29c804a6088a#file-proc_mem_map target=_blank rel=noopener>gist</a>)</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>address                   perms offset  dev   inode                      pathname
 559e3e51f000-559e3e520000 r--p 00000000 00:31 1199787                    /mnt/hdd1/Desktop/CS/CS380L/Lab1/a.out
 559e3e520000-559e3e521000 r-xp 00001000 00:31 1199787                    /mnt/hdd1/Desktop/CS/CS380L/Lab1/a.out
 559e3e521000-559e3e522000 r--p 00002000 00:31 1199787                    /mnt/hdd1/Desktop/CS/CS380L/Lab1/a.out
@@ -171,40 +27,11 @@
 7ffcddbe0000-7ffcddbe3000 r--p 00000000 00:00 0                          [vvar]
 7ffcddbe3000-7ffcddbe4000 r-xp 00000000 00:00 0                          [vdso]
 ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
-</code></pre></div><p>Based on the <a href=https://man7.org/linux/man-pages/man5/proc.5.html target=_blank rel=noopener>linux man page</a>, we can see each column has different definition. The <em>address</em> field is the address space in the process that the mapping occupies. The <em>perms</em> field is a set of permissions:</p>
-<ul>
-<li>r = read</li>
-<li>w = write</li>
-<li>x = execute</li>
-<li>s = shared</li>
-<li>p = private (copy on write)</li>
-</ul>
-<p>The <em>offset</em> field is the offset into the file/whatever; <em>dev</em> is the device (major:minor); <em>inode</em> is the inode on that device. 0 indicates that no inode is associated with the memory region, as would be the case with BSS (uninitialized data).</p>
-<p>The <em>pathname</em> field will usually be the file that is backing the mapping. For ELF files, you can easily coordinate with the <em>offset</em> field by looking at the Offset field in the ELF program headers (readelf -l). In addition, we can see a few other pseudo-paths:</p>
-<ul>
-<li>
-<p><em>[stack]</em>: the initial process&rsquo;s (also known as the main thread&rsquo;s) stack.</p>
-</li>
-<li>
-<p><em>[vdso]</em>: The virtual dynamically linked shared object. More detailed descriptions can be found on <a href=https://lwn.net/Articles/615809/ target=_blank rel=noopener>lwn</a>.</p>
-</li>
-<li>
-<p><em>[vvar]</em>: location of kernel space variables mapped in user space needed by virtual system calls. Essentially, a kernel-space physical address is mapped into the userspace.</p>
-</li>
-<li>
-<p><em>[vsyscall]</em>: similar to vDSO, vsyscall is another segment used to accelerate certain system calls in Linux. Vsyscall has some limitations; among other things, there is only space for a handful of virtual system calls. More detailed descriptions can be found on <a href=https://lwn.net/Articles/446528/ target=_blank rel=noopener>lwn</a>.</p>
-</li>
-</ul>
-<p>One thing interesting here is that when we execute the same program twice, we can see after the first run, the output is</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>7fffbc92f000-7fffbc930000 r-xp 00000000 00:00 0                          [vdso]
+</code></pre></div><p>Based on the <a href=https://man7.org/linux/man-pages/man5/proc.5.html target=_blank rel=noopener>linux man page</a>, we can see each column has different definition. The <em>address</em> field is the address space in the process that the mapping occupies. The <em>perms</em> field is a set of permissions:</p><ul><li>r = read</li><li>w = write</li><li>x = execute</li><li>s = shared</li><li>p = private (copy on write)</li></ul><p>The <em>offset</em> field is the offset into the file/whatever; <em>dev</em> is the device (major:minor); <em>inode</em> is the inode on that device. 0 indicates that no inode is associated with the memory region, as would be the case with BSS (uninitialized data).</p><p>The <em>pathname</em> field will usually be the file that is backing the mapping. For ELF files, you can easily coordinate with the <em>offset</em> field by looking at the Offset field in the ELF program headers (readelf -l). In addition, we can see a few other pseudo-paths:</p><ul><li><p><em>[stack]</em>: the initial process&rsquo;s (also known as the main thread&rsquo;s) stack.</p></li><li><p><em>[vdso]</em>: The virtual dynamically linked shared object. More detailed descriptions can be found on <a href=https://lwn.net/Articles/615809/ target=_blank rel=noopener>lwn</a>.</p></li><li><p><em>[vvar]</em>: location of kernel space variables mapped in user space needed by virtual system calls. Essentially, a kernel-space physical address is mapped into the userspace.</p></li><li><p><em>[vsyscall]</em>: similar to vDSO, vsyscall is another segment used to accelerate certain system calls in Linux. Vsyscall has some limitations; among other things, there is only space for a handful of virtual system calls. More detailed descriptions can be found on <a href=https://lwn.net/Articles/446528/ target=_blank rel=noopener>lwn</a>.</p></li></ul><p>One thing interesting here is that when we execute the same program twice, we can see after the first run, the output is</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>7fffbc92f000-7fffbc930000 r-xp 00000000 00:00 0                          [vdso]
 ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
-</code></pre></div><p>Type the same command again:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>7ffd6a94d000-7ffd6a94e000 r-xp 00000000 00:00 0                          [vdso]
+</code></pre></div><p>Type the same command again:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>7ffd6a94d000-7ffd6a94e000 r-xp 00000000 00:00 0                          [vdso]
 ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
-</code></pre></div><p>Note that the vDSO area has moved, while the vsyscall page remains at the same location. The location of the vsyscall page is nailed down in the kernel ABI, but the vDSO area - like most other areas in the user-space memory layout - has its location randomized every time it is mapped. The vsyscall is legacy implementation of user-space sys call acceleration. Since it has fixed addresses, it is vulnerable to security issues. Because applications depend on the existence and exact address of that page, most functions are simply removed and replaced by a special trap instruction. More detailed explanation can be found on <a href=https://lwn.net/Articles/446528/ target=_blank rel=noopener>lwn.net</a>.</p>
-<p>Another interesting thing we observed is the base address of the executable (the start of the text section) and the start address of libc is rather different. This is also the result of using ASLR which is used to prevent return-to-libc attack.</p>
-<h2 id=getrusage>getrusage <a href=#getrusage class=anchor>🔗</a></h2><p>Then, we call <code>getrusage</code> at the end of our program and print out the fields. We will need <code>getrusage</code> later. Here is a sample output for some fields inside <code>struct rusage</code>:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>utime: 1306
+</code></pre></div><p>Note that the vDSO area has moved, while the vsyscall page remains at the same location. The location of the vsyscall page is nailed down in the kernel ABI, but the vDSO area - like most other areas in the user-space memory layout - has its location randomized every time it is mapped. The vsyscall is legacy implementation of user-space sys call acceleration. Since it has fixed addresses, it is vulnerable to security issues. Because applications depend on the existence and exact address of that page, most functions are simply removed and replaced by a special trap instruction. More detailed explanation can be found on <a href=https://lwn.net/Articles/446528/ target=_blank rel=noopener>lwn.net</a>.</p><p>Another interesting thing we observed is the base address of the executable (the start of the text section) and the start address of libc is rather different. This is also the result of using ASLR which is used to prevent return-to-libc attack.</p><h2 id=getrusage>getrusage <a href=#getrusage class=anchor>🔗</a></h2><p>Then, we call <code>getrusage</code> at the end of our program and print out the fields. We will need <code>getrusage</code> later. Here is a sample output for some fields inside <code>struct rusage</code>:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>utime: 1306
 stime: 0
 maxrss: 2692
 minflt: 76
@@ -213,21 +40,7 @@ inblock: 0
 oublock: 0
 nvcsw: 2
 nivcsw: 0
-</code></pre></div><p>Here is a short list of descriptions for each of these fields. More detailed information can be found on <a href=https://www.gnu.org/software/libc/manual/html_node/Resource-Usage.html target=_blank rel=noopener>gnu website</a></p>
-<ul>
-<li><strong>utime</strong>: time spent executing user instructions.</li>
-<li><strong>stime</strong>: time spent in operating system code on behalf of processes.</li>
-<li><strong>maxrss</strong>: the maximum resident set size used, in kilobytes. That is, the maximum number of kilobytes of physical memory that processes used simultaneously.</li>
-<li><strong>minflt</strong>: the number of page faults which were serviced without requiring any I/O.</li>
-<li><strong>majflt</strong>: the number of page faults which were serviced by doing I/O.</li>
-<li><strong>inblock</strong>: the number of times the file system had to read from the disk on behalf of processes.</li>
-<li><strong>oublock</strong>: the number of times the file system had to write to the disk on behalf of processes.</li>
-<li><strong>nvcsw</strong>: the number of times processes voluntarily invoked a context switch (usually to wait for some service).</li>
-<li><strong>nivcsw</strong>: the number of times an involuntary context switch took place (because a time slice expired, or another process of higher priority was scheduled).</li>
-</ul>
-<h2 id=perf_event_open>perf_event_open <a href=#perf_event_open class=anchor>🔗</a></h2><p><code>perf_event_open</code> interface is useful to measurement numerous system events. However, glibc doesn&rsquo;t provide wrapper for this system call. Instead, we need to use <code>syscall</code> directly.</p>
-<p>To use <code>perf_event_open</code>, we call create a function wrapper that does the actual syscall for us. Take the example from the <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>Linux man page</a></p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#a2f;font-weight:700>static</span> <span style=color:#0b0;font-weight:700>int</span>
+</code></pre></div><p>Here is a short list of descriptions for each of these fields. More detailed information can be found on <a href=https://www.gnu.org/software/libc/manual/html_node/Resource-Usage.html target=_blank rel=noopener>gnu website</a></p><ul><li><strong>utime</strong>: time spent executing user instructions.</li><li><strong>stime</strong>: time spent in operating system code on behalf of processes.</li><li><strong>maxrss</strong>: the maximum resident set size used, in kilobytes. That is, the maximum number of kilobytes of physical memory that processes used simultaneously.</li><li><strong>minflt</strong>: the number of page faults which were serviced without requiring any I/O.</li><li><strong>majflt</strong>: the number of page faults which were serviced by doing I/O.</li><li><strong>inblock</strong>: the number of times the file system had to read from the disk on behalf of processes.</li><li><strong>oublock</strong>: the number of times the file system had to write to the disk on behalf of processes.</li><li><strong>nvcsw</strong>: the number of times processes voluntarily invoked a context switch (usually to wait for some service).</li><li><strong>nivcsw</strong>: the number of times an involuntary context switch took place (because a time slice expired, or another process of higher priority was scheduled).</li></ul><h2 id=perf_event_open>perf_event_open <a href=#perf_event_open class=anchor>🔗</a></h2><p><code>perf_event_open</code> interface is useful to measurement numerous system events. However, glibc doesn&rsquo;t provide wrapper for this system call. Instead, we need to use <code>syscall</code> directly.</p><p>To use <code>perf_event_open</code>, we call create a function wrapper that does the actual syscall for us. Take the example from the <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>Linux man page</a></p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#a2f;font-weight:700>static</span> <span style=color:#0b0;font-weight:700>int</span>
 <span style=color:#00a000>perf_event_open</span>(<span style=color:#a2f;font-weight:700>struct</span> perf_event_attr <span style=color:#666>*</span>hw_event, pid_t pid,
                 <span style=color:#0b0;font-weight:700>int</span> cpu, <span style=color:#0b0;font-weight:700>int</span> group_fd, <span style=color:#0b0;font-weight:700>unsigned</span> <span style=color:#0b0;font-weight:700>long</span> flags)
 {
@@ -237,9 +50,7 @@ nivcsw: 0
                     group_fd, flags);
     <span style=color:#a2f;font-weight:700>return</span> ret;
 }
-</code></pre></div><p>Here the <code>__NR_perf_event_open</code> specifies the syscall number. On our local machine, we can go to <code>/usr/include/x86_64-linux-gnu/sys/syscall.h</code>, which specifies the location of <code>__NR_perf_event_open</code>. In our case, it is located at <code>/usr/include/x86_64-linux-gnu/asm/unistd_64.h</code>.</p>
-<p>If we call <code>objdump -d</code> on the binary file, we will see something like this</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>000000000000119a &lt;perf_event_open&gt;:
+</code></pre></div><p>Here the <code>__NR_perf_event_open</code> specifies the syscall number. On our local machine, we can go to <code>/usr/include/x86_64-linux-gnu/sys/syscall.h</code>, which specifies the location of <code>__NR_perf_event_open</code>. In our case, it is located at <code>/usr/include/x86_64-linux-gnu/asm/unistd_64.h</code>.</p><p>If we call <code>objdump -d</code> on the binary file, we will see something like this</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>000000000000119a &lt;perf_event_open&gt;:
     119a:	55                   	push   %rbp
     119b:	48 89 e5             	mov    %rsp,%rbp
     119e:	48 83 ec 30          	sub    $0x30,%rsp
@@ -264,19 +75,13 @@ nivcsw: 0
     11e2:	48 98                	cltq   
     11e4:	c9                   	leaveq 
     11e5:	c3                   	retq   
-</code></pre></div><p>We notice there&rsquo;s one interesting line</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>callq  1060 &lt;syscall@plt&gt;
-</code></pre></div><p>The <code>plt</code> stands for Procedure Linkage Table. This lines indicates a call to the <code>syscall</code> in the procedure linking table. The PLT allows us to resolve the absolute addresses of shared libraries at runtime.</p>
-<p>Take a look at the <code>&lt;syscall@plt></code> section of the disassembly of section .plt, we see</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>0000000000001060 &lt;syscall@plt&gt;:
+</code></pre></div><p>We notice there&rsquo;s one interesting line</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>callq  1060 &lt;syscall@plt&gt;
+</code></pre></div><p>The <code>plt</code> stands for Procedure Linkage Table. This lines indicates a call to the <code>syscall</code> in the procedure linking table. The PLT allows us to resolve the absolute addresses of shared libraries at runtime.</p><p>Take a look at the <code>&lt;syscall@plt></code> section of the disassembly of section .plt, we see</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>0000000000001060 &lt;syscall@plt&gt;:
     1060:	ff 25 62 2f 00 00    	jmpq   *0x2f62(%rip)    #3fc8&lt;syscall@GLIBC_2.2.5&gt;
     1066:	68 03 00 00 00       	pushq  $0x3
     106b:	e9 b0 ff ff ff       	jmpq   1020 &lt;.plt&gt;
-</code></pre></div><p>Notice this jump is a pointer to an address. The address lies inside the GOT (Global Offset Table). The GOT will eventually hold the absolute address call to <code>syscall</code>. On the first call the address will point back to the instruction after the jump in the PLT - <code>0x1066</code>. Then we see another jump instruction. This jump is a jump into the eventual runtime linker code that will load the shared library which has syscall.</p>
-<p>We also see the comment for the first jump instruction</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#3fc8&lt;syscall@GLIBC_2.2.5&gt;
-</code></pre></div><p>Use <code>objdump -R</code>, we see the dynamic relocation entries in the file</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>DYNAMIC RELOCATION RECORDS
+</code></pre></div><p>Notice this jump is a pointer to an address. The address lies inside the GOT (Global Offset Table). The GOT will eventually hold the absolute address call to <code>syscall</code>. On the first call the address will point back to the instruction after the jump in the PLT - <code>0x1066</code>. Then we see another jump instruction. This jump is a jump into the eventual runtime linker code that will load the shared library which has syscall.</p><p>We also see the comment for the first jump instruction</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#3fc8&lt;syscall@GLIBC_2.2.5&gt;
+</code></pre></div><p>Use <code>objdump -R</code>, we see the dynamic relocation entries in the file</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>DYNAMIC RELOCATION RECORDS
 OFFSET           TYPE              VALUE 
 0000000000003d98 R_X86_64_RELATIVE  *ABS*+0x0000000000001190
 0000000000003da0 R_X86_64_RELATIVE  *ABS*+0x0000000000001150
@@ -291,9 +96,7 @@ OFFSET           TYPE              VALUE
 0000000000003fc0 R_X86_64_JUMP_SLOT  system@GLIBC_2.2.5
 0000000000003fc8 R_X86_64_JUMP_SLOT  syscall@GLIBC_2.2.5
 0000000000003fd0 R_X86_64_JUMP_SLOT  sprintf@GLIBC_2.2.5
-</code></pre></div>
-<h2 id=monitor-events>Monitor Events <a href=#monitor-events class=anchor>🔗</a></h2><p>Next, we are going to look at L1 data cache metrics. We are interested in L1 data cache accesses, misses, and data TLB misses. We will measure this code in our experiment. CACHE_LINE_SIZE is defined as 64 to match our CPU specs.</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#080;font-style:italic>// p points to a region that is 1GB (ideally)
+</code></pre></div><h2 id=monitor-events>Monitor Events <a href=#monitor-events class=anchor>🔗</a></h2><p>Next, we are going to look at L1 data cache metrics. We are interested in L1 data cache accesses, misses, and data TLB misses. We will measure this code in our experiment. CACHE_LINE_SIZE is defined as 64 to match our CPU specs.</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#080;font-style:italic>// p points to a region that is 1GB (ideally)
 </span><span style=color:#080;font-style:italic></span><span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>do_mem_access</span>(<span style=color:#0b0;font-weight:700>char</span><span style=color:#666>*</span> p, <span style=color:#0b0;font-weight:700>int</span> size) {
     <span style=color:#0b0;font-weight:700>int</span> i, j, count, outer, locality;
     <span style=color:#0b0;font-weight:700>int</span> ws_base <span style=color:#666>=</span> <span style=color:#666>0</span>;
@@ -324,10 +127,7 @@ OFFSET           TYPE              VALUE
       }
    }
 }
-</code></pre></div><p>What this routine does is essentially pick a working set of 512 cache lines, periodically perform a write or otherwise read operation. This process is repeated 16 times during each interaction. Each read or write access will operate on a new cache line. The innermost loop will perform this set of operations for the entire L1 data cache.</p>
-<p>When opt_random_access is true, the starting base address of the cache line is randomly picked. Otherwise, it is incremented by 512 cache lines (or one working set) during each outer iteration. The main difference is that with opt_random_access set to true, the starting base address of the cache line can&rsquo;t be precomputed by the hardware, thus likely increase miss rate.</p>
-<p>To measure L1 data cache metrics, we will use the <code>perf_event_open</code> interface we discussed above. To measure L1 data cache read misses, we will configure our <code>struct perf_event_attr</code> as follows:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#080>#define CALC_CONFIG(perf_hw_cache_id, perf_hw_cache_op_id, perf_hw_cache_op_result_id) \
+</code></pre></div><p>What this routine does is essentially pick a working set of 512 cache lines, periodically perform a write or otherwise read operation. This process is repeated 16 times during each interaction. Each read or write access will operate on a new cache line. The innermost loop will perform this set of operations for the entire L1 data cache.</p><p>When opt_random_access is true, the starting base address of the cache line is randomly picked. Otherwise, it is incremented by 512 cache lines (or one working set) during each outer iteration. The main difference is that with opt_random_access set to true, the starting base address of the cache line can&rsquo;t be precomputed by the hardware, thus likely increase miss rate.</p><p>To measure L1 data cache metrics, we will use the <code>perf_event_open</code> interface we discussed above. To measure L1 data cache read misses, we will configure our <code>struct perf_event_attr</code> as follows:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#080>#define CALC_CONFIG(perf_hw_cache_id, perf_hw_cache_op_id, perf_hw_cache_op_result_id) \
 </span><span style=color:#080>((perf_hw_cache_id) | (perf_hw_cache_op_id &lt;&lt; 8) | (perf_hw_cache_op_result_id &lt;&lt; 16))
 </span><span style=color:#080></span>
 hw_event.type <span style=color:#666>=</span> PERF_TYPE_HW_CACHE; 
@@ -335,238 +135,35 @@ hw_event.size <span style=color:#666>=</span> <span style=color:#a2f;font-weight
 hw_event.disabled <span style=color:#666>=</span> <span style=color:#666>1</span>; <span style=color:#080;font-style:italic>// disable at init time
 </span><span style=color:#080;font-style:italic></span>hw_event.exclude_kernel <span style=color:#666>=</span> <span style=color:#666>1</span>;
 hw_event.config <span style=color:#666>=</span> CALC_CONFIG(PERF_COUNT_HW_CACHE_L1D, PERF_COUNT_HW_CACHE_OP_READ, PERF_COUNT_HW_CACHE_RESULT_ACCESS);
-</code></pre></div><p>The exact details can be found in <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>linux man page</a>. The important part is:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>hw_event.config <span style=color:#666>=</span> CALC_CONFIG(PERF_COUNT_HW_CACHE_L1D, PERF_COUNT_HW_CACHE_OP_READ, PERF_COUNT_HW_CACHE_RESULT_ACCESS);
-</code></pre></div><p>These configurations allows us to measure the L1 data cahe read misses. The arguments passed to <code>perf_event_open</code> is</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>pid_t pid <span style=color:#666>=</span> <span style=color:#666>0</span>;
+</code></pre></div><p>The exact details can be found in <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>linux man page</a>. The important part is:</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>hw_event.config <span style=color:#666>=</span> CALC_CONFIG(PERF_COUNT_HW_CACHE_L1D, PERF_COUNT_HW_CACHE_OP_READ, PERF_COUNT_HW_CACHE_RESULT_ACCESS);
+</code></pre></div><p>These configurations allows us to measure the L1 data cahe read misses. The arguments passed to <code>perf_event_open</code> is</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>pid_t pid <span style=color:#666>=</span> <span style=color:#666>0</span>;
 <span style=color:#0b0;font-weight:700>int</span> cpu <span style=color:#666>=</span> <span style=color:#666>-</span><span style=color:#666>1</span>;
 <span style=color:#0b0;font-weight:700>int</span> group_fd <span style=color:#666>=</span> <span style=color:#666>-</span><span style=color:#666>1</span>;
 <span style=color:#0b0;font-weight:700>unsigned</span> <span style=color:#0b0;font-weight:700>long</span> flags <span style=color:#666>=</span> <span style=color:#666>0</span>;
-</code></pre></div><p>The choice of these parameters can also be found on the <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>linux man page</a>. After <code>perf_event_open</code> is called, we will re-enable event measurements by calling</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>ioctl(fd, PERF_EVENT_IOC_RESET, <span style=color:#666>0</span>);
+</code></pre></div><p>The choice of these parameters can also be found on the <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>linux man page</a>. After <code>perf_event_open</code> is called, we will re-enable event measurements by calling</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>ioctl(fd, PERF_EVENT_IOC_RESET, <span style=color:#666>0</span>);
 ioctl(fd, PERF_EVENT_IOC_ENABLE, <span style=color:#666>0</span>);
-</code></pre></div><p>What it does is resetting the event count specified by the file descriptor argument to zero, then enables the individual event specified by the file descriptor argument. After <code>do_mem_access(p, size)</code> is executed, we call <code>ioctl(fd, PERF_EVENT_IOC_DISABLE, 0)</code> to disable the event and then read the result by <code>read(fd, &result, sizeof(long long))</code>. How result is defined is up to how <code>PERF_FORMAT_*</code> was specified. You can also check <a href=https://elixir.bootlin.com/linux/latest/source/kernel/events/core.c#L1833 target=_blank rel=noopener>lxr</a> to see how <code>__perf_event_read_size</code> calculates the size of event that is read. In our case, it&rsquo;s simple a <code>u64</code>.</p>
-<blockquote>
-<p>Be aware that simply executing the binary might cause <code>perf_event_open</code> to fail (in which case will always return -1). Using <code>sudo</code> is one workaround. Execute <code>cat /proc/sys/kernel/perf_event_paranoid</code> and see what returns. <code>-1</code> means you have raw access to kernel tracepoints. Otherwise, you might have trouble accessing the performance counter without root privilege. Check this <a href=https://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar target=_blank rel=noopener>stackexchange post</a> for more details.</p>
-</blockquote>
-<p>To be even more careful about generating repeatable results we should flush the level 1 data cache before enabling the performance counters. We will do this by reading a memory buffer larger than per-core L1 data cache size</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>size_t buffer_size <span style=color:#666>=</span> <span style=color:#666>32</span> <span style=color:#666>*</span> <span style=color:#666>1024</span> <span style=color:#666>+</span> <span style=color:#666>1024</span>;
+</code></pre></div><p>What it does is resetting the event count specified by the file descriptor argument to zero, then enables the individual event specified by the file descriptor argument. After <code>do_mem_access(p, size)</code> is executed, we call <code>ioctl(fd, PERF_EVENT_IOC_DISABLE, 0)</code> to disable the event and then read the result by <code>read(fd, &result, sizeof(long long))</code>. How result is defined is up to how <code>PERF_FORMAT_*</code> was specified. You can also check <a href=https://elixir.bootlin.com/linux/latest/source/kernel/events/core.c#L1833 target=_blank rel=noopener>lxr</a> to see how <code>__perf_event_read_size</code> calculates the size of event that is read. In our case, it&rsquo;s simple a <code>u64</code>.</p><blockquote><p>Be aware that simply executing the binary might cause <code>perf_event_open</code> to fail (in which case will always return -1). Using <code>sudo</code> is one workaround. Execute <code>cat /proc/sys/kernel/perf_event_paranoid</code> and see what returns. <code>-1</code> means you have raw access to kernel tracepoints. Otherwise, you might have trouble accessing the performance counter without root privilege. Check this <a href=https://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar target=_blank rel=noopener>stackexchange post</a> for more details.</p></blockquote><p>To be even more careful about generating repeatable results we should flush the level 1 data cache before enabling the performance counters. We will do this by reading a memory buffer larger than per-core L1 data cache size</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>size_t buffer_size <span style=color:#666>=</span> <span style=color:#666>32</span> <span style=color:#666>*</span> <span style=color:#666>1024</span> <span style=color:#666>+</span> <span style=color:#666>1024</span>;
 <span style=color:#0b0;font-weight:700>char</span> <span style=color:#666>*</span>buff <span style=color:#666>=</span> malloc(buffer_size);
 <span style=color:#a2f;font-weight:700>for</span> (<span style=color:#0b0;font-weight:700>int</span> i <span style=color:#666>=</span> <span style=color:#666>0</span>; i <span style=color:#666>&lt;</span> buffer_size; i<span style=color:#666>++</span>) {
     buff[i] <span style=color:#666>=</span> rand();
 }
-</code></pre></div><p>We will also lock the process onto a single processor by using the <code>sched_setaffinity</code> function. Our example is</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>cpu_set_t set;
+</code></pre></div><p>We will also lock the process onto a single processor by using the <code>sched_setaffinity</code> function. Our example is</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>cpu_set_t set;
 CPU_ZERO(<span style=color:#666>&amp;</span>set);
 CPU_SET(<span style=color:#666>7</span>, <span style=color:#666>&amp;</span>set);
 <span style=color:#0b0;font-weight:700>int</span> aff <span style=color:#666>=</span> sched_setaffinity(<span style=color:#666>0</span>, <span style=color:#a2f;font-weight:700>sizeof</span>(cpu_set_t), <span style=color:#666>&amp;</span>set);
-</code></pre></div><p>We perform the each of the above experiments 5 times. First, we turn on random cache line base address generation. On average, we have around 1010665367 L1 data cache read misses wtih standard deviation to be 61010967 misses. When random access is disabled, we have on average 964420324 read misses with standard deviation of 65787193 misses. We can also measure the number L1 data cache write misses by using the <code>PERF_COUNT_HW_CACHE_OP_WRITE</code> config instead. Use <code>PERF_COUNT_HW_CACHE_OP_PREFETCH</code> gives us prefetch misses, in our case, both of these metrics are unavailable. We can check the <code>/arch/x86/events/intel/core.c</code> in <a href=https://elixir.bootlin.com/linux/v5.6/source/arch/x86/events/intel/core.c target=_blank rel=noopener>lxr</a> and we can see these metrics are not available.</p>
-<p>We can also use the <code>PERF_COUNT_HW_CACHE_DTLB</code> config option for data TLB measurement. For read access we have on average 3390719 misses with std dev being 17579, while write access has 1486451 misses with std dev being 13455. The prefetch metrics for TLB are unavailable in our case. To find out more about available metrics supported, please check the constant <code>static __initconst const u64 skl_hw_cache_event_ids</code> for specific kernel version.</p>
-<p>With random cache line access turned off, we have 517335 read misses data TLB with standard deviation of 3820 misses. For write we have on average 809671 misses with standard deviation being 9580 misses. It is a significant reduction compared to the random access implementation.</p>
-<p>To calculate the L1 cache miss rate and data TLB miss rate, we can use 100.0 * cache misses / cache_accesses and 100.0 * tlb misses / cache_accesses to calculate the results. With random access turned off, we get L1 read access miss rate to be $$miss_{cache} = 1.5%$$ and TLB read miss rate $$miss_{tlb} \approx 0$$. When random access is turned on, we have $$miss_{cache} = 1.4%$$ and $$miss_{tlb} \approx 0$$. We can see the miss rate in all scenarios is really low. This is mainly because the inner most loop in our routine is performing operations on working set already presented in L1 cache and TLB. The read/write operations use continous cache lines, which means there will almost be no faults while we access the 512 cache lines. If one fault causes the entire new working set to be cached, then there would be no subsequent faults until the entire working set is iterated.</p>
-<p>If we use <code>getrusage</code> we can see the metrics listed below:</p>
-<table>
-<thead>
-<tr>
-<th>Metrics</th>
-<th>Mean</th>
-<th>std dev</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>utime</td>
-<td>868629</td>
-<td>126044</td>
-</tr>
-<tr>
-<td>stime</td>
-<td>253586</td>
-<td>20112</td>
-</tr>
-<tr>
-<td>maxrss</td>
-<td>1049691</td>
-<td>43</td>
-</tr>
-<tr>
-<td>minflt</td>
-<td>262214</td>
-<td>1</td>
-</tr>
-<tr>
-<td>majflt</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>inblock</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>oublock</td>
-<td>0</td>
-<td>0</td>
-</tr>
-<tr>
-<td>nvcsw</td>
-<td>0.4</td>
-<td>0.54</td>
-</tr>
-<tr>
-<td>nivcsw</td>
-<td>47</td>
-<td>7</td>
-</tr>
-</tbody>
-</table>
-<p><br></p>
-<h2 id=mmap>mmap <a href=#mmap class=anchor>🔗</a></h2><p>Next we are going to explore the behavior of mmap. Previously, we used <code>malloc</code> for data allocation. Next, we are going to instead use <code>mmap</code> and see what happens. Here we will only use read access for benchmark metrics since it&rsquo;s available in both L1 and TLB metrics.</p>
-<p>First, we use the <code>MAP_ANONYMOUS</code> as a flag passed to <code>mmap</code>. This flag means the mapping is not backed by any file; its contents are initialized to zero. The complete call is</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>mmap(<span style=color:#a2f>NULL</span>, length, PROT_READ <span style=color:#666>|</span> PROT_WRITE,
+</code></pre></div><p>We perform the each of the above experiments 5 times. First, we turn on random cache line base address generation. On average, we have around 1010665367 L1 data cache read misses wtih standard deviation to be 61010967 misses. When random access is disabled, we have on average 964420324 read misses with standard deviation of 65787193 misses. We can also measure the number L1 data cache write misses by using the <code>PERF_COUNT_HW_CACHE_OP_WRITE</code> config instead. Use <code>PERF_COUNT_HW_CACHE_OP_PREFETCH</code> gives us prefetch misses, in our case, both of these metrics are unavailable. We can check the <code>/arch/x86/events/intel/core.c</code> in <a href=https://elixir.bootlin.com/linux/v5.6/source/arch/x86/events/intel/core.c target=_blank rel=noopener>lxr</a> and we can see these metrics are not available.</p><p>We can also use the <code>PERF_COUNT_HW_CACHE_DTLB</code> config option for data TLB measurement. For read access we have on average 3390719 misses with std dev being 17579, while write access has 1486451 misses with std dev being 13455. The prefetch metrics for TLB are unavailable in our case. To find out more about available metrics supported, please check the constant <code>static __initconst const u64 skl_hw_cache_event_ids</code> for specific kernel version.</p><p>With random cache line access turned off, we have 517335 read misses data TLB with standard deviation of 3820 misses. For write we have on average 809671 misses with standard deviation being 9580 misses. It is a significant reduction compared to the random access implementation.</p><p>To calculate the L1 cache miss rate and data TLB miss rate, we can use 100.0 * cache misses / cache_accesses and 100.0 * tlb misses / cache_accesses to calculate the results. With random access turned off, we get L1 read access miss rate to be $$miss_{cache} = 1.5%$$ and TLB read miss rate $$miss_{tlb} \approx 0$$. When random access is turned on, we have $$miss_{cache} = 1.4%$$ and $$miss_{tlb} \approx 0$$. We can see the miss rate in all scenarios is really low. This is mainly because the inner most loop in our routine is performing operations on working set already presented in L1 cache and TLB. The read/write operations use continous cache lines, which means there will almost be no faults while we access the 512 cache lines. If one fault causes the entire new working set to be cached, then there would be no subsequent faults until the entire working set is iterated.</p><p>If we use <code>getrusage</code> we can see the metrics listed below:</p><table><thead><tr><th>Metrics</th><th>Mean</th><th>std dev</th></tr></thead><tbody><tr><td>utime</td><td>868629</td><td>126044</td></tr><tr><td>stime</td><td>253586</td><td>20112</td></tr><tr><td>maxrss</td><td>1049691</td><td>43</td></tr><tr><td>minflt</td><td>262214</td><td>1</td></tr><tr><td>majflt</td><td>0</td><td>0</td></tr><tr><td>inblock</td><td>0</td><td>0</td></tr><tr><td>oublock</td><td>0</td><td>0</td></tr><tr><td>nvcsw</td><td>0.4</td><td>0.54</td></tr><tr><td>nivcsw</td><td>47</td><td>7</td></tr></tbody></table><p><br></p><h2 id=mmap>mmap <a href=#mmap class=anchor>🔗</a></h2><p>Next we are going to explore the behavior of mmap. Previously, we used <code>malloc</code> for data allocation. Next, we are going to instead use <code>mmap</code> and see what happens. Here we will only use read access for benchmark metrics since it&rsquo;s available in both L1 and TLB metrics.</p><p>First, we use the <code>MAP_ANONYMOUS</code> as a flag passed to <code>mmap</code>. This flag means the mapping is not backed by any file; its contents are initialized to zero. The complete call is</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>mmap(<span style=color:#a2f>NULL</span>, length, PROT_READ <span style=color:#666>|</span> PROT_WRITE,
                 MAP_PRIVATE <span style=color:#666>|</span> MAP_ANONYMOUS, fd_ignore, offset);
-</code></pre></div><p>For more details, refer to <a href=https://man7.org/linux/man-pages/man2/mmap.2.html target=_blank rel=noopener>mmap man page</a> for information.</p>
-<p>When we turn on the random access and use <code>perf_event_open</code> interface to collect metrics, we see the L1 data cache read misses are 956148031 (std dev 84631843). The TLB data cache read misses are 3370309 (std dev 17792). We see it is not really different to the malloc approach we used before. Doing a simple <code>strace</code> shows <code>malloc</code> calls <code>mmap</code>. The memory that backs <code>malloc()</code> allocations is handled by the kernel in much the same way as the memory that backs private anonymous mappings created with <code>mmap()</code>.</p>
-<p>Then, we try to use <code>mmap()</code> to create mapping in the virtual address space backed by a file instead of using <code>MAP_ANONYMOUS</code>.</p>
-<p>We first test <code>mmap</code> with <code>MAP_PRIVATE</code>. According to the man page, this flags means creating a private copy-on-write mapping. Updates to the mapping are not visible to other processes mapping the same file, and are not carried through to the underlying file. It is unspecified whether changes made to the file after the mmap() call are visible in the mapped region.</p>
-<blockquote>
-<p>Note we should call <code>fallocate()</code> for the newly created file, otherwise mmap is gonna throw bur error.</p>
-</blockquote>
-<p>When we measure the L1 data cache miss, it&rsquo;s around 946128512 (std dev 956148031), nothing special happens. When we use <code>MAP_SHARED</code> flag, the result was similar. The result seems to fluctuates as time passes, but overall they are not much different. After all, it&rsquo;s just reading from the memory, whether the address is backed by a file or not doesn&rsquo;t play a big role in affecting the cache miss rate. The L1 data cache misses is shown below:</p>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>PRIVATE</th>
-<th>PRIVATE+POPULATE</th>
-<th>SHARED</th>
-<th>SHARED+POPULATE</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Mean</td>
-<td>783864673</td>
-<td>769314361</td>
-<td>842915231</td>
-<td>816749524</td>
-</tr>
-<tr>
-<td>Std dev</td>
-<td>77816766</td>
-<td>53913082</td>
-<td>54613278</td>
-<td>60580595</td>
-</tr>
-</tbody>
-</table>
-<p><br></p>
-<p>If we take a look at TLB data cache, the result is</p>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>PRIVATE</th>
-<th>PRIVATE+POPULATE</th>
-<th>SHARED</th>
-<th>SHARED+POPULATE</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Mean</td>
-<td>3372303</td>
-<td>3370740</td>
-<td>3381755</td>
-<td>3377370</td>
-</tr>
-<tr>
-<td>Std dev</td>
-<td>9884</td>
-<td>13567</td>
-<td>17626</td>
-<td>11776</td>
-</tr>
-</tbody>
-</table>
-<p><br></p>
-<p>Still, there doesn&rsquo;t seem have any significant fluctuation in the number of misses in data TLB. This pattern also applies to sequential access, except the TLB data cache misses is alot lower in sequentual access.</p>
-<p>Now If we instead use <code>getrusage()</code>, we will get something like this</p>
-<table>
-<thead>
-<tr>
-<th>Flag</th>
-<th>PRIVATE</th>
-<th>PRIVATE+POPULATE</th>
-<th>SHARED</th>
-<th>SHARED+POPULATE</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Usec/std dev</td>
-<td>20/0</td>
-<td>20/0</td>
-<td>20/0</td>
-<td>20/0</td>
-</tr>
-<tr>
-<td>usec/std dev</td>
-<td>801512/ 78346</td>
-<td>793452/ 143556</td>
-<td>872342/ 124124</td>
-<td>671957/ 229314</td>
-</tr>
-<tr>
-<td>Ssec/std dev</td>
-<td>0/0</td>
-<td>0/0</td>
-<td>0/0</td>
-<td>0/0</td>
-</tr>
-<tr>
-<td>ssec/std dev</td>
-<td>475977/ 54355</td>
-<td>475678/ 134253</td>
-<td>445467/ 99345</td>
-<td>536041/ 98797</td>
-</tr>
-<tr>
-<td>oublock/std dev</td>
-<td>0/0</td>
-<td>0/0</td>
-<td>2997152/ 82256</td>
-<td>2097152/ 19760</td>
-</tr>
-</tbody>
-</table>
-<p><br></p>
-<p>The most interesting part here is when <code>MAP_SHARED</code> is enabled, the <code>oublock</code> immediately changes. As we mentioned previously, <code>oublock</code> specifies the number of times the file system had to write to the disk on behalf of processes. Because the address is now backed by a file, all write operations will cause the file system to write the contents back to the file.</p>
-<p><code>mmap()</code> creates a new mapping in the virtual address space of the
-calling process. However, it doesn&rsquo;t allocate RAM. If we call <code>memset()</code> then followed by <code>msync()</code> with <code>MS_SYNC</code> flag, we can get some interesting results in <code>getrusage</code>, these observations are summarized here:</p>
-<ul>
-<li>kernel space time is much higher. It usually take 1 sec (no std dev) as opposed to 0. Synchronizing to files on disk will require more kernel participation.</li>
-<li>minflt (the number of page faults which were serviced without requiring any I/O) was muich higher, the value is around 540782(std dev 3). More memory mapped means the faults by I/O will be less likely.</li>
-<li>oublock is much higher, the value is around 4196512(std dev 1). The sync operating means there will be approximatly double amount of writes to disk.</li>
-<li>nvcsw was higher, there are more voluntary context switches. Writing results to disk has delay, and thus the process likely need to context switch while waiting for I/O to be finished.</li>
-</ul>
-<p>We may notice the number data TLB misses is lower than the total number of page the application uses. One obvious answer the use of huge page. One huge page can cover many small pages. Also, because we have prefetching TLB and the working set access pattern is contiguous, TLB hit rate will be high. Because we have a set-associative TLB cache, and we access the memory in a fairly deterministic way, it&rsquo;s easy to predict where the next access is pointing to. For example, if the replacement policy is FIFO, then each cache line will remain untouched for exact same clock cycle before replaced. This also applies to other policies. One way to determine the replacement algorithm is using P-Chase.</p>
-<h2 id=strace>strace <a href=#strace class=anchor>🔗</a></h2><p>We then use <code>strace</code> to trace syscalls of our application. The output contains some interesting information, one is</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback>access(&#34;/etc/ld.so.preload&#34;, R_OK)      = -1 ENOENT (No such file or directory)
+</code></pre></div><p>For more details, refer to <a href=https://man7.org/linux/man-pages/man2/mmap.2.html target=_blank rel=noopener>mmap man page</a> for information.</p><p>When we turn on the random access and use <code>perf_event_open</code> interface to collect metrics, we see the L1 data cache read misses are 956148031 (std dev 84631843). The TLB data cache read misses are 3370309 (std dev 17792). We see it is not really different to the malloc approach we used before. Doing a simple <code>strace</code> shows <code>malloc</code> calls <code>mmap</code>. The memory that backs <code>malloc()</code> allocations is handled by the kernel in much the same way as the memory that backs private anonymous mappings created with <code>mmap()</code>.</p><p>Then, we try to use <code>mmap()</code> to create mapping in the virtual address space backed by a file instead of using <code>MAP_ANONYMOUS</code>.</p><p>We first test <code>mmap</code> with <code>MAP_PRIVATE</code>. According to the man page, this flags means creating a private copy-on-write mapping. Updates to the mapping are not visible to other processes mapping the same file, and are not carried through to the underlying file. It is unspecified whether changes made to the file after the mmap() call are visible in the mapped region.</p><blockquote><p>Note we should call <code>fallocate()</code> for the newly created file, otherwise mmap is gonna throw bur error.</p></blockquote><p>When we measure the L1 data cache miss, it&rsquo;s around 946128512 (std dev 956148031), nothing special happens. When we use <code>MAP_SHARED</code> flag, the result was similar. The result seems to fluctuates as time passes, but overall they are not much different. After all, it&rsquo;s just reading from the memory, whether the address is backed by a file or not doesn&rsquo;t play a big role in affecting the cache miss rate. The L1 data cache misses is shown below:</p><table><thead><tr><th>Flag</th><th>PRIVATE</th><th>PRIVATE+POPULATE</th><th>SHARED</th><th>SHARED+POPULATE</th></tr></thead><tbody><tr><td>Mean</td><td>783864673</td><td>769314361</td><td>842915231</td><td>816749524</td></tr><tr><td>Std dev</td><td>77816766</td><td>53913082</td><td>54613278</td><td>60580595</td></tr></tbody></table><p><br></p><p>If we take a look at TLB data cache, the result is</p><table><thead><tr><th>Flag</th><th>PRIVATE</th><th>PRIVATE+POPULATE</th><th>SHARED</th><th>SHARED+POPULATE</th></tr></thead><tbody><tr><td>Mean</td><td>3372303</td><td>3370740</td><td>3381755</td><td>3377370</td></tr><tr><td>Std dev</td><td>9884</td><td>13567</td><td>17626</td><td>11776</td></tr></tbody></table><p><br></p><p>Still, there doesn&rsquo;t seem have any significant fluctuation in the number of misses in data TLB. This pattern also applies to sequential access, except the TLB data cache misses is alot lower in sequentual access.</p><p>Now If we instead use <code>getrusage()</code>, we will get something like this</p><table><thead><tr><th>Flag</th><th>PRIVATE</th><th>PRIVATE+POPULATE</th><th>SHARED</th><th>SHARED+POPULATE</th></tr></thead><tbody><tr><td>Usec/std dev</td><td>20/0</td><td>20/0</td><td>20/0</td><td>20/0</td></tr><tr><td>usec/std dev</td><td>801512/ 78346</td><td>793452/ 143556</td><td>872342/ 124124</td><td>671957/ 229314</td></tr><tr><td>Ssec/std dev</td><td>0/0</td><td>0/0</td><td>0/0</td><td>0/0</td></tr><tr><td>ssec/std dev</td><td>475977/ 54355</td><td>475678/ 134253</td><td>445467/ 99345</td><td>536041/ 98797</td></tr><tr><td>oublock/std dev</td><td>0/0</td><td>0/0</td><td>2997152/ 82256</td><td>2097152/ 19760</td></tr></tbody></table><p><br></p><p>The most interesting part here is when <code>MAP_SHARED</code> is enabled, the <code>oublock</code> immediately changes. As we mentioned previously, <code>oublock</code> specifies the number of times the file system had to write to the disk on behalf of processes. Because the address is now backed by a file, all write operations will cause the file system to write the contents back to the file.</p><p><code>mmap()</code> creates a new mapping in the virtual address space of the
+calling process. However, it doesn&rsquo;t allocate RAM. If we call <code>memset()</code> then followed by <code>msync()</code> with <code>MS_SYNC</code> flag, we can get some interesting results in <code>getrusage</code>, these observations are summarized here:</p><ul><li>kernel space time is much higher. It usually take 1 sec (no std dev) as opposed to 0. Synchronizing to files on disk will require more kernel participation.</li><li>minflt (the number of page faults which were serviced without requiring any I/O) was muich higher, the value is around 540782(std dev 3). More memory mapped means the faults by I/O will be less likely.</li><li>oublock is much higher, the value is around 4196512(std dev 1). The sync operating means there will be approximatly double amount of writes to disk.</li><li>nvcsw was higher, there are more voluntary context switches. Writing results to disk has delay, and thus the process likely need to context switch while waiting for I/O to be finished.</li></ul><p>We may notice the number data TLB misses is lower than the total number of page the application uses. One obvious answer the use of huge page. One huge page can cover many small pages. Also, because we have prefetching TLB and the working set access pattern is contiguous, TLB hit rate will be high. Because we have a set-associative TLB cache, and we access the memory in a fairly deterministic way, it&rsquo;s easy to predict where the next access is pointing to. For example, if the replacement policy is FIFO, then each cache line will remain untouched for exact same clock cycle before replaced. This also applies to other policies. One way to determine the replacement algorithm is using P-Chase.</p><h2 id=strace>strace <a href=#strace class=anchor>🔗</a></h2><p>We then use <code>strace</code> to trace syscalls of our application. The output contains some interesting information, one is</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback>access(&#34;/etc/ld.so.preload&#34;, R_OK)      = -1 ENOENT (No such file or directory)
 ...
 arch_prctl(ARCH_SET_FS, 0x7fdc6ad83540) = 0
-</code></pre></div><p>According to <a href=https://man7.org/linux/man-pages/man2/arch_prctl.2.html target=_blank rel=noopener>arch_prctl man page</a>, <code>arch_prctl()</code> sets architecture-specific process or thread state. The <code>ARCH_SET_FS</code> option sets the 64-bit base for the FS register to addr, in our case it&rsquo;s 0x7fdc6ad83540. Let&rsquo;s set a break point at <code>arch_prctl</code> and backtrace from there</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#0  0x00007ffff7febb55 in ?? () from /lib64/ld-linux-x86-64.so.2
+</code></pre></div><p>According to <a href=https://man7.org/linux/man-pages/man2/arch_prctl.2.html target=_blank rel=noopener>arch_prctl man page</a>, <code>arch_prctl()</code> sets architecture-specific process or thread state. The <code>ARCH_SET_FS</code> option sets the 64-bit base for the FS register to addr, in our case it&rsquo;s 0x7fdc6ad83540. Let&rsquo;s set a break point at <code>arch_prctl</code> and backtrace from there</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#0  0x00007ffff7febb55 in ?? () from /lib64/ld-linux-x86-64.so.2
 #1  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
 #2  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
 #3  0x0000000000000001 in ?? ()
 #4  0x00007fffffffe2fa in ?? ()
 #5  0x0000000000000000 in ?? ()
-</code></pre></div><p>We can see the FS segment base is set by the <code>ld-linux</code>, which is a part of glibc, during the program loading. A simple google seach tells us <code>/lib64/ld-linux-x86-64.so.2</code> is a dynamic linker. A more detailed description can be found on this <a href=https://unix.stackexchange.com/questions/400621/what-is-lib64-ld-linux-x86-64-so-2-and-why-can-it-be-used-to-execute-file target=_blank rel=noopener>post</a> and <a href=https://lwn.net/Articles/631631/ target=_blank rel=noopener>lwn.net</a>. During the startup, the loader initalizes TLS. The includes memory allocation and setting FS base value to point to the TLS beignning, which is done via the <code>arch_prctl</code> syscall. More can be found <a href=https://unix.stackexchange.com/questions/453749/what-sets-fs0x28-stack-canary/453772 target=_blank rel=noopener>here</a>. This <code>init_tls()</code> is called <a href="https://git.launchpad.net/glibc/tree/elf/rtld.c?id=916124ed841745b7a1e0fbc43f9909340b47d373#n1397" target=_blank rel=noopener>here</a>, which subsequently calls the actuall <a href=https://git.launchpad.net/glibc/tree/sysdeps/x86_64/nptl/tls.h#n153 target=_blank rel=noopener>syscall</a> in <code>tls.h</code>.</p>
-<p>The /etc/ld.so.preload has similarities to LD_PRELOAD, in addition, it doesn&rsquo;t suffer security limitation posed by LD_PRELOAD (<a href=https://superuser.com/questions/1183037/what-is-does-ld-so-preload-do target=_blank rel=noopener>explanation here</a>). This a feature of <em>glibc</em>.</p>
-<h2 id=competing-for-memory>Competing for Memory <a href=#competing-for-memory class=anchor>🔗</a></h2><p>Next we are going to fork another process that will compete for memory with our process under test. We will use this code snippet which is going to be executed by both the parent and the child process</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#0b0;font-weight:700>int</span> <span style=color:#00a000>compete_for_memory</span>(<span style=color:#0b0;font-weight:700>void</span><span style=color:#666>*</span> unused) {
+</code></pre></div><p>We can see the FS segment base is set by the <code>ld-linux</code>, which is a part of glibc, during the program loading. A simple google seach tells us <code>/lib64/ld-linux-x86-64.so.2</code> is a dynamic linker. A more detailed description can be found on this <a href=https://unix.stackexchange.com/questions/400621/what-is-lib64-ld-linux-x86-64-so-2-and-why-can-it-be-used-to-execute-file target=_blank rel=noopener>post</a> and <a href=https://lwn.net/Articles/631631/ target=_blank rel=noopener>lwn.net</a>. During the startup, the loader initalizes TLS. The includes memory allocation and setting FS base value to point to the TLS beignning, which is done via the <code>arch_prctl</code> syscall. More can be found <a href=https://unix.stackexchange.com/questions/453749/what-sets-fs0x28-stack-canary/453772 target=_blank rel=noopener>here</a>. This <code>init_tls()</code> is called <a href="https://git.launchpad.net/glibc/tree/elf/rtld.c?id=916124ed841745b7a1e0fbc43f9909340b47d373#n1397" target=_blank rel=noopener>here</a>, which subsequently calls the actuall <a href=https://git.launchpad.net/glibc/tree/sysdeps/x86_64/nptl/tls.h#n153 target=_blank rel=noopener>syscall</a> in <code>tls.h</code>.</p><p>The /etc/ld.so.preload has similarities to LD_PRELOAD, in addition, it doesn&rsquo;t suffer security limitation posed by LD_PRELOAD (<a href=https://superuser.com/questions/1183037/what-is-does-ld-so-preload-do target=_blank rel=noopener>explanation here</a>). This a feature of <em>glibc</em>.</p><h2 id=competing-for-memory>Competing for Memory <a href=#competing-for-memory class=anchor>🔗</a></h2><p>Next we are going to fork another process that will compete for memory with our process under test. We will use this code snippet which is going to be executed by both the parent and the child process</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#0b0;font-weight:700>int</span> <span style=color:#00a000>compete_for_memory</span>(<span style=color:#0b0;font-weight:700>void</span><span style=color:#666>*</span> unused) {
    <span style=color:#0b0;font-weight:700>long</span> mem_size <span style=color:#666>=</span> get_mem_size();
    <span style=color:#0b0;font-weight:700>int</span> page_sz <span style=color:#666>=</span> sysconf(_SC_PAGE_SIZE);
    printf(<span style=color:#b44>&#34;Total memsize is %3.2f GBs</span><span style=color:#b62;font-weight:700>\n</span><span style=color:#b44>&#34;</span>,
@@ -596,8 +193,7 @@ arch_prctl(ARCH_SET_FS, 0x7fdc6ad83540) = 0
    }
    <span style=color:#a2f;font-weight:700>return</span> <span style=color:#666>0</span>;
 }
-</code></pre></div><p>The <code>get_mem_size()</code> is implemented using this <a href=https://stackoverflow.com/questions/22670257/getting-ram-size-in-c-linux-non-precise-result target=_blank rel=noopener>portable code</a></p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#080>#if defined(_WIN32)
+</code></pre></div><p>The <code>get_mem_size()</code> is implemented using this <a href=https://stackoverflow.com/questions/22670257/getting-ram-size-in-c-linux-non-precise-result target=_blank rel=noopener>portable code</a></p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#080>#if defined(_WIN32)
 </span><span style=color:#080>#include</span> <span style=color:#080>&lt;Windows.h&gt;</span><span style=color:#080>
 </span><span style=color:#080></span>
 <span style=color:#080>#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) &amp;&amp; defined(__MACH__))
@@ -645,7 +241,7 @@ size_t <span style=color:#00a000>getMemorySize</span>( )
 <span style=color:#080>#elif defined(HW_PHYSMEM64)
 </span><span style=color:#080></span>    mib[<span style=color:#666>1</span>] <span style=color:#666>=</span> HW_PHYSMEM64;          <span style=color:#080;font-style:italic>/* NetBSD, OpenBSD. --------- */</span>
 <span style=color:#080>#endif
-</span><span style=color:#080></span>    <span style=color:#0b0;font-weight:700>int64_t</span> size <span style=color:#666>=</span> <span style=color:#666>0</span>;               <span style=color:#080;font-style:italic>/* 64-bit */</span>
+</span><span style=color:#080></span>    int64_t size <span style=color:#666>=</span> <span style=color:#666>0</span>;               <span style=color:#080;font-style:italic>/* 64-bit */</span>
     size_t len <span style=color:#666>=</span> <span style=color:#a2f;font-weight:700>sizeof</span>( size );
     <span style=color:#a2f;font-weight:700>if</span> ( sysctl( mib, <span style=color:#666>2</span>, <span style=color:#666>&amp;</span>size, <span style=color:#666>&amp;</span>len, <span style=color:#a2f>NULL</span>, <span style=color:#666>0</span> ) <span style=color:#666>==</span> <span style=color:#666>0</span> )
         <span style=color:#a2f;font-weight:700>return</span> (size_t)size;
@@ -685,70 +281,11 @@ size_t <span style=color:#00a000>getMemorySize</span>( )
 </span><span style=color:#080></span>    <span style=color:#a2f;font-weight:700>return</span> <span style=color:#666>0L</span>;          <span style=color:#080;font-style:italic>/* Unknown OS. */</span>
 <span style=color:#080>#endif
 </span><span style=color:#080></span>}
-</code></pre></div><p>The important line is</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c> <span style=color:#a2f;font-weight:700>return</span> (size_t)sysconf( _SC_PHYS_PAGES ) <span style=color:#666>*</span>
+</code></pre></div><p>The important line is</p><div class=highlight><pre style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c> <span style=color:#a2f;font-weight:700>return</span> (size_t)sysconf( _SC_PHYS_PAGES ) <span style=color:#666>*</span>
         (size_t)sysconf( _SC_PAGESIZE );
-</code></pre></div><p>One thing to notice in the routine for competing for memory is we used <code>fflush</code> after the <code>printf</code>. The purpose of <code>fflush(stream)</code> is to make the operating system flush any buffers to the underlying file. This mainly because stdout is buffered. The buffer is not flushed until newline. <code>fflush</code> will cause this process to happen with the absense of newline. stderr is unbuffered and thus fflush would not be necessary.</p>
-<p>For this experiment, we tested it on a VM. The reason is because the contending process will take all RAM and completely hault the mahcine if tested on the host. To ensure our VM has enough swap space, we follow this <a href=https://wiki.crowncloud.net/?adding_swap_kvm target=_blank rel=noopener>tutorial</a> to create 4GB of swap area (we allocated 2GB RAM for VM).</p>
-<p>One thing we observe is that the execution time of the program become significantly longer to run. In our experiement we need to limit the number of iterations from 1 &#171; 20 to 1 &#171; 8 to get some sensible results without running for days.</p>
-<p>When we use PRIVATE and ANONYMUS option and random access turned on, the misses in data TLB is 335009(std dev 7298). We can&rsquo;t get access to L1 cache data because it will cause the session to be automatically logged out whenever L1D is used. here are some interesting things to notice:</p>
-<ul>
-<li><em>MAP_PRIVATE + MAP_ANONYMOUS</em>: TLB misses:335009(std dev 17298)<br>
-minflt: 4220(std dev 231)<br>
-oublock: 8(std dev 4)<br>
-nivcsw: 19(10)</li>
-<li><em>MAP_SHARED</em>: TLB misses:251284std dev 103292)<br>
-minflt: 2784(std dev 231)<br>
-majflt: 247(std 65)<br>
-oublock: 18200(std dev 2987)<br>
-nivcsw: 8(7)</li>
-</ul>
-<p>The most important difference here is that the oublock is much easier to trigger because the constant swapping. When file backed memory is used we also notice that majflt is much higher. Because pages are constantly traveling between swap area and memory, the page fault rate becomes a lot higher. The oublock also follows previous patterns as the file backed memory requires filesystem involvement.</p>
-<p>Finally, we also modify the kernel&rsquo;s head (or more precisely its LRU page replacement algorithm). Look in <code>mm/vmscan.c</code> there&rsquo;s a function calleed <code>shrink_page_list</code>. In it, you will see a switch statement with a PAGEREF_ACTIVATE case, which is the case where the kernel sees the page has been recently accessed. In this case the kernel gotos activate_locked, but you will change it to to do the same thing as the PAGEREF_RECLAIM case. We can simply move the case down and change its default behavior to direct to the PAGEREF_RECLAIM case. After that, we need to recompile the kernel for VM. We also summarize the most interesting results:</p>
-<ul>
-<li><em>MAP_PRIVATE + MAP_ANONYMOUS</em>: TLB misses:308031(std dev 17298)<br>
-minflt: 4223(std dev 791)<br>
-oublock: 8(std dev 1)<br>
-nivcsw: 11(5)</li>
-<li><em>MAP_SHARED</em>: TLB misses: 251284std dev 103292)<br>
-minflt: 2724(std dev 231)<br>
-majflt: 0(std 0)<br>
-oublock: 18200(std dev 2987)<br>
-nivcsw: 8(7)</li>
-</ul>
-<p>We can see that the most of the pattern follow the previous result after the modified kernel is installed. One main difference is majflt value is reduced back down.</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/os>os</a>
+</code></pre></div><p>One thing to notice in the routine for competing for memory is we used <code>fflush</code> after the <code>printf</code>. The purpose of <code>fflush(stream)</code> is to make the operating system flush any buffers to the underlying file. This mainly because stdout is buffered. The buffer is not flushed until newline. <code>fflush</code> will cause this process to happen with the absense of newline. stderr is unbuffered and thus fflush would not be necessary.</p><p>For this experiment, we tested it on a VM. The reason is because the contending process will take all RAM and completely hault the mahcine if tested on the host. To ensure our VM has enough swap space, we follow this <a href=https://wiki.crowncloud.net/?adding_swap_kvm target=_blank rel=noopener>tutorial</a> to create 4GB of swap area (we allocated 2GB RAM for VM).</p><p>One thing we observe is that the execution time of the program become significantly longer to run. In our experiement we need to limit the number of iterations from 1 &#171; 20 to 1 &#171; 8 to get some sensible results without running for days.</p><p>When we use PRIVATE and ANONYMUS option and random access turned on, the misses in data TLB is 335009(std dev 7298). We can&rsquo;t get access to L1 cache data because it will cause the session to be automatically logged out whenever L1D is used. here are some interesting things to notice:</p><ul><li><em>MAP_PRIVATE + MAP_ANONYMOUS</em>: TLB misses:335009(std dev 17298)<br>minflt: 4220(std dev 231)<br>oublock: 8(std dev 4)<br>nivcsw: 19(10)</li><li><em>MAP_SHARED</em>: TLB misses:251284std dev 103292)<br>minflt: 2784(std dev 231)<br>majflt: 247(std 65)<br>oublock: 18200(std dev 2987)<br>nivcsw: 8(7)</li></ul><p>The most important difference here is that the oublock is much easier to trigger because the constant swapping. When file backed memory is used we also notice that majflt is much higher. Because pages are constantly traveling between swap area and memory, the page fault rate becomes a lot higher. The oublock also follows previous patterns as the file backed memory requires filesystem involvement.</p><p>Finally, we also modify the kernel&rsquo;s head (or more precisely its LRU page replacement algorithm). Look in <code>mm/vmscan.c</code> there&rsquo;s a function calleed <code>shrink_page_list</code>. In it, you will see a switch statement with a PAGEREF_ACTIVATE case, which is the case where the kernel sees the page has been recently accessed. In this case the kernel gotos activate_locked, but you will change it to to do the same thing as the PAGEREF_RECLAIM case. We can simply move the case down and change its default behavior to direct to the PAGEREF_RECLAIM case. After that, we need to recompile the kernel for VM. We also summarize the most interesting results:</p><ul><li><em>MAP_PRIVATE + MAP_ANONYMOUS</em>: TLB misses:308031(std dev 17298)<br>minflt: 4223(std dev 791)<br>oublock: 8(std dev 1)<br>nivcsw: 11(5)</li><li><em>MAP_SHARED</em>: TLB misses: 251284std dev 103292)<br>minflt: 2724(std dev 231)<br>majflt: 0(std 0)<br>oublock: 18200(std dev 2987)<br>nivcsw: 8(7)</li></ul><p>We can see that the most of the pattern follow the previous result after the modified kernel is installed. One main difference is majflt value is reduced back down.</p></div><div class=tags><a href=https://www.bodunhu.com/blog/tags/os>os</a>
 <a href=https://www.bodunhu.com/blog/tags/kernel>kernel</a>
 <a href=https://www.bodunhu.com/blog/tags/mm>mm</a>
-<a href=https://www.bodunhu.com/blog/tags/linux>linux</a>
-</div>
-<div id=comment>
-<div id=disqus_thread></div>
-<script type=application/javascript>var disqus_config=function(){};(function(){if(["localhost","127.0.0.1"].indexOf(window.location.hostname)!=-1){document.getElementById('disqus_thread').innerHTML='Disqus comments not available by default when the website is previewed locally.';return}var b=document,a=b.createElement('script');a.async=!0,a.src='//bdhu.disqus.com/embed.js',a.setAttribute('data-timestamp',+new Date),(b.head||b.body).appendChild(a)})()</script>
-<noscript>Please enable JavaScript to view the <a href=https://disqus.com/?ref_noscript>comments powered by Disqus.</a></noscript>
-<a href=https://disqus.com class=dsq-brlink>comments powered by <span class=logo-disqus>Disqus</span></a>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div id=social>
-<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
-</a>
-<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
-</a>
-</div>
-<div class=copyright>
-© Copyright
-2021
-<span class=split><svg fill="#bbb" width="15" height="15" id="heart-15" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15"><path d="M13.91 6.75c-1.17 2.25-4.3 5.31-6.07 6.94-.1903.1718-.4797.1718-.67.0C5.39 12.06 2.26 9 1.09 6.75-1.48 1.8 5-1.5 7.5 3.45 10-1.5 16.48 1.8 13.91 6.75z"/></svg>
-</span>
-Bodun Hu
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-</footer>
-</body>
-</html>
+<a href=https://www.bodunhu.com/blog/tags/linux>linux</a></div><div id=comment><script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></section></main><footer id=footer><div id=social><a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg></a><a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg></a></div><div class=copyright>©
+2016-2021
+<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.</div><div class=powerby>Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a></div><a href=#top aria-label="go to top" title="Go to Top (Alt + G)"><button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button></a></footer></body></html>
