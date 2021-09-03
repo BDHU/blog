@@ -488,8 +488,8 @@ nav.navigation a.button {
 }
 @media (max-width: 700px) {
   #tags {
-    /* margin: 0 auto 0 auto; */
-    margin: 16px auto 0 auto;
+    margin: 0 auto 0 auto;
+    /* margin: 16px auto 0 auto; */
   }
   #tags .tag {
     display: inline-block;
