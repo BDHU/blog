@@ -4,7 +4,7 @@
 <meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
 <meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="This paper by [UTNS](https://utns.cs.utexas.edu/) lab appeared in [NDSI 2021](https://www.usenix.org/conference/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations">
+<meta name=description content="This paper by [UTNS](https://utns.cs.utexas.edu/) lab appeared in [NSDI 2021](https://www.usenix.org/conference/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations">
 <meta name=generator content="Hugo 0.88.1">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link rel=stylesheet href=/blog/css/style.css>
@@ -16,7 +16,7 @@
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Whiz: Data-Driven Analytics Execution">
-<meta name=twitter:description content="This paper by [UTNS](https://utns.cs.utexas.edu/) lab appeared in [NDSI 2021](https://www.usenix.org/conference/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations">
+<meta name=twitter:description content="This paper by [UTNS](https://utns.cs.utexas.edu/) lab appeared in [NSDI 2021](https://www.usenix.org/conference/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations">
 <meta name=twitter:site content="@https://twitter.com/BodunHu">
 <script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
 </head>
@@ -41,12 +41,12 @@
 </span>
 </div>
 <div class=content>
-<p>This paper by <a href=https://utns.cs.utexas.edu/ target=_blank rel=noopener>UTNS</a> lab appeared in <a href=https://www.usenix.org/conference/nsdi21 target=_blank rel=noopener>NDSI 2021</a>. It presents a data-analytics framework that decouples intermediate data from computations.</p>
+<p>This paper by <a href=https://utns.cs.utexas.edu/ target=_blank rel=noopener>UTNS</a> lab appeared in <a href=https://www.usenix.org/conference/nsdi21 target=_blank rel=noopener>NSDI 2021</a>. It presents a data-analytics framework that decouples intermediate data from computations.</p>
 <p>Whiz addresses several challenged posed by current analytics frameworks. The first one is data opacity. Most modern data analytics frameworks relies on MapReduce execution engine. The developer specifies the map and reduce function, which then get submitted to the analytics framework. The workflow can be expressed as a logical graph; the physical graph (which includes the cluster configuration, disk quota, etc.) is generated transparently. The workflow is shown below:</p>
 <p><p class=markdown-image>
 <img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/whiz-data-driven-analytics-execution/limitation1.png#center alt=mapreduce-limitation>
 </p></p>
-<p>The problem is in th region marked yellow. It shows the execution engine has limited runtime visibility into the intermediate data. Thus, adapting processing logic of tasks based on the states of intermediate data becomes challenging.</p>
+<p>The problem is in the region marked yellow. It shows the execution engine has limited runtime visibility into the intermediate data. Thus, adapting processing logic of tasks based on the states of intermediate data becomes challenging.</p>
 <p>In addition, task parallelism and intermediate data partition strategy are often static. In the graph above, the intermediate data partition tasks and the final reduce tasks might be determined prematurely, without taking the intermediate data partition characteristics into account. For example, <a href=https://itnext.io/handling-data-skew-in-apache-spark-9f56343e58e8 target=_blank rel=noopener>data skew</a> (unevenly distributed jobs) causes different reduce nodes to process different amount of tasks. The graph below illustrates how the shuffle stage can result in disproportional intermediate data partitions.</p>
 <p><p class=markdown-image>
 <img src=https://raw.githubusercontent.com/BDHU/Page_pics/a0119d0227e48aee2dba3cb48571b11b360a68b9/posts/whiz-data-driven-analytics-execution/data-skew.png#center alt=data-skew>
