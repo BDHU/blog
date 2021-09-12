@@ -134,30 +134,30 @@ cache systems, here is a picture demonstrating the memory hierarchy of a NVIDIA 
 </li>
 </ul>
 <p>We will later see why these assumptions are essential as we proceed with the experiment. We won&rsquo;t go through how P-Chase work exactly. To find more information, this <a href=https://arxiv.org/pdf/1509.02308.pdf target=_blank rel=noopener>paper</a> does a good job illustrating how P-Chase work. The takeaway is, we need to brute force an array with one element more than a cache can hold so that cache miss will start to occur periodically whereas such array with less or equal elements to the cache capacity will always result in cache hit and thus no access overhead will be introduced after all data is loaded into the cache. This is the algorithm the paper proposed and we will use it to do the experiment:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>__global__ <span style=color:#0b0;font-weight:700>void</span> <span style=color:#00a000>KernelFunction</span> ( . . . ) {
-    <span style=color:#080;font-style:italic>//declare shared memory space
-</span><span style=color:#080;font-style:italic></span>    __shared__ <span style=color:#0b0;font-weight:700>unsigned</span> <span style=color:#0b0;font-weight:700>int</span> s tvalue [ ] ;
-    __shared__ <span style=color:#0b0;font-weight:700>unsigned</span> <span style=color:#0b0;font-weight:700>int</span> s index [ ] ;
-    preheat the data ; <span style=color:#080;font-style:italic>// implementation varies
-</span><span style=color:#080;font-style:italic></span>    <span style=color:#a2f;font-weight:700>for</span> (it <span style=color:#666>=</span> <span style=color:#666>0</span>; it <span style=color:#666>&lt;</span> iter ; it<span style=color:#666>++</span>) {
-        start_time<span style=color:#666>=</span>clock();
-        j <span style=color:#666>=</span> my_array[j];
-        <span style=color:#080;font-style:italic>//store the array index
-</span><span style=color:#080;font-style:italic></span>
-        <span style=color:#080;font-style:italic>// This following line is essential because due to
-</span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// instruction-level parallelism (ILP), function clock() may
-</span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// overlap with its previous instruction and even return before
-</span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// the previous instruction finishes. For example,
-</span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// end_time=clock() can return before j = my_array[j] returns.
-</span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// adding s_index [it]= j since it have data dependency on the
-</span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// previous line. Thus the memory access will be over before
-</span><span style=color:#080;font-style:italic></span>        <span style=color:#080;font-style:italic>// end_time=clock() started.
-</span><span style=color:#080;font-style:italic></span>        s_index [it]<span style=color:#666>=</span> j;
-        end_time<span style=color:#666>=</span>clock();
-        <span style=color:#080;font-style:italic>//store the access latency
-</span><span style=color:#080;font-style:italic></span>        s_tvalue[it]<span style=color:#666>=</span> end_time<span>−</span>start_time ;
-    }
-}
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#111>__global__</span> <span style=color:#00a8c8>void</span> <span style=color:#75af00>KernelFunction</span> <span style=color:#111>(</span> <span style=color:#111>.</span> <span style=color:#111>.</span> <span style=color:#111>.</span> <span style=color:#111>)</span> <span style=color:#111>{</span>
+    <span style=color:#75715e>//declare shared memory space
+</span><span style=color:#75715e></span>    <span style=color:#111>__shared__</span> <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>int</span> <span style=color:#111>s</span> <span style=color:#111>tvalue</span> <span style=color:#111>[</span> <span style=color:#111>]</span> <span style=color:#111>;</span>
+    <span style=color:#111>__shared__</span> <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>int</span> <span style=color:#111>s</span> <span style=color:#111>index</span> <span style=color:#111>[</span> <span style=color:#111>]</span> <span style=color:#111>;</span>
+    <span style=color:#111>preheat</span> <span style=color:#111>the</span> <span style=color:#111>data</span> <span style=color:#111>;</span> <span style=color:#75715e>// implementation varies
+</span><span style=color:#75715e></span>    <span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#111>it</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>it</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>iter</span> <span style=color:#111>;</span> <span style=color:#111>it</span><span style=color:#f92672>++</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+        <span style=color:#111>start_time</span><span style=color:#f92672>=</span><span style=color:#111>clock</span><span style=color:#111>();</span>
+        <span style=color:#111>j</span> <span style=color:#f92672>=</span> <span style=color:#111>my_array</span><span style=color:#111>[</span><span style=color:#111>j</span><span style=color:#111>];</span>
+        <span style=color:#75715e>//store the array index
+</span><span style=color:#75715e></span>
+        <span style=color:#75715e>// This following line is essential because due to
+</span><span style=color:#75715e></span>        <span style=color:#75715e>// instruction-level parallelism (ILP), function clock() may
+</span><span style=color:#75715e></span>        <span style=color:#75715e>// overlap with its previous instruction and even return before
+</span><span style=color:#75715e></span>        <span style=color:#75715e>// the previous instruction finishes. For example,
+</span><span style=color:#75715e></span>        <span style=color:#75715e>// end_time=clock() can return before j = my_array[j] returns.
+</span><span style=color:#75715e></span>        <span style=color:#75715e>// adding s_index [it]= j since it have data dependency on the
+</span><span style=color:#75715e></span>        <span style=color:#75715e>// previous line. Thus the memory access will be over before
+</span><span style=color:#75715e></span>        <span style=color:#75715e>// end_time=clock() started.
+</span><span style=color:#75715e></span>        <span style=color:#111>s_index</span> <span style=color:#111>[</span><span style=color:#111>it</span><span style=color:#111>]</span><span style=color:#f92672>=</span> <span style=color:#111>j</span><span style=color:#111>;</span>
+        <span style=color:#111>end_time</span><span style=color:#f92672>=</span><span style=color:#111>clock</span><span style=color:#111>();</span>
+        <span style=color:#75715e>//store the access latency
+</span><span style=color:#75715e></span>        <span style=color:#111>s_tvalue</span><span style=color:#111>[</span><span style=color:#111>it</span><span style=color:#111>]</span><span style=color:#f92672>=</span> <span style=color:#111>end_time</span><span style=color:#960050;background-color:#1e0010>−</span><span style=color:#111>start_time</span> <span style=color:#111>;</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
 </code></pre></div><p>The steps is the same as the paper proposes, so here we show the paper&rsquo;s method:</p>
 <ol>
 <li>
@@ -174,23 +174,23 @@ cache systems, here is a picture demonstrating the memory hierarchy of a NVIDIA 
 </li>
 </ol>
 <h2 id=texture-l1-cache-and-read-only-data-cache>Texture L1 Cache and Read-only Data Cache <a href=#texture-l1-cache-and-read-only-data-cache class=anchor>🔗</a></h2><p>When use the <a href=http://www.comp.hkbu.edu.hk/~chxw/Code/fine_grain_Maxwell_texture_L1.cu target=_blank rel=noopener>code</a> with increased our own data preheat implementation because the texture L1 cache can potentially be greater than the shared memory. The original code uses the first iteration of the loop in the algorithm as a way to preheat data:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#a2f;font-weight:700>const</span> <span style=color:#0b0;font-weight:700>int</span> it <span style=color:#666>=</span>  <span style=color:#666>6144</span> <span style=color:#080;font-style:italic>// texture L1 may hold more elements,
-</span><span style=color:#080;font-style:italic></span>                     <span style=color:#080;font-style:italic>// So the first iteration may not cold
-</span><span style=color:#080;font-style:italic></span>                     <span style=color:#080;font-style:italic>// hit all elements, some cold hits can
-</span><span style=color:#080;font-style:italic></span>                     <span style=color:#080;font-style:italic>// be moved to the second iteration,
-</span><span style=color:#080;font-style:italic></span>                     <span style=color:#080;font-style:italic>// causing confusion
-</span><span style=color:#080;font-style:italic></span><span style=color:#a2f;font-weight:700>for</span> (<span style=color:#0b0;font-weight:700>int</span> cnt<span style=color:#666>=</span><span style=color:#666>0</span>; cnt <span style=color:#666>&lt;</span> it; cnt<span style=color:#666>++</span>) {
-    start<span style=color:#666>=</span>clock();
-    j<span style=color:#666>=</span>tex1Dfetch(tex_ref, j);
-    s_value[cnt] <span style=color:#666>=</span> j;
-    end<span style=color:#666>=</span>clock();
-    s_tvalue[cnt] <span style=color:#666>=</span> (end <span style=color:#666>-</span>start);
-}
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#00a8c8>const</span> <span style=color:#00a8c8>int</span> <span style=color:#111>it</span> <span style=color:#f92672>=</span>  <span style=color:#ae81ff>6144</span> <span style=color:#75715e>// texture L1 may hold more elements,
+</span><span style=color:#75715e></span>                     <span style=color:#75715e>// So the first iteration may not cold
+</span><span style=color:#75715e></span>                     <span style=color:#75715e>// hit all elements, some cold hits can
+</span><span style=color:#75715e></span>                     <span style=color:#75715e>// be moved to the second iteration,
+</span><span style=color:#75715e></span>                     <span style=color:#75715e>// causing confusion
+</span><span style=color:#75715e></span><span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#00a8c8>int</span> <span style=color:#111>cnt</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>cnt</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>it</span><span style=color:#111>;</span> <span style=color:#111>cnt</span><span style=color:#f92672>++</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+    <span style=color:#111>start</span><span style=color:#f92672>=</span><span style=color:#111>clock</span><span style=color:#111>();</span>
+    <span style=color:#111>j</span><span style=color:#f92672>=</span><span style=color:#111>tex1Dfetch</span><span style=color:#111>(</span><span style=color:#111>tex_ref</span><span style=color:#111>,</span> <span style=color:#111>j</span><span style=color:#111>);</span>
+    <span style=color:#111>s_value</span><span style=color:#111>[</span><span style=color:#111>cnt</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>j</span><span style=color:#111>;</span>
+    <span style=color:#111>end</span><span style=color:#f92672>=</span><span style=color:#111>clock</span><span style=color:#111>();</span>
+    <span style=color:#111>s_tvalue</span><span style=color:#111>[</span><span style=color:#111>cnt</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#111>end</span> <span style=color:#f92672>-</span><span style=color:#111>start</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
 </code></pre></div><p>However, if texture L1 cache is greater than the shared memory allowed for each thread block, then some reads in the second loop will trigger cache misses. But such misses are in fact cold misses, not misses caused after the texture L1 cache is completely filled up. One solution is increase iteration to a much larger number so that the first iteration will always fill up the texture L1 cache. Note that if you move the data
 preheat out such as</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#a2f;font-weight:700>for</span> (<span style=color:#0b0;font-weight:700>int</span> cnt<span style=color:#666>=</span><span style=color:#666>0</span>; cnt <span style=color:#666>&lt;</span> it; cnt<span style=color:#666>++</span>) {
-        tmp<span style=color:#666>=</span>tex1Dfetch(tex_ref, tmp);
-}
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#00a8c8>int</span> <span style=color:#111>cnt</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>cnt</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>it</span><span style=color:#111>;</span> <span style=color:#111>cnt</span><span style=color:#f92672>++</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+        <span style=color:#111>tmp</span><span style=color:#f92672>=</span><span style=color:#111>tex1Dfetch</span><span style=color:#111>(</span><span style=color:#111>tex_ref</span><span style=color:#111>,</span> <span style=color:#111>tmp</span><span style=color:#111>);</span>
+<span style=color:#111>}</span>
 </code></pre></div><p>The compiler can optimize this whole step out and thus nothing actually gets executed.</p>
 <p>After we run the modified code, the result shows that the we the cache missed starts when we set our array size to 6145, indicating the texture L1 cache can hold 6144 ints, which is equivalent to 24 kb. We also notice that each miss is followed by 7 consecutive hits. This means the cache line size is 8 words(b = 32 bytes). The structure of the L1 TLB is shown below, notice there are 192 lines in each set:</p>
 <table>

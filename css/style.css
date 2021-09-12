@@ -107,7 +107,8 @@ h4:hover a {
   visibility: visible
 }
 .highlight pre {
-  padding: 7px;
+  /* padding: 7px; */
+  padding: 8px 14px;
   overflow-x: auto;
 }
 

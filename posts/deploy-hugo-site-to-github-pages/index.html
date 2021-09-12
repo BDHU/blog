@@ -52,7 +52,7 @@ ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N
 <p>Test Hugo site by executing <code>hugo server</code> in the source code directory to make sure the site is generated properly.</p>
 </blockquote>
 <p>Then, we need to generate a pair of keys by using the following command:</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ssh-keygen -t rsa -b <span style=color:#666>4096</span> -C <span style=color:#b44>&#34;</span><span style=color:#a2f;font-weight:700>$(</span>git config user.email<span style=color:#a2f;font-weight:700>)</span><span style=color:#b44>&#34;</span> -f deployment -N <span style=color:#b44>&#34;&#34;</span>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ssh-keygen -t rsa -b <span style=color:#ae81ff>4096</span> -C <span style=color:#d88200>&#34;</span><span style=color:#00a8c8>$(</span>git config user.email<span style=color:#00a8c8>)</span><span style=color:#d88200>&#34;</span> -f deployment -N <span style=color:#d88200>&#34;&#34;</span>
 </code></pre></div><p>This will create two files: <code>deployment</code> and <code>deployment.pub</code>, which corresponds to a private key and a public key.</p>
 <p>Next, execute <code>cat deployment</code> and copy the private key. Navigate to the private <em>source repository -> Settings -> Secrets -> New repository secret</em>. Paste the private key and save the change.</p>
 <p><p class=markdown-image>
@@ -64,41 +64,41 @@ ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N
 <img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-keys.png alt=Github-keys>
 </p></p>
 <p>Finally, create a directory in the private repository in the following directory: <code>.github/workflows/deploy.yml</code>.</p>
-<div class=highlight><pre tabindex=0 style=background-color:#f8f8f8;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>github pages<span style=color:#bbb>
-</span><span style=color:#bbb>
-</span><span style=color:#bbb></span><span style=color:green;font-weight:700>on</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>push</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>branches</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>      </span>- main <span style=color:#bbb> </span><span style=color:#080;font-style:italic># Set a branch to deploy</span><span style=color:#bbb>
-</span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>pull_request</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>
-</span><span style=color:#bbb></span><span style=color:green;font-weight:700>jobs</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>  </span><span style=color:green;font-weight:700>deploy</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>runs-on</span>:<span style=color:#bbb> </span>ubuntu-20.04<span style=color:#bbb>
-</span><span style=color:#bbb>    </span><span style=color:green;font-weight:700>steps</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>actions/checkout@v2<span style=color:#bbb>
-</span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>submodules</span>:<span style=color:#bbb> </span><span style=color:#a2f;font-weight:700>true</span><span style=color:#bbb>  </span><span style=color:#080;font-style:italic># Fetch Hugo themes (true OR recursive)</span><span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>fetch-depth</span>:<span style=color:#bbb> </span><span style=color:#666>0</span><span style=color:#bbb>    </span><span style=color:#080;font-style:italic># Fetch all history for .GitInfo and .Lastmod</span><span style=color:#bbb>
-</span><span style=color:#bbb>
-</span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>Setup Hugo<span style=color:#bbb>
-</span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>peaceiris/actions-hugo@v2<span style=color:#bbb>
-</span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>hugo-version</span>:<span style=color:#bbb> </span><span style=color:#b44>&#39;0.83.0&#39;</span><span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:#080;font-style:italic># hugo-version: &#39;latest&#39;</span><span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:#080;font-style:italic># extended: true</span><span style=color:#bbb>
-</span><span style=color:#bbb>
-</span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>Build<span style=color:#bbb>
-</span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>run</span>:<span style=color:#bbb> </span>hugo --minify<span style=color:#bbb>
-</span><span style=color:#bbb>
-</span><span style=color:#bbb>      </span>- <span style=color:green;font-weight:700>name</span>:<span style=color:#bbb> </span>Deploy<span style=color:#bbb>
-</span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>uses</span>:<span style=color:#bbb> </span>peaceiris/actions-gh-pages@v3<span style=color:#bbb>
-</span><span style=color:#bbb>        </span><span style=color:green;font-weight:700>with</span>:<span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>deploy_key</span>:<span style=color:#bbb> </span>${{ secrets.PRIVATE_KEY }}<span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>external_repository</span>:<span style=color:#bbb> </span>your_username/public_repository_name<span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>publish_branch</span>:<span style=color:#bbb> </span>branch_to_publish<span style=color:#bbb>
-</span><span style=color:#bbb>          </span><span style=color:green;font-weight:700>publish_dir</span>:<span style=color:#bbb> </span>./public<span style=color:#bbb>
-</span></code></pre></div><p>Finally, make sure you create a file named <code>.nojekyll</code> in the root directory of the public repository to prevent GitHub Pages from building the site using Jekyll.</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yaml data-lang=yaml><span style=color:#f92672>name</span><span style=color:#111>:</span> <span style=color:#ae81ff>github pages</span>
+
+<span style=color:#f92672>on</span><span style=color:#111>:</span>
+  <span style=color:#f92672>push</span><span style=color:#111>:</span>
+    <span style=color:#f92672>branches</span><span style=color:#111>:</span>
+      - <span style=color:#ae81ff>main </span> <span style=color:#75715e># Set a branch to deploy</span>
+  <span style=color:#f92672>pull_request</span><span style=color:#111>:</span>
+
+<span style=color:#f92672>jobs</span><span style=color:#111>:</span>
+  <span style=color:#f92672>deploy</span><span style=color:#111>:</span>
+    <span style=color:#f92672>runs-on</span><span style=color:#111>:</span> <span style=color:#ae81ff>ubuntu-20.04</span>
+    <span style=color:#f92672>steps</span><span style=color:#111>:</span>
+      - <span style=color:#f92672>uses</span><span style=color:#111>:</span> <span style=color:#ae81ff>actions/checkout@v2</span>
+        <span style=color:#f92672>with</span><span style=color:#111>:</span>
+          <span style=color:#f92672>submodules</span><span style=color:#111>:</span> <span style=color:#00a8c8>true</span>  <span style=color:#75715e># Fetch Hugo themes (true OR recursive)</span>
+          <span style=color:#f92672>fetch-depth</span><span style=color:#111>:</span> <span style=color:#ae81ff>0</span>    <span style=color:#75715e># Fetch all history for .GitInfo and .Lastmod</span>
+
+      - <span style=color:#f92672>name</span><span style=color:#111>:</span> <span style=color:#ae81ff>Setup Hugo</span>
+        <span style=color:#f92672>uses</span><span style=color:#111>:</span> <span style=color:#ae81ff>peaceiris/actions-hugo@v2</span>
+        <span style=color:#f92672>with</span><span style=color:#111>:</span>
+          <span style=color:#f92672>hugo-version</span><span style=color:#111>:</span> <span style=color:#d88200>&#39;0.83.0&#39;</span>
+          <span style=color:#75715e># hugo-version: &#39;latest&#39;</span>
+          <span style=color:#75715e># extended: true</span>
+
+      - <span style=color:#f92672>name</span><span style=color:#111>:</span> <span style=color:#ae81ff>Build</span>
+        <span style=color:#f92672>run</span><span style=color:#111>:</span> <span style=color:#ae81ff>hugo --minify</span>
+
+      - <span style=color:#f92672>name</span><span style=color:#111>:</span> <span style=color:#ae81ff>Deploy</span>
+        <span style=color:#f92672>uses</span><span style=color:#111>:</span> <span style=color:#ae81ff>peaceiris/actions-gh-pages@v3</span>
+        <span style=color:#f92672>with</span><span style=color:#111>:</span>
+          <span style=color:#f92672>deploy_key</span><span style=color:#111>:</span> <span style=color:#ae81ff>${{ secrets.PRIVATE_KEY }}</span>
+          <span style=color:#f92672>external_repository</span><span style=color:#111>:</span> <span style=color:#ae81ff>your_username/public_repository_name</span>
+          <span style=color:#f92672>publish_branch</span><span style=color:#111>:</span> <span style=color:#ae81ff>branch_to_publish</span>
+          <span style=color:#f92672>publish_dir</span><span style=color:#111>:</span> <span style=color:#ae81ff>./public</span>
+</code></pre></div><p>Finally, make sure you create a file named <code>.nojekyll</code> in the root directory of the public repository to prevent GitHub Pages from building the site using Jekyll.</p>
 <p>Every time you make commits to the private repository, the site will be automatically generated and published on the public repository.</p>
 </div>
 <div class=tags>

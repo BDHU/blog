@@ -1,0 +1,197 @@
+<!doctype html><html lang=en-us>
+<head>
+<title>Specifying Token Ring for Mutual Exclusion | std::bodun::blog</title>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it's a mechanism of concurrency control allowing exclusive access to some resource (or &#34;critical region&#34;). Token passing is an algorithm for distributed mutual exclusion and will be our focus in this post">
+<meta name=generator content="Hugo 0.88.1">
+<meta name=ROBOTS content="INDEX, FOLLOW">
+<link rel=stylesheet href=/blog/css/style.css>
+<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
+<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="Specifying Token Ring for Mutual Exclusion">
+<meta name=twitter:description content="Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it's a mechanism of concurrency control allowing exclusive access to some resource (or &#34;critical region&#34;). Token passing is an algorithm for distributed mutual exclusion and will be our focus in this post">
+<meta name=twitter:site content="@https://twitter.com/BodunHu">
+<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
+</head>
+<body>
+<nav class=navigation>
+<a href=/blog/> <span class=arrow>←</span>Home</a>
+<a href=/blog/posts>Archive</a>
+<a href=/blog/tags>Tags</a>
+<a href=https://www.bodunhu.com/>About</a>
+<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
+</nav>
+<main class=main>
+<section id=single>
+<h1 class=title>Specifying Token Ring for Mutual Exclusion</h1>
+<div class=tip>
+<time datetime="2021-09-11 00:00:00 +0000 UTC">Sep 11, 2021</time>
+<span class=split>
+·
+</span>
+<span>
+4 minute read
+</span>
+</div>
+<div class=content>
+<p>Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it&rsquo;s a mechanism of concurrency control allowing exclusive access to some resource (or &ldquo;critical region&rdquo;). Token passing is an algorithm for distributed mutual exclusion (DME) and will be our focus in this post.</p>
+<p>DME specifications usually make the following assumptions:</p>
+<ul>
+<li>Network delivers message in order, e.g. TCP (sometimes)</li>
+<li>Every message is eventually delivered (usually)</li>
+<li>Messages are never duplicated. Duplication may result granting resources to multiple clients, which is not what mutual exclusion demands (usually)</li>
+</ul>
+<p>Thing we might want to guarantee for DME specifications are:</p>
+<ul>
+<li>Mutual exclusion, at most one client is in a critical section (always)</li>
+<li>Non-starvation. A requesting client enters critical section eventually (usually)</li>
+<li>Non-overtaking. A client cannot enter critical section more than once while another client waits (usually)</li>
+</ul>
+<p>In addition, we need to analyze DME algorithms' performance metrics, which usually includes:</p>
+<ul>
+<li>Message complexity, e.g. number of messages sent between clients being served</li>
+<li>response time, or time between request and entering CS</li>
+<li>Throughput, or rate of processing CS requests</li>
+</ul>
+<p>Let&rsquo;s take a token ring as an example. In a token ring, a client holds a token and then sends it to the next one after exiting its critical section. When we make assumptions about a token ring, we</p>
+<ul>
+<li>do not need to have network delivering messages in order, because at any given time in a token, there is at most one message in transit.</li>
+<li>ensure every message is eventually delivered. Otherwise, the system won&rsquo;t make progress, and we will not have non-starvation guarantee.</li>
+<li>need non-duplication for messages. Otherwise, we violate the fundamental properties of this protocol, or no mutual exclusion.</li>
+<li>clients don&rsquo;t spuriously release. This will be clear later when we demonstrate what happens if clients release multiple times.</li>
+</ul>
+<p><p class=markdown-image>
+<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/token-ring-protocol/token-ring.png#center alt=token-ring>
+</p></p>
+<p>We want to guarantee that</p>
+<ul>
+<li>mutual exclusion holds.</li>
+<li>non-starvation</li>
+<li>non-overtaking, because token will get through every client in the network first because repetition happens.</li>
+</ul>
+<p>To analyze token performance, we use the above performance metrics (message complexity, response time, and throughput)</p>
+<ul>
+<li>Message complexity: when the system is under low load, the message complexity is unbounded because there may be an arbitrary number of messages being sent throughout the network where no one is in the critical section. When system is under high load, the message complexity is 1.</li>
+<li>Response time: when the system is under low load, there could be \(N\) messages times (where \(N\) is the total number of clients). When under high load, the response time would be 1 message time.</li>
+<li>Throughput: the maximum throughput would be 1/(message time + CS time)</li>
+</ul>
+<p>A naive specification for mutex in <a href=https://microsoft.github.io/ivy/language.html target=_blank rel=noopener>Ivy</a> would be:</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#75af00>action</span> <span style=color:#111>grant</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#00a8c8>:</span><span style=color:#111>id</span><span style=color:#111>)</span>
+<span style=color:#75af00>action</span> <span style=color:#111>release</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#00a8c8>:</span><span style=color:#111>id</span><span style=color:#111>)</span>
+
+<span style=color:#75af00>specification</span> <span style=color:#111>{</span>
+    <span style=color:#111>var</span> <span style=color:#111>lock</span><span style=color:#111>(</span><span style=color:#00a8c8>X:</span><span style=color:#111>id</span><span style=color:#111>)</span><span style=color:#00a8c8>:</span><span style=color:#111>bool</span>
+    <span style=color:#111>after</span> <span style=color:#111>init</span> <span style=color:#111>{</span>
+        <span style=color:#111>lock</span><span style=color:#111>(</span><span style=color:#00a8c8>X</span><span style=color:#111>)</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>false</span><span style=color:#111>;</span>
+    <span style=color:#111>}</span>
+    
+    <span style=color:#111>before</span> <span style=color:#111>grant</span> <span style=color:#111>{</span>
+        <span style=color:#111>require</span> <span style=color:#f92672>~</span><span style=color:#111>lock</span><span style=color:#111>(</span><span style=color:#00a8c8>X</span><span style=color:#111>);</span>
+        <span style=color:#111>lock</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#111>)</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>true</span>
+    <span style=color:#111>}</span>
+
+    <span style=color:#111>before</span> <span style=color:#111>release</span> <span style=color:#111>{</span>
+        <span style=color:#111>require</span> <span style=color:#111>lock</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#111>);</span>
+        <span style=color:#111>lock</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#111>)</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>false</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>To see token ring in action, we use the demo from <a href=http://mcmil.net/wordpress/ target=_blank rel=noopener>Ken</a>&rsquo;s presentation:</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#f92672>#</span><span style=color:#111>lang</span> <span style=color:#111>ivy1</span><span style=color:#f92672>.</span><span style=color:#ae81ff>8</span>
+
+<span style=color:#75af00>include</span> <span style=color:#111>network</span>
+<span style=color:#75af00>include</span> <span style=color:#111>numbers</span>
+
+<span style=color:#75af00>global</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>type</span> <span style=color:#111>host_id</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span><span style=color:#ae81ff>0</span><span style=color:#f92672>..</span><span style=color:#111>max</span><span style=color:#111>}</span>
+    <span style=color:#111>alias</span> <span style=color:#111>token</span> <span style=color:#f92672>=</span> <span style=color:#111>uint</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]</span>
+    <span style=color:#00a8c8>instance</span> <span style=color:#111>net</span> <span style=color:#00a8c8>:</span> <span style=color:#111>tcp</span><span style=color:#f92672>.</span><span style=color:#111>net</span><span style=color:#111>(</span><span style=color:#111>token</span><span style=color:#111>)</span>
+<span style=color:#111>}</span>
+
+<span style=color:#75af00>process</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#00a8c8>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+    <span style=color:#00a8c8>import</span> <span style=color:#111>action</span> <span style=color:#111>grant</span>
+    <span style=color:#111>export</span> <span style=color:#111>action</span> <span style=color:#111>release</span>
+
+    <span style=color:#111>specification</span> <span style=color:#111>{</span>
+        <span style=color:#111>var</span> <span style=color:#111>lock</span> <span style=color:#00a8c8>:</span> <span style=color:#111>bool</span>
+
+        <span style=color:#111>after</span> <span style=color:#111>init</span> <span style=color:#111>{</span>
+            <span style=color:#111>lock</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>false</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+
+        <span style=color:#111>before</span> <span style=color:#111>grant</span> <span style=color:#111>{</span>
+            <span style=color:#111>require</span> <span style=color:#111>forall</span> <span style=color:#00a8c8>X</span><span style=color:#f92672>.</span> <span style=color:#f92672>~</span><span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#00a8c8>X</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>lock</span><span style=color:#111>;</span>
+            <span style=color:#111>lock</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>true</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+
+        <span style=color:#111>before</span> <span style=color:#111>release</span> <span style=color:#111>{</span>
+            <span style=color:#111>require</span> <span style=color:#111>lock</span><span style=color:#111>;</span>
+            <span style=color:#111>lock</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>false</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+
+    <span style=color:#111>implementation</span> <span style=color:#111>{</span>
+        <span style=color:#00a8c8>instance</span> <span style=color:#111>sock</span> <span style=color:#00a8c8>:</span> <span style=color:#111>net</span><span style=color:#f92672>.</span><span style=color:#111>socket</span>
+
+        <span style=color:#111>after</span> <span style=color:#111>init</span> <span style=color:#111>{</span>
+            <span style=color:#00a8c8>if</span> <span style=color:#111>self</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span> <span style=color:#111>{</span>
+                <span style=color:#111>pass</span>
+            <span style=color:#111>}</span>
+        <span style=color:#111>}</span>
+
+        <span style=color:#111>action</span> <span style=color:#111>pass</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+            <span style=color:#111>var</span> <span style=color:#111>tok</span> <span style=color:#00a8c8>:</span> <span style=color:#111>token</span><span style=color:#111>;</span>
+            <span style=color:#111>var</span> <span style=color:#111>next</span> <span style=color:#00a8c8>:=</span> <span style=color:#ae81ff>0</span> <span style=color:#00a8c8>if</span> <span style=color:#111>self</span> <span style=color:#f92672>=</span> <span style=color:#111>max</span> <span style=color:#00a8c8>else</span> <span style=color:#111>self</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span>
+            <span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#111>next</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>id</span><span style=color:#111>,</span> <span style=color:#111>tok</span><span style=color:#111>);</span>
+        <span style=color:#111>}</span>
+
+        <span style=color:#111>implement</span> <span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#111>src</span><span style=color:#00a8c8>:</span><span style=color:#111>tcp</span><span style=color:#f92672>.</span><span style=color:#111>endpoint</span><span style=color:#111>,</span> <span style=color:#111>val</span><span style=color:#00a8c8>:</span><span style=color:#111>token</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+            <span style=color:#111>grant</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+
+        <span style=color:#111>implement</span> <span style=color:#111>release</span> <span style=color:#111>{</span>
+            <span style=color:#111>pass</span><span style=color:#111>;</span>
+        <span style=color:#111>}</span>
+    <span style=color:#111>}</span>
+<span style=color:#111>}</span>
+</code></pre></div><p>We put the above code into a file called <code>token_ring.ivy</code> and compile it using <code>ivyc token_ring.ivy</code>. Then we launch the program using <code>ivy_launch max=2 token_ring.ivy</code>, which opens three terminal windows.</p>
+<p>If we type in host(1) with <code>host.release</code>, we see in host(2) it outputs <code>host.grant</code>, which seems to show that the token work properly. However, if we type <code>host.release</code> again in host(1), <code>host.grant</code> will show up again in host(2), resulting in multiple tokens getting created, which violates the requirement that there is at most one token in the ring at any given time.</p>
+<p>If we execute <code>ivyc target=test token_ring.ivy && ivy_launch max=2 token_ring.ivy</code>, then we see the token ring work properly. The reason is we have specified the requirement for <code>grant</code> and <code>release</code> (<code>require forall X. ~host(X).lock</code> for <code>grant</code> and <code>require lock</code> for <code>release</code>).</p>
+<p><code>grant</code> is an action <em>imported</em> from the environment, thus we know when grant happens, all clients in the network do not hold a lock. On the other hand, <code>release</code> is an action <em>exported</em> from the system, which means the tester must perform grant given the host has the lock. So the tester won&rsquo;t perform <em>release</em> multiple times like we did above because the tester can not violate the <code>require lock</code> requirement.</p>
+</div>
+<div class=tags>
+<a href=https://www.bodunhu.com/blog/tags/distributed-system>distributed-system</a>
+<a href=https://www.bodunhu.com/blog/tags/ivy>ivy</a>
+</div>
+<div id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
+</div>
+</section>
+</main>
+<footer id=footer>
+<div id=social>
+<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
+</a>
+<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
+</a>
+</div>
+<div class=copyright>
+©
+2016-2021
+<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
+</div>
+<div class=powerby>
+Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
+</div>
+<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
+<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
+</a>
+</footer>
+</body>
+</html>
