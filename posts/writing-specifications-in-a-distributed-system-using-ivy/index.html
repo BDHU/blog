@@ -1,81 +1,10 @@
-<!doctype html><html lang=en-us>
-<head>
-<title>Writing Specifications in a Distributed System using Ivy | std::bodun::blog</title>
-<meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http://mcmil.net/wordpress/): a specification is a *statement*">
-<meta name=generator content="Hugo 0.88.1">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Writing Specifications in a Distributed System using Ivy">
-<meta name=twitter:description content="Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http://mcmil.net/wordpress/): a specification is a *statement*">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
-</head>
-<body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
+<!doctype html><html lang=en-us><head><title>Writing Specifications in a Distributed System using Ivy | std::bodun::blog</title><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http://mcmil.net/wordpress/): a specification is a *statement*"><meta name=generator content="Hugo 0.83.1"><meta name=ROBOTS content="INDEX, FOLLOW"><link rel=stylesheet href=/blog/css/style.css><link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script><script async src=https://www.google-analytics.com/analytics.js></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script><meta name=twitter:card content="summary"><meta name=twitter:title content="Writing Specifications in a Distributed System using Ivy"><meta name=twitter:description content="Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http://mcmil.net/wordpress/): a specification is a *statement*"><meta name=twitter:site content="@https://twitter.com/BodunHu"><script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script></head><body><nav class=navigation><a href=/blog/><span class=arrow>←</span>Home</a>
 <a href=/blog/posts>Archive</a>
 <a href=/blog/tags>Tags</a>
 <a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Writing Specifications in a Distributed System using Ivy</h1>
-<div class=tip>
-<time datetime="2021-09-08 00:00:00 +0000 UTC">Sep 8, 2021</time>
-<span class=split>
-·
-</span>
-<span>
-5 minute read
-</span>
-</div>
-<div class=content>
-<p>Before we jump into writing specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent <a href=http://mcmil.net/wordpress/ target=_blank rel=noopener>Ken McMillan</a>: a specification is a <em>statement</em>.</p>
-<p>A statement describes an abstract view of a program. The view itself is often at an interface, which hides or abstracts internal states. A specification is stated in terms of two elements:</p>
-<ul>
-<li>Assumption: properties of the environment the system relies on</li>
-<li>Guarantee: properties that most hold <em>if</em> the assumption(s) is met</li>
-</ul>
-<p>The way we write specifications is through an abstract program that observes or monitors all program events. This abstract program is able to remember the execution history of program being monitored, and decides, at any given moment, whether an action is allowable according to the specification.</p>
-<p>One way to implement this abstract monitor program is to use guarded command form:</p>
-<ul>
-<li>Let \(A\) be a set of program actions</li>
-<li>An event \(e(x_1,\ &mldr;,\ x_n)\) is an action \(e\in A\) with parameter values \(x_1,\ &mldr;,\ x_n\) of the right types for \(e\).</li>
-<li>Let \(S\) be a set of states and \(s_0 \in S\) be the initial state.</li>
-<li>Guarded command set \(G\) is specified as:</li>
-</ul>
-<p>\[e(V):\ \gamma (S,V) \rightarrow {S := \tau(S, V)}\]</p>
-<p>It means if a guarded command \(\gamma\) determines a given event \(e\) satisfies certain specifications with parameter \(V\) under state \(S\), then we accept the code and then deterministically update the state with a function \(\tau\).</p>
-<p>The observation \(E\) of system is going to be a finite sequence of events, which corresponds to the system behavior, denoted as \(e_0(V_0)&mldr;e_{n-1}(V_{n-1})\). A run of \(E\) is a state sequence \(s_0\ &mldr;s_n\) such that for \(i\in 0\ &mldr; n- 1\), \(\gamma(s_i, V_i)\) is true and \(s_{i+1} = \tau(s_i, v_i)\). Observation \(E\) is accepted by the specification iff it has a run. We can test whether an observation is accepted by just executing the guarded commands. In layman&rsquo;s term, if all guarded commands accepts the their corresponding event at a given time, then the sequence events must satisfy our specification and should be accepted.</p>
-<p>Now let&rsquo;s replicated file as an example. Out first informal attempt to the specification for &ldquo;append&rdquo; operation would be:</p>
-<ul>
-<li>Assumption: network is ordered and non-duplicating</li>
-<li>Guarantee: if no further append requests, eventually replicas are equal</li>
-</ul>
-<p>However, the problem with this specification is that this is a liveness property, meaning that we can&rsquo;t practically test such property by observing a finite sequence of events. Therefore, we resort to a different safety specification we can test:</p>
-<ul>
-<li>If all sent messages are delivered, the two replicas are identical.</li>
-</ul>
-<p>Now we convert liveness to safety by explicitly defining the moment hen the eventuality should hold.</p>
-<blockquote>
-<p>Liveness property means a good thing eventually happens. A liveness property can be <em>refuted</em> by finite execution. Safety property means a bad thing never happens. A safety property can always be refuted by a finite execution.</p>
-</blockquote>
-<p>To see how replicated file specification plays in action, we use the example given in <a href=http://mcmil.net/wordpress/ target=_blank rel=noopener>Prof. McMillan</a>&rsquo;s presentation. The code is written in <a href=http://microsoft.github.io/ivy/language.html target=_blank rel=noopener>Ivy</a> and is pretty self-explanatory. In this demo we only have two processes.</p>
-<blockquote>
-<p>To install Ivy, simply execute <code>virtualenv ivyenv && source ivyenv/bin/activate && pip install ms-ivy</code>. This is tested on Ubuntu 18.04 LTS and may vary slight on other distros.</p>
-</blockquote>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#f92672>#</span><span style=color:#111>lang</span> <span style=color:#111>ivy1</span><span style=color:#f92672>.</span><span style=color:#ae81ff>8</span>
+<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a></nav><main class=main><section id=single><h1 class=title>Writing Specifications in a Distributed System using Ivy</h1><div class=tip><time datetime="2021-09-08 00:00:00 +0000 UTC">Sep 8, 2021</time>
+<span class=split>·</span>
+<span>5 minute read</span></div><div class=content><p>Before we jump into writing specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent <a href=http://mcmil.net/wordpress/ target=_blank rel=noopener>Ken McMillan</a>: a specification is a <em>statement</em>.</p><p>A statement describes an abstract view of a program. The view itself is often at an interface, which hides or abstracts internal states. A specification is stated in terms of two elements:</p><ul><li>Assumption: properties of the environment the system relies on</li><li>Guarantee: properties that most hold <em>if</em> the assumption(s) is met</li></ul><p>The way we write specifications is through an abstract program that observes or monitors all program events. This abstract program is able to remember the execution history of program being monitored, and decides, at any given moment, whether an action is allowable according to the specification.</p><p>One way to implement this abstract monitor program is to use guarded command form:</p><ul><li>Let \(A\) be a set of program actions</li><li>An event \(e(x_1,\ &mldr;,\ x_n)\) is an action \(e\in A\) with parameter values \(x_1,\ &mldr;,\ x_n\) of the right types for \(e\).</li><li>Let \(S\) be a set of states and \(s_0 \in S\) be the initial state.</li><li>Guarded command set \(G\) is specified as:</li></ul><p>\[e(V):\ \gamma (S,V) \rightarrow {S := \tau(S, V)}\]</p><p>It means if a guarded command \(\gamma\) determines a given event \(e\) satisfies certain specifications with parameter \(V\) under state \(S\), then we accept the code and then deterministically update the state with a function \(\tau\).</p><p>The observation \(E\) of system is going to be a finite sequence of events, which corresponds to the system behavior, denoted as \(e_0(V_0)&mldr;e_{n-1}(V_{n-1})\). A run of \(E\) is a state sequence \(s_0\ &mldr;s_n\) such that for \(i\in 0\ &mldr; n- 1\), \(\gamma(s_i, V_i)\) is true and \(s_{i+1} = \tau(s_i, v_i)\). Observation \(E\) is accepted by the specification iff it has a run. We can test whether an observation is accepted by just executing the guarded commands. In layman&rsquo;s term, if all guarded commands accepts the their corresponding event at a given time, then the sequence events must satisfy our specification and should be accepted.</p><p>Now let&rsquo;s replicated file as an example. Out first informal attempt to the specification for &ldquo;append&rdquo; operation would be:</p><ul><li>Assumption: network is ordered and non-duplicating</li><li>Guarantee: if no further append requests, eventually replicas are equal</li></ul><p>However, the problem with this specification is that this is a liveness property, meaning that we can&rsquo;t practically test such property by observing a finite sequence of events. Therefore, we resort to a different safety specification we can test:</p><ul><li>If all sent messages are delivered, the two replicas are identical.</li></ul><p>Now we convert liveness to safety by explicitly defining the moment hen the eventuality should hold.</p><blockquote><p>Liveness property means a good thing eventually happens. A liveness property can be <em>refuted</em> by finite execution. Safety property means a bad thing never happens. A safety property can always be refuted by a finite execution.</p></blockquote><p>To see how replicated file specification plays in action, we use the example given in <a href=http://mcmil.net/wordpress/ target=_blank rel=noopener>Prof. McMillan</a>&rsquo;s presentation. The code is written in <a href=http://microsoft.github.io/ivy/language.html target=_blank rel=noopener>Ivy</a> and is pretty self-explanatory. In this demo we only have two processes.</p><blockquote><p>To install Ivy, simply execute <code>virtualenv ivyenv && source ivyenv/bin/activate && pip install ms-ivy</code>. This is tested on Ubuntu 18.04 LTS and may vary slight on other distros.</p></blockquote><div class=highlight><pre style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#f92672>#</span><span style=color:#111>lang</span> <span style=color:#111>ivy1</span><span style=color:#f92672>.</span><span style=color:#ae81ff>8</span>
 
 <span style=color:#75af00>include</span> <span style=color:#111>numbers</span>
 <span style=color:#75af00>include</span> <span style=color:#111>collections</span>
@@ -109,8 +38,7 @@
         <span style=color:#111>show</span><span style=color:#111>(</span><span style=color:#111>contents</span><span style=color:#111>);</span>
     <span style=color:#111>}</span>
 <span style=color:#111>}</span>
-</code></pre></div><p>Then we form our specification based on the guarantee that if all sent messages are delivered, the two replicas are identical. The specification is equivalent to the <em>guarded command</em> we&rsquo;ve talked about earlier.</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#75af00>specification</span> <span style=color:#111>{</span>
+</code></pre></div><p>Then we form our specification based on the guarantee that if all sent messages are delivered, the two replicas are identical. The specification is equivalent to the <em>guarded command</em> we&rsquo;ve talked about earlier.</p><div class=highlight><pre style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#75af00>specification</span> <span style=color:#111>{</span>
     <span style=color:#111>var</span> <span style=color:#111>msg_count</span> <span style=color:#00a8c8>:</span> <span style=color:#111>nat</span>
 
     <span style=color:#111>after</span> <span style=color:#111>init</span> <span style=color:#111>{</span>
@@ -126,9 +54,7 @@
         <span style=color:#111>ensure</span> <span style=color:#111>msg_count</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>contents</span><span style=color:#f92672>.</span><span style=color:#111>eq</span><span style=color:#111>(</span><span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>contents</span><span style=color:#111>);</span>
     <span style=color:#111>}</span>
 <span style=color:#111>}</span>
-</code></pre></div><p>We wrote the above code into a file named <code>append.ivy</code> and we generate the testing code using <code>ivyc target=test append.ivy</code>. Then we run the code using <code>ivy_launch append.ivy</code>.</p>
-<p>Interestingly, the program yields an error message:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>`ivy_shell`; ./append &#34;[[0,{addr:0x7f000001,port:49124}],[1,{addr:0x7f000001,port:49125}]]&#34;
+</code></pre></div><p>We wrote the above code into a file named <code>append.ivy</code> and we generate the testing code using <code>ivyc target=test append.ivy</code>. Then we run the code using <code>ivy_launch append.ivy</code>.</p><p>Interestingly, the program yields an error message:</p><div class=highlight><pre style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>`ivy_shell`; ./append &#34;[[0,{addr:0x7f000001,port:49124}],[1,{addr:0x7f000001,port:49125}]]&#34;
 &gt; host.append(1,251)
 &lt; host.show(1,[251])
 &lt; host.show(0,[251])
@@ -140,17 +66,10 @@
 &lt; host.show(1,[251,46,183])
 assertion_failed(&#34;append.ivy: line 49&#34;)
 append.ivy: line 49: error: assertion failed
-</code></pre></div><p>What happens is the program generates tests that randomizes message arrival times and we can see a delivered message may arrive after its target sends another message, therefore creating corrupted file contents.</p>
-<p>Notice that here we are actually running on real network to find counter examples, the downside is the test may be arbitrary long depending on the randomized testing cases. Instead, we will use bounded model checking (BMC) to test if the specification is correct. This way we can reply purely on the logic of our specification instead of running on the real network. The Ivy checker uses <a href=https://en.wikipedia.org/wiki/Z3_Theorem_Prover target=_blank rel=noopener>Z3 Theorem Prover</a>.</p>
-<blockquote>
-<p>BMC construct a boolean formula that is satisfiable if and only if the underlying state transition system can realize a finite sequence of state transitions that reaches certain states of interest.</p>
-</blockquote>
-<p>To tell Ivy using bounded model checking, we add the following lines to <code>append.ivy</code>:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#75af00>axiom</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>id</span> <span style=color:#f92672>~=</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>id</span>
+</code></pre></div><p>What happens is the program generates tests that randomizes message arrival times and we can see a delivered message may arrive after its target sends another message, therefore creating corrupted file contents.</p><p>Notice that here we are actually running on real network to find counter examples, the downside is the test may be arbitrary long depending on the randomized testing cases. Instead, we will use bounded model checking (BMC) to test if the specification is correct. This way we can reply purely on the logic of our specification instead of running on the real network. The Ivy checker uses <a href=https://en.wikipedia.org/wiki/Z3_Theorem_Prover target=_blank rel=noopener>Z3 Theorem Prover</a>.</p><blockquote><p>BMC construct a boolean formula that is satisfiable if and only if the underlying state transition system can realize a finite sequence of state transitions that reaches certain states of interest.</p></blockquote><p>To tell Ivy using bounded model checking, we add the following lines to <code>append.ivy</code>:</p><div class=highlight><pre style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#75af00>axiom</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>id</span> <span style=color:#f92672>~=</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>id</span>
 
 <span style=color:#75af00>attribute</span> <span style=color:#111>method</span><span style=color:#f92672>=</span><span style=color:#111>bmc</span><span style=color:#111>[</span><span style=color:#ae81ff>10</span><span style=color:#111>]</span>
-</code></pre></div><p>Executing <code>ivy_check detailed=false append.ivy</code>, we see an error message:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>&gt; host.append(1,80)
+</code></pre></div><p>Executing <code>ivy_check detailed=false append.ivy</code>, we see an error message:</p><div class=highlight><pre style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>&gt; host.append(1,80)
 &lt; host.show(1,[80])
 &gt; host.append(0,64)
 &lt; host.show(0,[64])
@@ -159,35 +78,7 @@ append.ivy: line 49: error: assertion failed
 &gt; host.sock.recv(1,{tcp.endpoint.addr:...,tcp.endpoint.port:...},64)
 &lt; host.show(1,[80,64])
 append.ivy: line 49: error: assertion failed
-</code></pre></div><p>Sometimes BMC can help us find the error faster because it is systematically checking all possible actions. However, increasing the number of steps for the BMC can result in the exploration space growing exponentially, so we are going to use some combination of BMC and randomized test cases.</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/distributed-system>distributed-system</a>
-<a href=https://www.bodunhu.com/blog/tags/ivy>ivy</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div id=social>
-<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
-</a>
-<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
-</a>
-</div>
-<div class=copyright>
-©
+</code></pre></div><p>Sometimes BMC can help us find the error faster because it is systematically checking all possible actions. However, increasing the number of steps for the BMC can result in the exploration space growing exponentially, so we are going to use some combination of BMC and randomized test cases.</p></div><div class=tags><a href=https://www.bodunhu.com/blog/tags/distributed-system>distributed-system</a>
+<a href=https://www.bodunhu.com/blog/tags/ivy>ivy</a></div><div id=comment><script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></section></main><footer id=footer><div id=social><a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg></a><a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg></a></div><div class=copyright>©
 2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
-</footer>
-</body>
-</html>
+<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.</div><div class=powerby>Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a></div><a href=#top aria-label="go to top" title="Go to Top (Alt + G)"><button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button></a></footer></body></html>
