@@ -129,7 +129,7 @@ wr(1,0,2) \rightarrow wr(0,0,1)\rightarrow rd(0,0,1)\rightarrow\ ?
 <img src=https://raw.githubusercontent.com/BDHU/Page_pics/cf1f2e22f6368b743534a43fb95e55034b25beb3/posts/consistency-models/commit-point.png#center alt=commit-points>
 </p></p>
 <center>Source: Ken McMillan</center>
-<p>We know these events are linearizable because the three commit points we picked respects the \(&lt;_{lin}\) relationship. The commit point \(wr(0,0,1)\) is set before the commit point for \(wr(1,0,2)\) and we know \(wr(1,0,2)&lt; _{lin}wr(0,0,1)\).</p>
+<p>We know these events are linearizable because the three commit points we picked respects the \(&lt;_{lin}\) relationship. The commit point \(wr(0,0,1)\) is set after the commit point for \(wr(1,0,2)\) and we know \(wr(1,0,2)&lt; _{lin}wr(0,0,1)\).</p>
 <h2 id=sequential-consistency>Sequential Consistency <a href=#sequential-consistency class=anchor>🔗</a></h2><p>We can relax the requirement of linearizability even more, which leads us to sequential consistency. Sequential consistency (<a href=http://www.lamport.org/ target=_blank rel=noopener>Lamport</a>) is based on slightly different assumptions compared to linearizability:</p>
 <ul>
 <li>Assume clients don&rsquo;t send messages to each other</li>
@@ -165,7 +165,7 @@ RF(rd(p,a,v)) = wr(p',a',v') \rightarrow a=a' \land v = v'
 <ul>
 <li>For all reads \(e\in E\), there is no write \(e' \in E\) such that \(hb_{RF}(RF(e),e')\) and \(hb_{RF}(e',e)\) have the same address.</li>
 </ul>
-<p>In laymen&rsquo;s term, it says that if a write operation \(e\) causes us to read a value \(x\), it can&rsquo;t be that there is another write operation \(e'\) that happens after \(e\) and writes some value to the same address. Because if there is such a write operation, then \(RF\) will produce write operation \(e'\) instead of \(e\).</p>
+<p>In layman&rsquo;s term, it says that if a write operation \(e\) causes us to read a value \(x\), it can&rsquo;t be that there is another write operation \(e'\) that happens after \(e\) and writes some value to the same address. Because if there is such a write operation, then \(RF\) will produce write operation \(e'\) instead of \(e\).</p>
 <p>Take a previous example here:</p>
 <p><p class=markdown-image>
 <img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/not-linearizable.png#center alt=causal-consistency>
