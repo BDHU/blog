@@ -4,10 +4,7 @@
 <meta charset=utf-8>
 <meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
 <meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="This post assumes the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for GitHub Pages.
- Test Hugo site by executing hugo server in the source code directory to make sure the site is generated properly.
- Then, we need to generate a pair of keys by using the following command:
-ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N &#34;&#34; This will create two files: deployment and deployment.">
+<meta name=description content="This post assumes the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for [GitHub Pages](https://pages.github.com/).">
 <meta name=generator content="Hugo 0.88.1">
 <meta name=ROBOTS content="INDEX, FOLLOW">
 <link rel=stylesheet href=/blog/css/style.css>
@@ -19,10 +16,7 @@ ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Deploy Hugo Site to GitHub Pages">
-<meta name=twitter:description content="This post assumes the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for GitHub Pages.
- Test Hugo site by executing hugo server in the source code directory to make sure the site is generated properly.
- Then, we need to generate a pair of keys by using the following command:
-ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N &#34;&#34; This will create two files: deployment and deployment.">
+<meta name=twitter:description content="This post assumes the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for [GitHub Pages](https://pages.github.com/).">
 <meta name=twitter:site content="@https://twitter.com/BodunHu">
 <script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
 </head>
@@ -47,9 +41,7 @@ ssh-keygen -t rsa -b 4096 -C &#34;$(git config user.email)&#34; -f deployment -N
 </div>
 <div class=content>
 <p>This post assumes the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for <a href=https://pages.github.com/ target=_blank rel=noopener>GitHub Pages</a>.</p>
-<blockquote>
-<p>Test Hugo site by executing <code>hugo server</code> in the source code directory to make sure the site is generated properly.</p>
-</blockquote>
+<p><em>Note: test Hugo site by executing <code>hugo server</code> in the source code directory to make sure the site is generated properly.</em></p>
 <p>Then, we need to generate a pair of keys by using the following command:</p>
 <div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ssh-keygen -t rsa -b <span style=color:#ae81ff>4096</span> -C <span style=color:#d88200>&#34;</span><span style=color:#00a8c8>$(</span>git config user.email<span style=color:#00a8c8>)</span><span style=color:#d88200>&#34;</span> -f deployment -N <span style=color:#d88200>&#34;&#34;</span>
 </code></pre></div><p>This will create two files: <code>deployment</code> and <code>deployment.pub</code>, which corresponds to a private key and a public key.</p>
