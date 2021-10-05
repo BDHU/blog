@@ -1,24 +1,284 @@
-<!doctype html><html lang=en-us><head><title>Hoare Logic | std::bodun::blog</title><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><meta name=viewport content="width=device-width,minimum-scale=1"><meta name=description content="Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we will first consider a smaller imperative programming language IMP"><meta name=generator content="Hugo 0.83.1"><meta name=ROBOTS content="INDEX, FOLLOW"><link rel=stylesheet href=/blog/css/style.css><link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css><script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script><script async src=https://www.google-analytics.com/analytics.js></script><script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script><script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script><meta name=twitter:card content="summary"><meta name=twitter:title content="Hoare Logic"><meta name=twitter:description content="Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we will first consider a smaller imperative programming language IMP"><meta name=twitter:site content="@https://twitter.com/BodunHu"><script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script></head><body><nav class=navigation><a href=/blog/><span class=arrow>←</span>Home</a>
+<!doctype html><html lang=en-us>
+<head>
+<title>Hoare Logic | std::bodun::blog</title>
+<meta charset=utf-8>
+<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
+<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta name=description content="Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we will first consider a smaller imperative programming language IMP">
+<meta name=generator content="Hugo 0.88.1">
+<meta name=ROBOTS content="INDEX, FOLLOW">
+<link rel=stylesheet href=/blog/css/style.css>
+<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
+<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="Hoare Logic">
+<meta name=twitter:description content="Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we will first consider a smaller imperative programming language IMP">
+<meta name=twitter:site content="@https://twitter.com/BodunHu">
+<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
+</head>
+<body>
+<nav class=navigation>
+<a href=/blog/> <span class=arrow>←</span>Home</a>
 <a href=/blog/posts>Archive</a>
-<a href=/blog/tags>Tags</a>
 <a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a></nav><main class=main><section id=single><h1 class=title>Hoare Logic</h1><div class=tip><time datetime="2021-04-17 00:00:00 +0000 UTC">Apr 17, 2021</time>
-<span class=split>·</span>
-<span>12 minute read</span></div><aside class=toc><details><summary>Table of Contents</summary><div><nav id=TableOfContents><ul><li><a href=#hoare-triple>Hoare Triple</a></li><li><a href=#proving-partial-correctness>Proving Partial Correctness</a></li><li><a href=#proof-rule-for-precondition-strengthening>Proof Rule for Precondition Strengthening</a></li><li><a href=#a-dual-post-condition-weakening>A Dual: Post-Condition Weakening</a></li><li><a href=#proof-rule-for-composition>Proof Rule for Composition</a></li><li><a href=#proof-rule-for-if-statements>Proof Rule for If Statements</a></li><li><a href=#proof-rule-for-while>Proof Rule for While</a><ul><li><a href=#loop-invariant>Loop Invariant</a></li><li><a href=#inductive-loop-invariant>Inductive Loop Invariant</a></li></ul></li><li><a href=#basic-idea-behind-program-verification>Basic Idea behind Program Verification</a><ul><li><a href=#automating-reasoning-in-hoare-logic>Automating Reasoning in Hoare Logic</a></li><li><a href=#weakest-preconditions>Weakest Preconditions</a></li><li><a href=#verification-conditions>Verification Conditions</a></li></ul></li><li><a href=#verification-of-hoare-triple>Verification of Hoare Triple</a></li></ul></nav></div></details></aside><div class=content><p>Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we first consider a smaller imperative programming
-language <strong>IMP</strong>.</p><p>In IMP, we have three program constructs: expressions, conditionals, and statements:</p><ul><li><p>Expression takes the form \( E := Z\ |\ V\ |\ e_1 + e_2\ |\ e_1 \times e_2 \)</p></li><li><p>Conditional is self-explanatory: \( C := true\ |\ false\ |\ e_1 = e_2\ |\ e_1 \leq e_2 \)</p></li><li><p>Statement consists of several different forms:</p><ul><li>\(S := V := E\) (Assignment)</li><li>\(S_1; S_2\) (Composition)</li><li>if \(C\) then \(S_1\) else \(S_2\) (If)</li><li>while \(C\) do \(S\) (While)</li></ul></li></ul><h2 id=hoare-triple>Hoare Triple <a href=#hoare-triple class=anchor>🔗</a></h2><p>In Hoare logic, we specify partial correctness of programs using Hoare triples:</p><p>\[\{P\} S \{Q\}\]</p><p>Here \(P\) is the precondition and \(Q\) is the post-condition. $S$ is a statement in IMP.</p><p>The interpretation of Hoare triple is as follows:</p><ol><li><p>if \(S\) is executed in a state satisfying \(P\)</p></li><li><p>and if execution of \(S\) terminates</p></li><li><p>then the program state after \(S\) terminates satisfies \(Q\)</p></li></ol><p>Here an example, \(\{x = 0 \} while\ true\ do\ x := 0\ \{x = 1 \}\) is a valid Hoare triple because the execution of the statement never terminates, thus satisfying the requirement posed by Hoare triple.</p><p>Thus the specification \(\{P\} S \{Q\}\) is called <em>partial</em> correctness spec, because it doesn&rsquo;t require \(S\) to terminate.</p><p>There is also a stronger requirement called <em>total</em> correctness. The total correctness specification is written as:</p><p>\[ [P] S [Q]\]</p><p>Total correctness requires that if \(P\) is satisfied when executing \(S\), then \(S\) must terminate, and the post-conditional \(Q\) must be satisfied after \(S\) terminates.</p><p>Thus the example \(\{x = 0 \} while\ true\ do\ x := 0\ \{x = 1 \}\) is no longer valid because it never terminates.</p><p>In summary, we can say that Total correctness \(=\) Partial correctness \(+\) termination.</p><h2 id=proving-partial-correctness>Proving Partial Correctness <a href=#proving-partial-correctness class=anchor>🔗</a></h2><p>We use \(\vDash \{P\} S \{Q\} \) to say a Hoare triple is valid and we use \(\vdash \{P\} S \{Q\} \) to indicate we can prove validity of a Hoare triple.</p><p>Let&rsquo;s say we are given an assignment \(x := y \) with post-condition \(x > 2\). The question is, what do we need to know before the assignment happens so that the post-condition, \(x > 2\), holds afterwards?</p><p>To prove \(Q\) holds after the assignment \(x := E\), we need to show that <strong>\(Q\) with \(E\) substituting \(x\) holds before the assignment</strong>. Formally, we write it as:</p><p>\[\vdash \{Q[E / x]\}\ x := E \{Q\}\]</p><p>For example, given \( \{ x+1 = n\}\ x := x+1 \ \{x=n\} \), we know this formula is provable because we can take \(Q\), which is \(\{x=n\}\), substituting \(x\) with \(x+1\) given we need to replace it with \(E\), and we will convert \(x=n\) to \(x+1 = n\), which matches the precondition.</p><p>Here is another interesting example, given \( \{z = 2\}y:= x \{y = x\} \), this Hoare triple is valid but not provable. If we use the above substitution procedure, it will result in the precondition being \(x=x\) which is always true but is also different from the original precondition \(z=2\).</p><p>Intuitively, we can prove the post-condition \(y = x\) given the statement \(y = x\) without any assumptions, so even if we do have assumptions like \(z=2\), we should still be able to prove it, and here comes proof rule for precondition strengthening.</p><h2 id=proof-rule-for-precondition-strengthening>Proof Rule for Precondition Strengthening <a href=#proof-rule-for-precondition-strengthening class=anchor>🔗</a></h2><p>Formally, we define precondition strengthening as:</p><p>\[ \frac{ \vDash \{P'\} S \{Q\}\ \ P \Rightarrow P' }{\vdash \{P\} S \{Q\}} \]</p><p>Now, with the original formula \( \{z = 2\}y:= x \{y = x\} \), we would derive \( x= x \equiv true \). and since \(z=2 \rightarrow true\) is valid, we can now prove the formula!</p><h2 id=a-dual-post-condition-weakening>A Dual: Post-Condition Weakening <a href=#a-dual-post-condition-weakening class=anchor>🔗</a></h2><p>Formally, we define post-condition weakening as:</p><p>\[ \frac{ \vDash \{P\} S \{Q'\}\ \ Q' \Rightarrow Q }{\vdash \{P\} S \{Q\}} \]</p><p>What this means if that if we can prove a post-condition \(Q'\), we can always relax it to something <strong>weaker</strong>.</p><p>For example, given that \(\vdash \{true\}S\{x=y \land z=2\}\), we can prove \(\{true\}S\{x=y\}\) because \(x=y\) is a weaker condition of \( x=y \land z=2 \).</p><h2 id=proof-rule-for-composition>Proof Rule for Composition <a href=#proof-rule-for-composition class=anchor>🔗</a></h2><p>For composition, we define the rule as:</p><p>\[ \frac{ \vdash \{P\}S_1\{Q\}\ \ \vdash \{Q\}S_2 \{R\} }{ \vdash \{P\}S_1;S_2\{R\} }\]</p><p>I won&rsquo;t show why this is true, so this will be left as an exercise.</p><h2 id=proof-rule-for-if-statements>Proof Rule for If Statements <a href=#proof-rule-for-if-statements class=anchor>🔗</a></h2><p>Naturally, we define the rule for if statement as:</p><p>\[ \frac{_{ \vdash \{P \land C\} S_1 \{Q\} }^{ \vdash \{P \land \neg C\} S_2 \{Q\} }}{ \vdash \{P\}\ if\ C\ then\ S_1\ else \ S_2 \ \{Q\} } \]</p><p>In summary, this means given we know \(P\) is true, no matter what \(C\) evaluates to, we will come to the same post-condition \(Q\). If you still don&rsquo;t understand it, just stare at it for five minutes and you should figure out why this is the case:)</p><h2 id=proof-rule-for-while>Proof Rule for While <a href=#proof-rule-for-while class=anchor>🔗</a></h2><p>To understand the proof rule for while statement, we need to first understand a simple concept: loop invariant</p><h3 id=loop-invariant>Loop Invariant <a href=#loop-invariant class=anchor>🔗</a></h3><p>Loop invariant \(I\) has two properties:</p><ol><li><p>\(I\) holds initially before the loop</p></li><li><p>\(I\) holds after each loop iteration</p></li></ol><p>For example, given a loop</p><div class=highlight><pre style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>i := 0;
+<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
+</nav>
+<main class=main>
+<section id=single>
+<h1 class=title>Hoare Logic</h1>
+<div class=tip>
+<time datetime="2021-04-17 00:00:00 +0000 UTC">Apr 17, 2021</time>
+<span class=split>
+·
+</span>
+<span>
+12 minute read
+</span>
+</div>
+<aside class=toc>
+<details>
+<summary>Table of Contents
+</summary>
+<div>
+<nav id=TableOfContents>
+<ul>
+<li><a href=#hoare-triple>Hoare Triple</a></li>
+<li><a href=#proving-partial-correctness>Proving Partial Correctness</a></li>
+<li><a href=#proof-rule-for-precondition-strengthening>Proof Rule for Precondition Strengthening</a></li>
+<li><a href=#a-dual-post-condition-weakening>A Dual: Post-Condition Weakening</a></li>
+<li><a href=#proof-rule-for-composition>Proof Rule for Composition</a></li>
+<li><a href=#proof-rule-for-if-statements>Proof Rule for If Statements</a></li>
+<li><a href=#proof-rule-for-while>Proof Rule for While</a>
+<ul>
+<li><a href=#loop-invariant>Loop Invariant</a></li>
+<li><a href=#inductive-loop-invariant>Inductive Loop Invariant</a></li>
+</ul>
+</li>
+<li><a href=#basic-idea-behind-program-verification>Basic Idea behind Program Verification</a>
+<ul>
+<li><a href=#automating-reasoning-in-hoare-logic>Automating Reasoning in Hoare Logic</a></li>
+<li><a href=#weakest-preconditions>Weakest Preconditions</a></li>
+<li><a href=#verification-conditions>Verification Conditions</a></li>
+</ul>
+</li>
+<li><a href=#verification-of-hoare-triple>Verification of Hoare Triple</a></li>
+</ul>
+</nav>
+</div>
+</details>
+</aside>
+<div class=content>
+<p>Hoare logic forms the basis of all deductive verification. To illustrate Hoare logic, we first consider a smaller imperative programming
+language <strong>IMP</strong>.</p>
+<p>In IMP, we have three program constructs: expressions, conditionals, and statements:</p>
+<ul>
+<li>
+<p>Expression takes the form \( E := Z\ |\ V\ |\ e_1 + e_2\ |\ e_1 \times e_2 \)</p>
+</li>
+<li>
+<p>Conditional is self-explanatory: \( C := true\ |\ false\ |\ e_1 = e_2\ |\ e_1 \leq e_2 \)</p>
+</li>
+<li>
+<p>Statement consists of several different forms:</p>
+<ul>
+<li>\(S := V := E\) (Assignment)</li>
+<li>\(S_1; S_2\) (Composition)</li>
+<li>if \(C\) then \(S_1\) else \(S_2\) (If)</li>
+<li>while \(C\) do \(S\) (While)</li>
+</ul>
+</li>
+</ul>
+<h2 id=hoare-triple>Hoare Triple <a href=#hoare-triple class=anchor>🔗</a></h2><p>In Hoare logic, we specify partial correctness of programs using Hoare triples:</p>
+<p>\[\{P\} S \{Q\}\]</p>
+<p>Here \(P\) is the precondition and \(Q\) is the post-condition. $S$ is a statement in IMP.</p>
+<p>The interpretation of Hoare triple is as follows:</p>
+<ol>
+<li>
+<p>if \(S\) is executed in a state satisfying \(P\)</p>
+</li>
+<li>
+<p>and if execution of \(S\) terminates</p>
+</li>
+<li>
+<p>then the program state after \(S\) terminates satisfies \(Q\)</p>
+</li>
+</ol>
+<p>Here an example, \(\{x = 0 \} while\ true\ do\ x := 0\ \{x = 1 \}\) is a valid Hoare triple because the execution of the statement never terminates, thus satisfying the requirement posed by Hoare triple.</p>
+<p>Thus the specification \(\{P\} S \{Q\}\) is called <em>partial</em> correctness spec, because it doesn&rsquo;t require \(S\) to terminate.</p>
+<p>There is also a stronger requirement called <em>total</em> correctness. The total correctness specification is written as:</p>
+<p>\[ [P] S [Q]\]</p>
+<p>Total correctness requires that if \(P\) is satisfied when executing \(S\), then \(S\) must terminate, and the post-conditional \(Q\) must be satisfied after \(S\) terminates.</p>
+<p>Thus the example \(\{x = 0 \} while\ true\ do\ x := 0\ \{x = 1 \}\) is no longer valid because it never terminates.</p>
+<p>In summary, we can say that Total correctness \(=\) Partial correctness \(+\) termination.</p>
+<h2 id=proving-partial-correctness>Proving Partial Correctness <a href=#proving-partial-correctness class=anchor>🔗</a></h2><p>We use \(\vDash \{P\} S \{Q\} \) to say a Hoare triple is valid and we use \(\vdash \{P\} S \{Q\} \) to indicate we can prove validity of a Hoare triple.</p>
+<p>Let&rsquo;s say we are given an assignment \(x := y \) with post-condition \(x > 2\). The question is, what do we need to know before the assignment happens so that the post-condition, \(x > 2\), holds afterwards?</p>
+<p>To prove \(Q\) holds after the assignment \(x := E\), we need to show that <strong>\(Q\) with \(E\) substituting \(x\) holds before the assignment</strong>. Formally, we write it as:</p>
+<p>\[\vdash \{Q[E / x]\}\ x := E \{Q\}\]</p>
+<p>For example, given \( \{ x+1 = n\}\ x := x+1 \ \{x=n\} \), we know this formula is provable because we can take \(Q\), which is \(\{x=n\}\), substituting \(x\) with \(x+1\) given we need to replace it with \(E\), and we will convert \(x=n\) to \(x+1 = n\), which matches the precondition.</p>
+<p>Here is another interesting example, given \( \{z = 2\}y:= x \{y = x\} \), this Hoare triple is valid but not provable. If we use the above substitution procedure, it will result in the precondition being \(x=x\) which is always true but is also different from the original precondition \(z=2\).</p>
+<p>Intuitively, we can prove the post-condition \(y = x\) given the statement \(y = x\) without any assumptions, so even if we do have assumptions like \(z=2\), we should still be able to prove it, and here comes proof rule for precondition strengthening.</p>
+<h2 id=proof-rule-for-precondition-strengthening>Proof Rule for Precondition Strengthening <a href=#proof-rule-for-precondition-strengthening class=anchor>🔗</a></h2><p>Formally, we define precondition strengthening as:</p>
+<p>\[ \frac{ \vDash \{P'\} S \{Q\}\ \ P \Rightarrow P' }{\vdash \{P\} S \{Q\}} \]</p>
+<p>Now, with the original formula \( \{z = 2\}y:= x \{y = x\} \), we would derive \( x= x \equiv true \). and since \(z=2 \rightarrow true\) is valid, we can now prove the formula!</p>
+<h2 id=a-dual-post-condition-weakening>A Dual: Post-Condition Weakening <a href=#a-dual-post-condition-weakening class=anchor>🔗</a></h2><p>Formally, we define post-condition weakening as:</p>
+<p>\[ \frac{ \vDash \{P\} S \{Q'\}\ \ Q' \Rightarrow Q }{\vdash \{P\} S \{Q\}} \]</p>
+<p>What this means if that if we can prove a post-condition \(Q'\), we can always relax it to something <strong>weaker</strong>.</p>
+<p>For example, given that \(\vdash \{true\}S\{x=y \land z=2\}\), we can prove \(\{true\}S\{x=y\}\) because \(x=y\) is a weaker condition of \( x=y \land z=2 \).</p>
+<h2 id=proof-rule-for-composition>Proof Rule for Composition <a href=#proof-rule-for-composition class=anchor>🔗</a></h2><p>For composition, we define the rule as:</p>
+<p>\[ \frac{ \vdash \{P\}S_1\{Q\}\ \ \vdash \{Q\}S_2 \{R\} }{ \vdash \{P\}S_1;S_2\{R\} }\]</p>
+<p>I won&rsquo;t show why this is true, so this will be left as an exercise.</p>
+<h2 id=proof-rule-for-if-statements>Proof Rule for If Statements <a href=#proof-rule-for-if-statements class=anchor>🔗</a></h2><p>Naturally, we define the rule for if statement as:</p>
+<p>\[ \frac{_{ \vdash \{P \land C\} S_1 \{Q\} }^{ \vdash \{P \land \neg C\} S_2 \{Q\} }}{ \vdash \{P\}\ if\ C\ then\ S_1\ else \ S_2 \ \{Q\} } \]</p>
+<p>In summary, this means given we know \(P\) is true, no matter what \(C\) evaluates to, we will come to the same post-condition \(Q\). If you still don&rsquo;t understand it, just stare at it for five minutes and you should figure out why this is the case:)</p>
+<h2 id=proof-rule-for-while>Proof Rule for While <a href=#proof-rule-for-while class=anchor>🔗</a></h2><p>To understand the proof rule for while statement, we need to first understand a simple concept: loop invariant</p>
+<h3 id=loop-invariant>Loop Invariant <a href=#loop-invariant class=anchor>🔗</a></h3><p>Loop invariant \(I\) has two properties:</p>
+<ol>
+<li>
+<p>\(I\) holds initially before the loop</p>
+</li>
+<li>
+<p>\(I\) holds after each loop iteration</p>
+</li>
+</ol>
+<p>For example, given a loop</p>
+<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>i := 0;
 j := 0;
 n := 0;
 while i &lt; n do
     i := i + 1;
     j := i + j
-</code></pre></div><p>Here, \(i \leq n \) is a loop invariant but \(i &lt; n \) isn&rsquo;t.</p><p>Now, we put the properties of loop invariant \(I\) in formal terms. Given that the precondition before a loop executes is \(C\), by definition, \(I\) holds initially before the loop, we know \(I \land C\) holds.</p><p>For the second property of loop invariant, it specifies \(I\) holds after each loop iteration. So that means \(\{ I \land C\ \} S \{I\} \) holds. Formally, we express loop invariant as \( \vdash \{P \land C\} S \{P\} \).</p><p>Now, we know if a loop terminates, it must be that condition \(C\) no longer holds, meaning \( P \land \neg C \) must be true after loop terminates. This is because \(P\) is a loop invariant and always holds after each loop iteration, including termination.</p><p>Putting all this together, we form the proof rule for while loop:</p><p>\[ \frac{ \vdash \{P \land C\} S \{P\} }{ \vdash \{P\} while \ C \ do \ S\{P \land \neg C\} }\]</p><h3 id=inductive-loop-invariant>Inductive Loop Invariant <a href=#inductive-loop-invariant class=anchor>🔗</a></h3><p>It&rsquo;s not always the case that we can prove loop invariant is valid. Here is a counter example:</p><p>Consider precondition \( I = j \geq 1 \) and the code is:</p><p>\[i := 1; j := 1; while \ i &lt; n\ do\ \{j := j+i; i ;= i + 1\}\]</p><p>We know that the precondition is \(I = j \geq 1\) and \(C\) (loop condition) is \(i \leq n\). So we have a Hoare triple:</p><p>\[ \{ j \geq 1 \land i \leq n \} j =j + i;\ i = i + 1; \ \{j \geq 1\} \]</p><p>We could simply set \(i = -100\), then if we execute the code once we will not be sure if the post-condition \(j \geq 1\) holds.</p><p>However, if we have <strong>strengthened invariant</strong> such as \(j \geq 1 \land i \geq 1\), the new Hoare triple will be valid. Then \(I\) will become inductive invariant because we can prove these invariant.</p><p>To put everything in action, here is an example showing how to find inductive loop invariant to prove the following Hoare triple:</p><p>\[ \{i = o \land j = o \land n = 5\} \]
+</code></pre></div><p>Here, \(i \leq n \) is a loop invariant but \(i &lt; n \) isn&rsquo;t.</p>
+<p>Now, we put the properties of loop invariant \(I\) in formal terms. Given that the precondition before a loop executes is \(C\), by definition, \(I\) holds initially before the loop, we know \(I \land C\) holds.</p>
+<p>For the second property of loop invariant, it specifies \(I\) holds after each loop iteration. So that means \(\{ I \land C\ \} S \{I\} \) holds. Formally, we express loop invariant as \( \vdash \{P \land C\} S \{P\} \).</p>
+<p>Now, we know if a loop terminates, it must be that condition \(C\) no longer holds, meaning \( P \land \neg C \) must be true after loop terminates. This is because \(P\) is a loop invariant and always holds after each loop iteration, including termination.</p>
+<p>Putting all this together, we form the proof rule for while loop:</p>
+<p>\[ \frac{ \vdash \{P \land C\} S \{P\} }{ \vdash \{P\} while \ C \ do \ S\{P \land \neg C\} }\]</p>
+<h3 id=inductive-loop-invariant>Inductive Loop Invariant <a href=#inductive-loop-invariant class=anchor>🔗</a></h3><p>It&rsquo;s not always the case that we can prove loop invariant is valid. Here is a counter example:</p>
+<p>Consider precondition \( I = j \geq 1 \) and the code is:</p>
+<p>\[i := 1; j := 1; while \ i &lt; n\ do\ \{j := j+i; i ;= i + 1\}\]</p>
+<p>We know that the precondition is \(I = j \geq 1\) and \(C\) (loop condition) is \(i \leq n\). So we have a Hoare triple:</p>
+<p>\[ \{ j \geq 1 \land i \leq n \} j =j + i;\ i = i + 1; \ \{j \geq 1\} \]</p>
+<p>We could simply set \(i = -100\), then if we execute the code once we will not be sure if the post-condition \(j \geq 1\) holds.</p>
+<p>However, if we have <strong>strengthened invariant</strong> such as \(j \geq 1 \land i \geq 1\), the new Hoare triple will be valid. Then \(I\) will become inductive invariant because we can prove these invariant.</p>
+<p>To put everything in action, here is an example showing how to find inductive loop invariant to prove the following Hoare triple:</p>
+<p>\[ \{i = o \land j = o \land n = 5\} \]
 \[while\ i &lt; do\ i := i + 1; \ j := j + i; \]
-\[\{j = 15\} \]</p><p>If we have \( j = \frac{i(i+1)}{2} \), this is a loop invariant because we can prove that:</p><p>\[\{j = \frac{i(i+1)}{2} \land i &lt; n\} i = i + 1;\ j = j+ i\ \{j = \frac{i(i+1)}{2}\} \]</p><p>If we conjoin this condition with \(i \geq n\) as the post-condition, however, we can&rsquo;t really show that \(j = 15\) is true for the given Hoare triple.</p><p>If we also add condition \(n = 5\) and \(i \leq n\), and we conjoin this with the end-loop condition \( i \geq n\), we would realize that \( i = n = 5\), and thus prove that \(j = 15\) for the given Hoare triple.</p><p>How we get \(j = \frac{i(i+1)}{2}\) is, however, not trivial to solve, and requires some human effort in program verification.</p><h2 id=basic-idea-behind-program-verification>Basic Idea behind Program Verification <a href=#basic-idea-behind-program-verification class=anchor>🔗</a></h2><h3 id=automating-reasoning-in-hoare-logic>Automating Reasoning in Hoare Logic <a href=#automating-reasoning-in-hoare-logic class=anchor>🔗</a></h3><p>It&rsquo;s reasonable to automate the tedious parts of program verification: proving correctness. The basic idea to assume an oracle (human or another program) gives loop invariants but automate the rest of the reasoning.</p><p>Automating Hoare logic is based on generating verification conditions (VC). Essentially, a verification condition is formula \(\phi\) s.t. program is correct iff \(\phi\) is valid.</p><p>There are two way to generate verification conditions: forwards and backwards.</p><p>As their name suggests, a forwards analysis starts from precondition and generates formulas to prove post-condition. Forwards technique computes <strong>strongest post-conditions (sp)</strong>. In contrast, backwards analysis starts from post-condition and tries to prove precondition. Backwards technique computes <strong>weakest preconditions (wp)</strong>.</p><p>Here, we start from the backwards method.</p><h3 id=weakest-preconditions>Weakest Preconditions <a href=#weakest-preconditions class=anchor>🔗</a></h3><p>Formally, we define the weakest precondition of \(Q\) with respect to \(S\) as \(wp(S, Q)\).</p><p>\(wp(S, Q)\) has the property that it is the weakest condition (least amount of information we need to have) that guarantees \(Q\) holds after \(S\) in any execution.</p><p>Thus, Hoare triple \( \{P\}S\{Q\} \) is valid iff \( P\Rightarrow wp(S, Q) \).</p><p>Weakest preconditions are defined inductively and follow Hoare&rsquo;s proof rules:</p><ul><li><p>\(wp(x := E, Q) = Q[E/x]\)</p></li><li><p>\( wp(s_1 ; s_2, Q) = wp(s_1, wp(s_2, Q) ) \)</p></li><li><p>\(wp(if \ C\ then \ s_1\ else \ s_2, Q) =C \rightarrow wp(s_1, Q) \land \neg C \rightarrow wp(s_2, Q) \)</p></li></ul><p>However, for loops, we might not be able to compute the weakest preconditions exactly because there might be cases where we simply don&rsquo;t know the number loops executed.</p><p>Thus, we relax our requirement by computing \(awp(S,Q)\) (\(a\) stands for approximate)) instead, hoping that \(awp(S, Q)\) is weak enough to be implied by \(P\) although it may not be the weakest.</p><p>Now, assume all loops are annotated with invariants \(while \ C \ do \ [I]\ S\), we will just define \(awp(while \ C \ do \ [I]\ S, Q) \equiv I\).</p><p>However, there is another program, since \(awp\) is only an approximated condition, it doesn&rsquo;t necessarily mean that if \(P \Rightarrow awp(S, Q)\), \( \{P\}S\{Q\} \) is valid. There are two reasons:</p><ol><li><p>We don&rsquo;t know if the loop invariant \(I\) provided by the oracle is correct since it might be provided by human and we know human make mistakes.</p></li><li><p>Even if \(I\) is correct, we don&rsquo;t know if \(I \land \neg C\) is sufficient to establish \(Q\).</p></li></ol><p>Thus, for each statement \(S\), we need to generate verification condition (VC) \( VC(S,Q) \) which encodes additional conditions to prove.</p><h3 id=verification-conditions>Verification Conditions <a href=#verification-conditions class=anchor>🔗</a></h3><p>So how do we formulate VC generation rules for loops?</p><p>\[ VC(while\ C\ do\ [I]\ S,Q) = ?\]</p><p>First, we need to ensure that \(Q\) is satisfied after loop, which means \( I \land \neg C \Rightarrow Q \).</p><p>To show that \(I\) is actually correct, we also need \( \{I \land C\} S \{I\} \).</p><p>This implies that we need to show \( I \land C \Rightarrow awp(S, I) \). In case \(S\) contains nested loops, and also add \(VC(S, I)\)</p><p>In summary, to how that loop invariant \(I\) provided by the oracle is correct, we need to show \( I \land C \Rightarrow awp(S,I) \land VC(S, I) \).</p><p>To show \(I\) is strong enough to establish \(Q\), we need to show \( I \land \neg C \Rightarrow Q \).</p><p>Putting this together, and to answer the two reason why \(P \Rightarrow awp(S, Q)\), \( \{P\}S\{Q\} \) might not be valid, VC for a while loop \( S' = while \ C \ do \ \{I\} \) is expressed as:</p><p>\[ VC(S', Q) = (I \land C \Rightarrow awp(S, I) \land VC(S, I) ) \land (I \land \neg C \Rightarrow Q) \]</p><p>In essence, verification condition simply stands for additional checks we need to verify before we can claim that, if an approximated precondition \(P\) is valid, \( \{P\} S \{Q\} \).</p><p>The verification condition for other statements is as follows:</p><ol><li><p>For assignment, we don&rsquo;t need any additional checks for precondition because if \( P \Rightarrow wp(S, Q) \), it implies that \( \{P\} S \{Q\} \) is valid. Thus, \( VC(x:= E, Q) = true \).</p></li><li><p>For composition, we have \( VC(s_1 ; s_2, Q) = VC(s_2, Q) \land VC(s_1, awp(s_2 , Q)) \).</p></li><li><p>For if statement, we have \( VC(if \ C \ then \ s_1\ else \ s_2, Q) = VC(s_1, Q) \land VC(s_2, Q) \).</p></li></ol><blockquote><p>Quick question: for if statement, why don&rsquo;t we instead use verification condition generation rule: \( C \Rightarrow VC(s_1, Q) \land \neg C \Rightarrow VC(s_2, Q) \)?</p></blockquote><p>Here is a counter example. Suppose we have \( S = if\ (x > 0) \ while (*) x - -; else \ skip\), and we have given loop invariant \(x \geq 0\).</p><p>If we use the original rule \( VC(s_1, Q) \land VC(s_2, Q) \), according to the verification condition generation rule for while loop, we would have to verify the loop invariant \(I\) is correct, and thus \(VC(S, I) \equiv \{ x \geq 0 \} x - - \{ x \geq 0 \} \), obviously, this not true, and we can use this VC.</p><p>However, if we instead use the rule \( C \Rightarrow VC(s_1, Q) \land \neg C \Rightarrow VC(s_2, Q) \). The VC would become \( x > 0 \Rightarrow (\{ x \geq 0 \} x - - \{ x \geq 0 \}) \), which is valid, and we will include the wrong VC. Thus we can&rsquo;t use this VC generation rule.</p><h2 id=verification-of-hoare-triple>Verification of Hoare Triple <a href=#verification-of-hoare-triple class=anchor>🔗</a></h2><p>Thus, to show validity of Hoare triple \( \{P\} S \{ Q \} \), we need to compute:</p><ol><li><p>\( awp(S, Q) \)</p></li><li><p>\( VC(S, Q) \)</p></li></ol><p>Therefore, a Hoare triple is valid if the following formula holds:</p><p>\begin{equation}\tag{*}
+\[\{j = 15\} \]</p>
+<p>If we have \( j = \frac{i(i+1)}{2} \), this is a loop invariant because we can prove that:</p>
+<p>\[\{j = \frac{i(i+1)}{2} \land i &lt; n\} i = i + 1;\ j = j+ i\ \{j = \frac{i(i+1)}{2}\} \]</p>
+<p>If we conjoin this condition with \(i \geq n\) as the post-condition, however, we can&rsquo;t really show that \(j = 15\) is true for the given Hoare triple.</p>
+<p>If we also add condition \(n = 5\) and \(i \leq n\), and we conjoin this with the end-loop condition \( i \geq n\), we would realize that \( i = n = 5\), and thus prove that \(j = 15\) for the given Hoare triple.</p>
+<p>How we get \(j = \frac{i(i+1)}{2}\) is, however, not trivial to solve, and requires some human effort in program verification.</p>
+<h2 id=basic-idea-behind-program-verification>Basic Idea behind Program Verification <a href=#basic-idea-behind-program-verification class=anchor>🔗</a></h2><h3 id=automating-reasoning-in-hoare-logic>Automating Reasoning in Hoare Logic <a href=#automating-reasoning-in-hoare-logic class=anchor>🔗</a></h3><p>It&rsquo;s reasonable to automate the tedious parts of program verification: proving correctness. The basic idea to assume an oracle (human or another program) gives loop invariants but automate the rest of the reasoning.</p>
+<p>Automating Hoare logic is based on generating verification conditions (VC). Essentially, a verification condition is formula \(\phi\) s.t. program is correct iff \(\phi\) is valid.</p>
+<p>There are two way to generate verification conditions: forwards and backwards.</p>
+<p>As their name suggests, a forwards analysis starts from precondition and generates formulas to prove post-condition. Forwards technique computes <strong>strongest post-conditions (sp)</strong>. In contrast, backwards analysis starts from post-condition and tries to prove precondition. Backwards technique computes <strong>weakest preconditions (wp)</strong>.</p>
+<p>Here, we start from the backwards method.</p>
+<h3 id=weakest-preconditions>Weakest Preconditions <a href=#weakest-preconditions class=anchor>🔗</a></h3><p>Formally, we define the weakest precondition of \(Q\) with respect to \(S\) as \(wp(S, Q)\).</p>
+<p>\(wp(S, Q)\) has the property that it is the weakest condition (least amount of information we need to have) that guarantees \(Q\) holds after \(S\) in any execution.</p>
+<p>Thus, Hoare triple \( \{P\}S\{Q\} \) is valid iff \( P\Rightarrow wp(S, Q) \).</p>
+<p>Weakest preconditions are defined inductively and follow Hoare&rsquo;s proof rules:</p>
+<ul>
+<li>
+<p>\(wp(x := E, Q) = Q[E/x]\)</p>
+</li>
+<li>
+<p>\( wp(s_1 ; s_2, Q) = wp(s_1, wp(s_2, Q) ) \)</p>
+</li>
+<li>
+<p>\(wp(if \ C\ then \ s_1\ else \ s_2, Q) =C \rightarrow wp(s_1, Q) \land \neg C \rightarrow wp(s_2, Q) \)</p>
+</li>
+</ul>
+<p>However, for loops, we might not be able to compute the weakest preconditions exactly because there might be cases where we simply don&rsquo;t know the number loops executed.</p>
+<p>Thus, we relax our requirement by computing \(awp(S,Q)\) (\(a\) stands for approximate)) instead, hoping that \(awp(S, Q)\) is weak enough to be implied by \(P\) although it may not be the weakest.</p>
+<p>Now, assume all loops are annotated with invariants \(while \ C \ do \ [I]\ S\), we will just define \(awp(while \ C \ do \ [I]\ S, Q) \equiv I\).</p>
+<p>However, there is another program, since \(awp\) is only an approximated condition, it doesn&rsquo;t necessarily mean that if \(P \Rightarrow awp(S, Q)\), \( \{P\}S\{Q\} \) is valid. There are two reasons:</p>
+<ol>
+<li>
+<p>We don&rsquo;t know if the loop invariant \(I\) provided by the oracle is correct since it might be provided by human and we know human make mistakes.</p>
+</li>
+<li>
+<p>Even if \(I\) is correct, we don&rsquo;t know if \(I \land \neg C\) is sufficient to establish \(Q\).</p>
+</li>
+</ol>
+<p>Thus, for each statement \(S\), we need to generate verification condition (VC) \( VC(S,Q) \) which encodes additional conditions to prove.</p>
+<h3 id=verification-conditions>Verification Conditions <a href=#verification-conditions class=anchor>🔗</a></h3><p>So how do we formulate VC generation rules for loops?</p>
+<p>\[ VC(while\ C\ do\ [I]\ S,Q) = ?\]</p>
+<p>First, we need to ensure that \(Q\) is satisfied after loop, which means \( I \land \neg C \Rightarrow Q \).</p>
+<p>To show that \(I\) is actually correct, we also need \( \{I \land C\} S \{I\} \).</p>
+<p>This implies that we need to show \( I \land C \Rightarrow awp(S, I) \). In case \(S\) contains nested loops, and also add \(VC(S, I)\)</p>
+<p>In summary, to how that loop invariant \(I\) provided by the oracle is correct, we need to show \( I \land C \Rightarrow awp(S,I) \land VC(S, I) \).</p>
+<p>To show \(I\) is strong enough to establish \(Q\), we need to show \( I \land \neg C \Rightarrow Q \).</p>
+<p>Putting this together, and to answer the two reason why \(P \Rightarrow awp(S, Q)\), \( \{P\}S\{Q\} \) might not be valid, VC for a while loop \( S' = while \ C \ do \ \{I\} \) is expressed as:</p>
+<p>\[ VC(S', Q) = (I \land C \Rightarrow awp(S, I) \land VC(S, I) ) \land (I \land \neg C \Rightarrow Q) \]</p>
+<p>In essence, verification condition simply stands for additional checks we need to verify before we can claim that, if an approximated precondition \(P\) is valid, \( \{P\} S \{Q\} \).</p>
+<p>The verification condition for other statements is as follows:</p>
+<ol>
+<li>
+<p>For assignment, we don&rsquo;t need any additional checks for precondition because if \( P \Rightarrow wp(S, Q) \), it implies that \( \{P\} S \{Q\} \) is valid. Thus, \( VC(x:= E, Q) = true \).</p>
+</li>
+<li>
+<p>For composition, we have \( VC(s_1 ; s_2, Q) = VC(s_2, Q) \land VC(s_1, awp(s_2 , Q)) \).</p>
+</li>
+<li>
+<p>For if statement, we have \( VC(if \ C \ then \ s_1\ else \ s_2, Q) = VC(s_1, Q) \land VC(s_2, Q) \).</p>
+</li>
+</ol>
+<blockquote>
+<p>Quick question: for if statement, why don&rsquo;t we instead use verification condition generation rule: \( C \Rightarrow VC(s_1, Q) \land \neg C \Rightarrow VC(s_2, Q) \)?</p>
+</blockquote>
+<p>Here is a counter example. Suppose we have \( S = if\ (x > 0) \ while (*) x - -; else \ skip\), and we have given loop invariant \(x \geq 0\).</p>
+<p>If we use the original rule \( VC(s_1, Q) \land VC(s_2, Q) \), according to the verification condition generation rule for while loop, we would have to verify the loop invariant \(I\) is correct, and thus \(VC(S, I) \equiv \{ x \geq 0 \} x - - \{ x \geq 0 \} \), obviously, this not true, and we can use this VC.</p>
+<p>However, if we instead use the rule \( C \Rightarrow VC(s_1, Q) \land \neg C \Rightarrow VC(s_2, Q) \). The VC would become \( x > 0 \Rightarrow (\{ x \geq 0 \} x - - \{ x \geq 0 \}) \), which is valid, and we will include the wrong VC. Thus we can&rsquo;t use this VC generation rule.</p>
+<h2 id=verification-of-hoare-triple>Verification of Hoare Triple <a href=#verification-of-hoare-triple class=anchor>🔗</a></h2><p>Thus, to show validity of Hoare triple \( \{P\} S \{ Q \} \), we need to compute:</p>
+<ol>
+<li>
+<p>\( awp(S, Q) \)</p>
+</li>
+<li>
+<p>\( VC(S, Q) \)</p>
+</li>
+</ol>
+<p>Therefore, a Hoare triple is valid if the following formula holds:</p>
+<p>\begin{equation}\tag{*}
 VC(S, Q) \land P \rightarrow awp(S, Q)
-\end{equation}</p><p>Thus, if we can prove the validity of the above equation *, we know the program obeys specification.</p></div><div class=tags><a href=https://www.bodunhu.com/blog/tags/pl>PL</a>
+\end{equation}</p>
+<p>Thus, if we can prove the validity of the above equation *, we know the program obeys specification.</p>
+</div>
+<div class=tags>
+<a href=https://www.bodunhu.com/blog/tags/pl>PL</a>
 <a href=https://www.bodunhu.com/blog/tags/algorithm>algorithm</a>
 <a href=https://www.bodunhu.com/blog/tags/theory>theory</a>
 <a href=https://www.bodunhu.com/blog/tags/logic>logic</a>
-<a href=https://www.bodunhu.com/blog/tags/verification>verification</a></div><div id=comment><script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script></div></section></main><footer id=footer><div id=social><a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg></a><a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg></a></div><div class=copyright>©
+<a href=https://www.bodunhu.com/blog/tags/verification>verification</a>
+</div>
+<div id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
+</div>
+</section>
+</main>
+<footer id=footer>
+<div id=social>
+<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
+</a>
+<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
+</a>
+</div>
+<div class=copyright>
+©
 2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.</div><div class=powerby>Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a></div><a href=#top aria-label="go to top" title="Go to Top (Alt + G)"><button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button></a></footer></body></html>
+<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
+</div>
+<div class=powerby>
+Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
+</div>
+<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
+<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
+</a>
+</footer>
+</body>
+</html>

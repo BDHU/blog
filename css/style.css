@@ -385,8 +385,10 @@ nav.navigation a.button {
 
 @media (max-width: 700px) {
   #single {
-    padding: 0 18px;
-    margin: 20px auto 0 auto;
+    /* padding: 0 18px; */
+    padding: 0 14px;
+    /* margin: 20px auto 0 auto; */
+    margin: 40px auto 0 auto;
   }
   #single .title {
     font-size: 24px;
