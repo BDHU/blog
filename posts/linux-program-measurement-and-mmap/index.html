@@ -1,65 +1,51 @@
-<!doctype html><html lang=en-us>
+<!doctype html><html lang=en>
 <head>
-<title>Linux Program Measurement and mmap | std::bodun::blog</title>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=author content="Liste - https://www.bodunhu.com/blog/">
+<title>Linux Program Measurement and mmap | std::bodun::blog</title>
 <meta name=description content="This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to [cpu world](http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html) for more info">
-<meta name=generator content="Hugo 0.88.1">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<meta property="og:title" content="Linux Program Measurement and mmap">
+<meta property="og:description" content="This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to [cpu world](http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html) for more info">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.bodunhu.com/blog/posts/linux-program-measurement-and-mmap/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2020-09-23T00:00:00+00:00">
+<meta property="article:modified_time" content="2021-07-21T23:46:24-05:00">
+<meta itemprop=name content="Linux Program Measurement and mmap">
+<meta itemprop=description content="This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to [cpu world](http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html) for more info"><meta itemprop=datePublished content="2020-09-23T00:00:00+00:00">
+<meta itemprop=dateModified content="2021-07-21T23:46:24-05:00">
+<meta itemprop=wordCount content="4745">
+<meta itemprop=keywords content="os,kernel,mm,linux,">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Linux Program Measurement and mmap">
 <meta name=twitter:description content="This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to [cpu world](http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html) for more info">
 <meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
+<link rel=canonical href=https://www.bodunhu.com/blog/posts/linux-program-measurement-and-mmap/>
+<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
+<link rel=dns-prefetch href=https://www.google-analytics.com>
+<link href=https://www.google-analytics.com rel=preconnect crossorigin>
+<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
+<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
+<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
+<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:2rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Linux Program Measurement and mmap","headline":"Linux Program Measurement and mmap","alternativeHeadline":"","description":"This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to [cpu world](http:\/\/www.cpu-world.com\/CPUs\/Core_i7\/Intel-Core%20i7%20i7-6800K.html) for more info","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/linux-program-measurement-and-mmap\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2020","dateCreated":"2020-09-23T00:00:00.00Z","datePublished":"2020-09-23T00:00:00.00Z","dateModified":"2021-07-21T23:46:24.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/linux-program-measurement-and-mmap\/","wordCount":"4745","genre":["os","kernel","mm","linux"],"keywords":["os","kernel","mm","linux"]}</script>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
 </head>
 <body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
-<a href=/blog/posts>Archive</a>
-<a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Linux Program Measurement and mmap</h1>
-<div class=tip>
-<time datetime="2020-09-23 00:00:00 +0000 UTC">Sep 23, 2020</time>
-<span class=split>
-·
-</span>
-<span>
-23 minute read
-</span>
-</div>
-<aside class=toc>
-<details>
-<summary>Table of Contents
-</summary>
-<div>
-<nav id=TableOfContents>
-<ul>
-<li><a href=#memory-map>Memory Map</a></li>
-<li><a href=#getrusage>getrusage</a></li>
-<li><a href=#perf_event_open>perf_event_open</a></li>
-<li><a href=#monitor-events>Monitor Events</a></li>
-<li><a href=#mmap>mmap</a></li>
-<li><a href=#strace>strace</a></li>
-<li><a href=#competing-for-memory>Competing for Memory</a></li>
-</ul>
-</nav>
-</div>
-</details>
-</aside>
+<a class=skip-link href=#main>Skip to main</a>
+<main id=main>
 <div class=content>
-<p>This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to <a href=http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html target=_blank rel=noopener>cpu world</a>. This is the system spec:</p>
+<header>
+<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
+<ul style=padding:0;margin:0>
+<li><a href=https://www.bodunhu.com/>About</a></li>
+</ul>
+</header>
+<hr class=hr-list style=padding:0;margin:0>
+<h2 class=post>Linux Program Measurement and mmap</h2>
+<p>This is a summary over Linux kernel program measurement and mmap. The specs of our experiment environment is listed below. For more details regarding the CPU spec please refer to <a href=http://www.cpu-world.com/CPUs/Core_i7/Intel-Core%20i7%20i7-6800K.html>cpu world</a>. This is the system spec:</p>
 <table>
 <thead>
 <tr>
@@ -145,8 +131,9 @@
 </tbody>
 </table>
 <p><br></p>
-<h2 id=memory-map>Memory Map <a href=#memory-map class=anchor>🔗</a></h2><p>To print the <code>/proc/self/maps</code> file for a process, we use the <code>sprintf</code> to construct the file name and then use the <code>system</code> from stdlib to cat the contents of the running process&rsquo;s address space. If we execute the program, it shows (also available on <a href=https://gist.github.com/BDHU/9ad2f0b6353b789cfb7c29c804a6088a#file-proc_mem_map target=_blank rel=noopener>gist</a>)</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>address                   perms offset  dev   inode                      pathname
+<h2 id=memory-map>Memory Map <a href=#memory-map class="hash g">#</a></h2>
+<p>To print the <code>/proc/self/maps</code> file for a process, we use the <code>sprintf</code> to construct the file name and then use the <code>system</code> from stdlib to cat the contents of the running process&rsquo;s address space. If we execute the program, it shows (also available on <a href=https://gist.github.com/BDHU/9ad2f0b6353b789cfb7c29c804a6088a#file-proc_mem_map>gist</a>)</p>
+<pre><code class=language-text>address                   perms offset  dev   inode                      pathname
 559e3e51f000-559e3e520000 r--p 00000000 00:31 1199787                    /mnt/hdd1/Desktop/CS/CS380L/Lab1/a.out
 559e3e520000-559e3e521000 r-xp 00001000 00:31 1199787                    /mnt/hdd1/Desktop/CS/CS380L/Lab1/a.out
 559e3e521000-559e3e522000 r--p 00002000 00:31 1199787                    /mnt/hdd1/Desktop/CS/CS380L/Lab1/a.out
@@ -169,7 +156,8 @@
 7ffcddbe0000-7ffcddbe3000 r--p 00000000 00:00 0                          [vvar]
 7ffcddbe3000-7ffcddbe4000 r-xp 00000000 00:00 0                          [vdso]
 ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
-</code></pre></div><p>Based on the <a href=https://man7.org/linux/man-pages/man5/proc.5.html target=_blank rel=noopener>linux man page</a>, we can see each column has different definition. The <em>address</em> field is the address space in the process that the mapping occupies. The <em>perms</em> field is a set of permissions:</p>
+</code></pre>
+<p>Based on the <a href=https://man7.org/linux/man-pages/man5/proc.5.html>linux man page</a>, we can see each column has different definition. The <em>address</em> field is the address space in the process that the mapping occupies. The <em>perms</em> field is a set of permissions:</p>
 <ul>
 <li>r = read</li>
 <li>w = write</li>
@@ -184,25 +172,28 @@ ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsysca
 <p><em>[stack]</em>: the initial process&rsquo;s (also known as the main thread&rsquo;s) stack.</p>
 </li>
 <li>
-<p><em>[vdso]</em>: The virtual dynamically linked shared object. More detailed descriptions can be found on <a href=https://lwn.net/Articles/615809/ target=_blank rel=noopener>lwn</a>.</p>
+<p><em>[vdso]</em>: The virtual dynamically linked shared object. More detailed descriptions can be found on <a href=https://lwn.net/Articles/615809/>lwn</a>.</p>
 </li>
 <li>
 <p><em>[vvar]</em>: location of kernel space variables mapped in user space needed by virtual system calls. Essentially, a kernel-space physical address is mapped into the userspace.</p>
 </li>
 <li>
-<p><em>[vsyscall]</em>: similar to vDSO, vsyscall is another segment used to accelerate certain system calls in Linux. Vsyscall has some limitations; among other things, there is only space for a handful of virtual system calls. More detailed descriptions can be found on <a href=https://lwn.net/Articles/446528/ target=_blank rel=noopener>lwn</a>.</p>
+<p><em>[vsyscall]</em>: similar to vDSO, vsyscall is another segment used to accelerate certain system calls in Linux. Vsyscall has some limitations; among other things, there is only space for a handful of virtual system calls. More detailed descriptions can be found on <a href=https://lwn.net/Articles/446528/>lwn</a>.</p>
 </li>
 </ul>
 <p>One thing interesting here is that when we execute the same program twice, we can see after the first run, the output is</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>7fffbc92f000-7fffbc930000 r-xp 00000000 00:00 0                          [vdso]
+<pre><code class=language-text>7fffbc92f000-7fffbc930000 r-xp 00000000 00:00 0                          [vdso]
 ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
-</code></pre></div><p>Type the same command again:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>7ffd6a94d000-7ffd6a94e000 r-xp 00000000 00:00 0                          [vdso]
+</code></pre>
+<p>Type the same command again:</p>
+<pre><code class=language-text>7ffd6a94d000-7ffd6a94e000 r-xp 00000000 00:00 0                          [vdso]
 ffffffffff600000-ffffffffff601000 --xp 00000000 00:00 0                  [vsyscall]
-</code></pre></div><p>Note that the vDSO area has moved, while the vsyscall page remains at the same location. The location of the vsyscall page is nailed down in the kernel ABI, but the vDSO area - like most other areas in the user-space memory layout - has its location randomized every time it is mapped. The vsyscall is legacy implementation of user-space sys call acceleration. Since it has fixed addresses, it is vulnerable to security issues. Because applications depend on the existence and exact address of that page, most functions are simply removed and replaced by a special trap instruction. More detailed explanation can be found on <a href=https://lwn.net/Articles/446528/ target=_blank rel=noopener>lwn.net</a>.</p>
+</code></pre>
+<p>Note that the vDSO area has moved, while the vsyscall page remains at the same location. The location of the vsyscall page is nailed down in the kernel ABI, but the vDSO area - like most other areas in the user-space memory layout - has its location randomized every time it is mapped. The vsyscall is legacy implementation of user-space sys call acceleration. Since it has fixed addresses, it is vulnerable to security issues. Because applications depend on the existence and exact address of that page, most functions are simply removed and replaced by a special trap instruction. More detailed explanation can be found on <a href=https://lwn.net/Articles/446528/>lwn.net</a>.</p>
 <p>Another interesting thing we observed is the base address of the executable (the start of the text section) and the start address of libc is rather different. This is also the result of using ASLR which is used to prevent return-to-libc attack.</p>
-<h2 id=getrusage>getrusage <a href=#getrusage class=anchor>🔗</a></h2><p>Then, we call <code>getrusage</code> at the end of our program and print out the fields. We will need <code>getrusage</code> later. Here is a sample output for some fields inside <code>struct rusage</code>:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>utime: 1306
+<h2 id=getrusage>getrusage <a href=#getrusage class="hash g">#</a></h2>
+<p>Then, we call <code>getrusage</code> at the end of our program and print out the fields. We will need <code>getrusage</code> later. Here is a sample output for some fields inside <code>struct rusage</code>:</p>
+<pre><code class=language-text>utime: 1306
 stime: 0
 maxrss: 2692
 minflt: 76
@@ -211,7 +202,8 @@ inblock: 0
 oublock: 0
 nvcsw: 2
 nivcsw: 0
-</code></pre></div><p>Here is a short list of descriptions for each of these fields. More detailed information can be found on <a href=https://www.gnu.org/software/libc/manual/html_node/Resource-Usage.html target=_blank rel=noopener>gnu website</a></p>
+</code></pre>
+<p>Here is a short list of descriptions for each of these fields. More detailed information can be found on <a href=https://www.gnu.org/software/libc/manual/html_node/Resource-Usage.html>gnu website</a></p>
 <ul>
 <li><strong>utime</strong>: time spent executing user instructions.</li>
 <li><strong>stime</strong>: time spent in operating system code on behalf of processes.</li>
@@ -223,21 +215,23 @@ nivcsw: 0
 <li><strong>nvcsw</strong>: the number of times processes voluntarily invoked a context switch (usually to wait for some service).</li>
 <li><strong>nivcsw</strong>: the number of times an involuntary context switch took place (because a time slice expired, or another process of higher priority was scheduled).</li>
 </ul>
-<h2 id=perf_event_open>perf_event_open <a href=#perf_event_open class=anchor>🔗</a></h2><p><code>perf_event_open</code> interface is useful to measurement numerous system events. However, glibc doesn&rsquo;t provide wrapper for this system call. Instead, we need to use <code>syscall</code> directly.</p>
-<p>To use <code>perf_event_open</code>, we call create a function wrapper that does the actual syscall for us. Take the example from the <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>Linux man page</a></p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#00a8c8>static</span> <span style=color:#00a8c8>int</span>
-<span style=color:#75af00>perf_event_open</span><span style=color:#111>(</span><span style=color:#00a8c8>struct</span> <span style=color:#111>perf_event_attr</span> <span style=color:#f92672>*</span><span style=color:#111>hw_event</span><span style=color:#111>,</span> <span style=color:#111>pid_t</span> <span style=color:#111>pid</span><span style=color:#111>,</span>
-                <span style=color:#00a8c8>int</span> <span style=color:#111>cpu</span><span style=color:#111>,</span> <span style=color:#00a8c8>int</span> <span style=color:#111>group_fd</span><span style=color:#111>,</span> <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>long</span> <span style=color:#111>flags</span><span style=color:#111>)</span>
-<span style=color:#111>{</span>
-    <span style=color:#00a8c8>int</span> <span style=color:#111>ret</span><span style=color:#111>;</span>
+<h2 id=perf_event_open>perf_event_open <a href=#perf_event_open class="hash g">#</a></h2>
+<p><code>perf_event_open</code> interface is useful to measurement numerous system events. However, glibc doesn&rsquo;t provide wrapper for this system call. Instead, we need to use <code>syscall</code> directly.</p>
+<p>To use <code>perf_event_open</code>, we call create a function wrapper that does the actual syscall for us. Take the example from the <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html>Linux man page</a></p>
+<pre><code class=language-c>static int
+perf_event_open(struct perf_event_attr *hw_event, pid_t pid,
+                int cpu, int group_fd, unsigned long flags)
+{
+    int ret;
 
-    <span style=color:#111>ret</span> <span style=color:#f92672>=</span> <span style=color:#111>syscall</span><span style=color:#111>(</span><span style=color:#111>__NR_perf_event_open</span><span style=color:#111>,</span> <span style=color:#111>hw_event</span><span style=color:#111>,</span> <span style=color:#111>pid</span><span style=color:#111>,</span> <span style=color:#111>cpu</span><span style=color:#111>,</span>
-                    <span style=color:#111>group_fd</span><span style=color:#111>,</span> <span style=color:#111>flags</span><span style=color:#111>);</span>
-    <span style=color:#00a8c8>return</span> <span style=color:#111>ret</span><span style=color:#111>;</span>
-<span style=color:#111>}</span>
-</code></pre></div><p>Here the <code>__NR_perf_event_open</code> specifies the syscall number. On our local machine, we can go to <code>/usr/include/x86_64-linux-gnu/sys/syscall.h</code>, which specifies the location of <code>__NR_perf_event_open</code>. In our case, it is located at <code>/usr/include/x86_64-linux-gnu/asm/unistd_64.h</code>.</p>
+    ret = syscall(__NR_perf_event_open, hw_event, pid, cpu,
+                    group_fd, flags);
+    return ret;
+}
+</code></pre>
+<p>Here the <code>__NR_perf_event_open</code> specifies the syscall number. On our local machine, we can go to <code>/usr/include/x86_64-linux-gnu/sys/syscall.h</code>, which specifies the location of <code>__NR_perf_event_open</code>. In our case, it is located at <code>/usr/include/x86_64-linux-gnu/asm/unistd_64.h</code>.</p>
 <p>If we call <code>objdump -d</code> on the binary file, we will see something like this</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>000000000000119a &lt;perf_event_open&gt;:
+<pre><code class=language-text>000000000000119a &lt;perf_event_open&gt;:
     119a:	55                   	push   %rbp
     119b:	48 89 e5             	mov    %rsp,%rbp
     119e:	48 83 ec 30          	sub    $0x30,%rsp
@@ -262,19 +256,23 @@ nivcsw: 0
     11e2:	48 98                	cltq   
     11e4:	c9                   	leaveq 
     11e5:	c3                   	retq   
-</code></pre></div><p>We notice there&rsquo;s one interesting line</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>callq  1060 &lt;syscall@plt&gt;
-</code></pre></div><p>The <code>plt</code> stands for Procedure Linkage Table. This lines indicates a call to the <code>syscall</code> in the procedure linking table. The PLT allows us to resolve the absolute addresses of shared libraries at runtime.</p>
+</code></pre>
+<p>We notice there&rsquo;s one interesting line</p>
+<pre><code class=language-text>callq  1060 &lt;syscall@plt&gt;
+</code></pre>
+<p>The <code>plt</code> stands for Procedure Linkage Table. This lines indicates a call to the <code>syscall</code> in the procedure linking table. The PLT allows us to resolve the absolute addresses of shared libraries at runtime.</p>
 <p>Take a look at the <code>&lt;syscall@plt></code> section of the disassembly of section .plt, we see</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>0000000000001060 &lt;syscall@plt&gt;:
+<pre><code class=language-text>0000000000001060 &lt;syscall@plt&gt;:
     1060:	ff 25 62 2f 00 00    	jmpq   *0x2f62(%rip)    #3fc8&lt;syscall@GLIBC_2.2.5&gt;
     1066:	68 03 00 00 00       	pushq  $0x3
     106b:	e9 b0 ff ff ff       	jmpq   1020 &lt;.plt&gt;
-</code></pre></div><p>Notice this jump is a pointer to an address. The address lies inside the GOT (Global Offset Table). The GOT will eventually hold the absolute address call to <code>syscall</code>. On the first call the address will point back to the instruction after the jump in the PLT - <code>0x1066</code>. Then we see another jump instruction. This jump is a jump into the eventual runtime linker code that will load the shared library which has syscall.</p>
+</code></pre>
+<p>Notice this jump is a pointer to an address. The address lies inside the GOT (Global Offset Table). The GOT will eventually hold the absolute address call to <code>syscall</code>. On the first call the address will point back to the instruction after the jump in the PLT - <code>0x1066</code>. Then we see another jump instruction. This jump is a jump into the eventual runtime linker code that will load the shared library which has syscall.</p>
 <p>We also see the comment for the first jump instruction</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#3fc8&lt;syscall@GLIBC_2.2.5&gt;
-</code></pre></div><p>Use <code>objdump -R</code>, we see the dynamic relocation entries in the file</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>DYNAMIC RELOCATION RECORDS
+<pre><code class=language-text>#3fc8&lt;syscall@GLIBC_2.2.5&gt;
+</code></pre>
+<p>Use <code>objdump -R</code>, we see the dynamic relocation entries in the file</p>
+<pre><code class=language-text>DYNAMIC RELOCATION RECORDS
 OFFSET           TYPE              VALUE 
 0000000000003d98 R_X86_64_RELATIVE  *ABS*+0x0000000000001190
 0000000000003da0 R_X86_64_RELATIVE  *ABS*+0x0000000000001150
@@ -289,76 +287,84 @@ OFFSET           TYPE              VALUE
 0000000000003fc0 R_X86_64_JUMP_SLOT  system@GLIBC_2.2.5
 0000000000003fc8 R_X86_64_JUMP_SLOT  syscall@GLIBC_2.2.5
 0000000000003fd0 R_X86_64_JUMP_SLOT  sprintf@GLIBC_2.2.5
-</code></pre></div>
-<h2 id=monitor-events>Monitor Events <a href=#monitor-events class=anchor>🔗</a></h2><p>Next, we are going to look at L1 data cache metrics. We are interested in L1 data cache accesses, misses, and data TLB misses. We will measure this code in our experiment. CACHE_LINE_SIZE is defined as 64 to match our CPU specs.</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>// p points to a region that is 1GB (ideally)
-</span><span style=color:#75715e></span><span style=color:#00a8c8>void</span> <span style=color:#75af00>do_mem_access</span><span style=color:#111>(</span><span style=color:#00a8c8>char</span><span style=color:#f92672>*</span> <span style=color:#111>p</span><span style=color:#111>,</span> <span style=color:#00a8c8>int</span> <span style=color:#111>size</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-    <span style=color:#00a8c8>int</span> <span style=color:#111>i</span><span style=color:#111>,</span> <span style=color:#111>j</span><span style=color:#111>,</span> <span style=color:#111>count</span><span style=color:#111>,</span> <span style=color:#111>outer</span><span style=color:#111>,</span> <span style=color:#111>locality</span><span style=color:#111>;</span>
-    <span style=color:#00a8c8>int</span> <span style=color:#111>ws_base</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-    <span style=color:#00a8c8>int</span> <span style=color:#111>max_base</span> <span style=color:#f92672>=</span> <span style=color:#111>((</span><span style=color:#111>size</span> <span style=color:#f92672>/</span> <span style=color:#111>CACHE_LINE_SIZE</span><span style=color:#111>)</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>512</span><span style=color:#111>);</span>
-    <span style=color:#00a8c8>for</span><span style=color:#111>(</span><span style=color:#111>outer</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>outer</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>&lt;&lt;</span><span style=color:#ae81ff>20</span><span style=color:#111>);</span> <span style=color:#f92672>++</span><span style=color:#111>outer</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-      <span style=color:#00a8c8>long</span> <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>simplerand</span><span style=color:#111>()</span> <span style=color:#f92672>%</span> <span style=color:#111>max_base</span><span style=color:#111>;</span>
-      <span style=color:#75715e>// Pick a starting offset
-</span><span style=color:#75715e></span>      <span style=color:#00a8c8>if</span><span style=color:#111>(</span> <span style=color:#111>opt_random_access</span> <span style=color:#111>)</span> <span style=color:#111>{</span>
-         <span style=color:#111>ws_base</span> <span style=color:#f92672>=</span> <span style=color:#111>r</span><span style=color:#111>;</span>
-      <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
-         <span style=color:#111>ws_base</span> <span style=color:#f92672>+=</span> <span style=color:#ae81ff>512</span><span style=color:#111>;</span>
-         <span style=color:#00a8c8>if</span><span style=color:#111>(</span> <span style=color:#111>ws_base</span> <span style=color:#f92672>&gt;=</span> <span style=color:#111>max_base</span> <span style=color:#111>)</span> <span style=color:#111>{</span>
-            <span style=color:#111>ws_base</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-         <span style=color:#111>}</span>
-      <span style=color:#111>}</span>
-      <span style=color:#00a8c8>for</span><span style=color:#111>(</span><span style=color:#111>locality</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>locality</span> <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>16</span><span style=color:#111>;</span> <span style=color:#111>locality</span><span style=color:#f92672>++</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-         <span style=color:#00a8c8>volatile</span> <span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>a</span><span style=color:#111>;</span>
-         <span style=color:#00a8c8>char</span> <span style=color:#111>c</span><span style=color:#111>;</span>
-         <span style=color:#00a8c8>for</span><span style=color:#111>(</span><span style=color:#111>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>i</span> <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>512</span><span style=color:#111>;</span> <span style=color:#111>i</span><span style=color:#f92672>++</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-            <span style=color:#75715e>// Working set of 512 cache lines, 32KB
-</span><span style=color:#75715e></span>            <span style=color:#111>a</span> <span style=color:#f92672>=</span> <span style=color:#111>p</span> <span style=color:#f92672>+</span> <span style=color:#111>(</span><span style=color:#111>ws_base</span> <span style=color:#f92672>+</span> <span style=color:#111>i</span><span style=color:#111>)</span> <span style=color:#f92672>*</span> <span style=color:#111>CACHE_LINE_SIZE</span><span style=color:#111>;</span>
-            <span style=color:#00a8c8>if</span><span style=color:#111>((</span><span style=color:#111>i</span><span style=color:#f92672>%</span><span style=color:#ae81ff>8</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-               <span style=color:#f92672>*</span><span style=color:#111>a</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span>
-            <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
-               <span style=color:#111>c</span> <span style=color:#f92672>=</span> <span style=color:#f92672>*</span><span style=color:#111>a</span><span style=color:#111>;</span>
-            <span style=color:#111>}</span>
-         <span style=color:#111>}</span>
-      <span style=color:#111>}</span>
-   <span style=color:#111>}</span>
-<span style=color:#111>}</span>
-</code></pre></div><p>What this routine does is essentially pick a working set of 512 cache lines, periodically perform a write or otherwise read operation. This process is repeated 16 times during each interaction. Each read or write access will operate on a new cache line. The innermost loop will perform this set of operations for the entire L1 data cache.</p>
+</code></pre>
+<h2 id=monitor-events>Monitor Events <a href=#monitor-events class="hash g">#</a></h2>
+<p>Next, we are going to look at L1 data cache metrics. We are interested in L1 data cache accesses, misses, and data TLB misses. We will measure this code in our experiment. CACHE_LINE_SIZE is defined as 64 to match our CPU specs.</p>
+<pre><code class=language-c>// p points to a region that is 1GB (ideally)
+void do_mem_access(char* p, int size) {
+    int i, j, count, outer, locality;
+    int ws_base = 0;
+    int max_base = ((size / CACHE_LINE_SIZE) - 512);
+    for(outer = 0; outer &lt; (1&lt;&lt;20); ++outer) {
+      long r = simplerand() % max_base;
+      // Pick a starting offset
+      if( opt_random_access ) {
+         ws_base = r;
+      } else {
+         ws_base += 512;
+         if( ws_base &gt;= max_base ) {
+            ws_base = 0;
+         }
+      }
+      for(locality = 0; locality &lt; 16; locality++) {
+         volatile char *a;
+         char c;
+         for(i = 0; i &lt; 512; i++) {
+            // Working set of 512 cache lines, 32KB
+            a = p + (ws_base + i) * CACHE_LINE_SIZE;
+            if((i%8) == 0) {
+               *a = 1;
+            } else {
+               c = *a;
+            }
+         }
+      }
+   }
+}
+</code></pre>
+<p>What this routine does is essentially pick a working set of 512 cache lines, periodically perform a write or otherwise read operation. This process is repeated 16 times during each interaction. Each read or write access will operate on a new cache line. The innermost loop will perform this set of operations for the entire L1 data cache.</p>
 <p>When opt_random_access is true, the starting base address of the cache line is randomly picked. Otherwise, it is incremented by 512 cache lines (or one working set) during each outer iteration. The main difference is that with opt_random_access set to true, the starting base address of the cache line can&rsquo;t be precomputed by the hardware, thus likely increase miss rate.</p>
 <p>To measure L1 data cache metrics, we will use the <code>perf_event_open</code> interface we discussed above. To measure L1 data cache read misses, we will configure our <code>struct perf_event_attr</code> as follows:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>#define CALC_CONFIG(perf_hw_cache_id, perf_hw_cache_op_id, perf_hw_cache_op_result_id) \
-</span><span style=color:#75715e>((perf_hw_cache_id) | (perf_hw_cache_op_id &lt;&lt; 8) | (perf_hw_cache_op_result_id &lt;&lt; 16))
-</span><span style=color:#75715e></span>
-<span style=color:#111>hw_event</span><span style=color:#111>.</span><span style=color:#111>type</span> <span style=color:#f92672>=</span> <span style=color:#111>PERF_TYPE_HW_CACHE</span><span style=color:#111>;</span> 
-<span style=color:#111>hw_event</span><span style=color:#111>.</span><span style=color:#111>size</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>sizeof</span><span style=color:#111>(</span><span style=color:#00a8c8>struct</span> <span style=color:#111>perf_event_attr</span><span style=color:#111>);</span>
-<span style=color:#111>hw_event</span><span style=color:#111>.</span><span style=color:#111>disabled</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span> <span style=color:#75715e>// disable at init time
-</span><span style=color:#75715e></span><span style=color:#111>hw_event</span><span style=color:#111>.</span><span style=color:#111>exclude_kernel</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span>
-<span style=color:#111>hw_event</span><span style=color:#111>.</span><span style=color:#111>config</span> <span style=color:#f92672>=</span> <span style=color:#111>CALC_CONFIG</span><span style=color:#111>(</span><span style=color:#111>PERF_COUNT_HW_CACHE_L1D</span><span style=color:#111>,</span> <span style=color:#111>PERF_COUNT_HW_CACHE_OP_READ</span><span style=color:#111>,</span> <span style=color:#111>PERF_COUNT_HW_CACHE_RESULT_ACCESS</span><span style=color:#111>);</span>
-</code></pre></div><p>The exact details can be found in <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>linux man page</a>. The important part is:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#111>hw_event</span><span style=color:#111>.</span><span style=color:#111>config</span> <span style=color:#f92672>=</span> <span style=color:#111>CALC_CONFIG</span><span style=color:#111>(</span><span style=color:#111>PERF_COUNT_HW_CACHE_L1D</span><span style=color:#111>,</span> <span style=color:#111>PERF_COUNT_HW_CACHE_OP_READ</span><span style=color:#111>,</span> <span style=color:#111>PERF_COUNT_HW_CACHE_RESULT_ACCESS</span><span style=color:#111>);</span>
-</code></pre></div><p>These configurations allows us to measure the L1 data cahe read misses. The arguments passed to <code>perf_event_open</code> is</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#111>pid_t</span> <span style=color:#111>pid</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-<span style=color:#00a8c8>int</span> <span style=color:#111>cpu</span> <span style=color:#f92672>=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>;</span>
-<span style=color:#00a8c8>int</span> <span style=color:#111>group_fd</span> <span style=color:#f92672>=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>;</span>
-<span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>long</span> <span style=color:#111>flags</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-</code></pre></div><p>The choice of these parameters can also be found on the <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html target=_blank rel=noopener>linux man page</a>. After <code>perf_event_open</code> is called, we will re-enable event measurements by calling</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#111>ioctl</span><span style=color:#111>(</span><span style=color:#111>fd</span><span style=color:#111>,</span> <span style=color:#111>PERF_EVENT_IOC_RESET</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>);</span>
-<span style=color:#111>ioctl</span><span style=color:#111>(</span><span style=color:#111>fd</span><span style=color:#111>,</span> <span style=color:#111>PERF_EVENT_IOC_ENABLE</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>);</span>
-</code></pre></div><p>What it does is resetting the event count specified by the file descriptor argument to zero, then enables the individual event specified by the file descriptor argument. After <code>do_mem_access(p, size)</code> is executed, we call <code>ioctl(fd, PERF_EVENT_IOC_DISABLE, 0)</code> to disable the event and then read the result by <code>read(fd, &result, sizeof(long long))</code>. How result is defined is up to how <code>PERF_FORMAT_*</code> was specified. You can also check <a href=https://elixir.bootlin.com/linux/latest/source/kernel/events/core.c#L1833 target=_blank rel=noopener>lxr</a> to see how <code>__perf_event_read_size</code> calculates the size of event that is read. In our case, it&rsquo;s simple a <code>u64</code>.</p>
+<pre><code class=language-c>#define CALC_CONFIG(perf_hw_cache_id, perf_hw_cache_op_id, perf_hw_cache_op_result_id) \
+((perf_hw_cache_id) | (perf_hw_cache_op_id &lt;&lt; 8) | (perf_hw_cache_op_result_id &lt;&lt; 16))
+
+hw_event.type = PERF_TYPE_HW_CACHE; 
+hw_event.size = sizeof(struct perf_event_attr);
+hw_event.disabled = 1; // disable at init time
+hw_event.exclude_kernel = 1;
+hw_event.config = CALC_CONFIG(PERF_COUNT_HW_CACHE_L1D, PERF_COUNT_HW_CACHE_OP_READ, PERF_COUNT_HW_CACHE_RESULT_ACCESS);
+</code></pre>
+<p>The exact details can be found in <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html>linux man page</a>. The important part is:</p>
+<pre><code class=language-c>hw_event.config = CALC_CONFIG(PERF_COUNT_HW_CACHE_L1D, PERF_COUNT_HW_CACHE_OP_READ, PERF_COUNT_HW_CACHE_RESULT_ACCESS);
+</code></pre>
+<p>These configurations allows us to measure the L1 data cahe read misses. The arguments passed to <code>perf_event_open</code> is</p>
+<pre><code class=language-c>pid_t pid = 0;
+int cpu = -1;
+int group_fd = -1;
+unsigned long flags = 0;
+</code></pre>
+<p>The choice of these parameters can also be found on the <a href=https://man7.org/linux/man-pages/man2/perf_event_open.2.html>linux man page</a>. After <code>perf_event_open</code> is called, we will re-enable event measurements by calling</p>
+<pre><code class=language-c>ioctl(fd, PERF_EVENT_IOC_RESET, 0);
+ioctl(fd, PERF_EVENT_IOC_ENABLE, 0);
+</code></pre>
+<p>What it does is resetting the event count specified by the file descriptor argument to zero, then enables the individual event specified by the file descriptor argument. After <code>do_mem_access(p, size)</code> is executed, we call <code>ioctl(fd, PERF_EVENT_IOC_DISABLE, 0)</code> to disable the event and then read the result by <code>read(fd, &result, sizeof(long long))</code>. How result is defined is up to how <code>PERF_FORMAT_*</code> was specified. You can also check <a href=https://elixir.bootlin.com/linux/latest/source/kernel/events/core.c#L1833>lxr</a> to see how <code>__perf_event_read_size</code> calculates the size of event that is read. In our case, it&rsquo;s simple a <code>u64</code>.</p>
 <blockquote>
-<p>Be aware that simply executing the binary might cause <code>perf_event_open</code> to fail (in which case will always return -1). Using <code>sudo</code> is one workaround. Execute <code>cat /proc/sys/kernel/perf_event_paranoid</code> and see what returns. <code>-1</code> means you have raw access to kernel tracepoints. Otherwise, you might have trouble accessing the performance counter without root privilege. Check this <a href=https://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar target=_blank rel=noopener>stackexchange post</a> for more details.</p>
+<p>Be aware that simply executing the binary might cause <code>perf_event_open</code> to fail (in which case will always return -1). Using <code>sudo</code> is one workaround. Execute <code>cat /proc/sys/kernel/perf_event_paranoid</code> and see what returns. <code>-1</code> means you have raw access to kernel tracepoints. Otherwise, you might have trouble accessing the performance counter without root privilege. Check this <a href=https://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar>stackexchange post</a> for more details.</p>
 </blockquote>
 <p>To be even more careful about generating repeatable results we should flush the level 1 data cache before enabling the performance counters. We will do this by reading a memory buffer larger than per-core L1 data cache size</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#111>size_t</span> <span style=color:#111>buffer_size</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>32</span> <span style=color:#f92672>*</span> <span style=color:#ae81ff>1024</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1024</span><span style=color:#111>;</span>
-<span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>buff</span> <span style=color:#f92672>=</span> <span style=color:#111>malloc</span><span style=color:#111>(</span><span style=color:#111>buffer_size</span><span style=color:#111>);</span>
-<span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#00a8c8>int</span> <span style=color:#111>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>i</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>buffer_size</span><span style=color:#111>;</span> <span style=color:#111>i</span><span style=color:#f92672>++</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-    <span style=color:#111>buff</span><span style=color:#111>[</span><span style=color:#111>i</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>rand</span><span style=color:#111>();</span>
-<span style=color:#111>}</span>
-</code></pre></div><p>We will also lock the process onto a single processor by using the <code>sched_setaffinity</code> function. Our example is</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#111>cpu_set_t</span> <span style=color:#111>set</span><span style=color:#111>;</span>
-<span style=color:#111>CPU_ZERO</span><span style=color:#111>(</span><span style=color:#f92672>&amp;</span><span style=color:#111>set</span><span style=color:#111>);</span>
-<span style=color:#111>CPU_SET</span><span style=color:#111>(</span><span style=color:#ae81ff>7</span><span style=color:#111>,</span> <span style=color:#f92672>&amp;</span><span style=color:#111>set</span><span style=color:#111>);</span>
-<span style=color:#00a8c8>int</span> <span style=color:#111>aff</span> <span style=color:#f92672>=</span> <span style=color:#111>sched_setaffinity</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#00a8c8>sizeof</span><span style=color:#111>(</span><span style=color:#111>cpu_set_t</span><span style=color:#111>),</span> <span style=color:#f92672>&amp;</span><span style=color:#111>set</span><span style=color:#111>);</span>
-</code></pre></div><p>We perform the each of the above experiments 5 times. First, we turn on random cache line base address generation. On average, we have around 1010665367 L1 data cache read misses wtih standard deviation to be 61010967 misses. When random access is disabled, we have on average 964420324 read misses with standard deviation of 65787193 misses. We can also measure the number L1 data cache write misses by using the <code>PERF_COUNT_HW_CACHE_OP_WRITE</code> config instead. Use <code>PERF_COUNT_HW_CACHE_OP_PREFETCH</code> gives us prefetch misses, in our case, both of these metrics are unavailable. We can check the <code>/arch/x86/events/intel/core.c</code> in <a href=https://elixir.bootlin.com/linux/v5.6/source/arch/x86/events/intel/core.c target=_blank rel=noopener>lxr</a> and we can see these metrics are not available.</p>
+<pre><code class=language-c>size_t buffer_size = 32 * 1024 + 1024;
+char *buff = malloc(buffer_size);
+for (int i = 0; i &lt; buffer_size; i++) {
+    buff[i] = rand();
+}
+</code></pre>
+<p>We will also lock the process onto a single processor by using the <code>sched_setaffinity</code> function. Our example is</p>
+<pre><code class=language-c>cpu_set_t set;
+CPU_ZERO(&amp;set);
+CPU_SET(7, &amp;set);
+int aff = sched_setaffinity(0, sizeof(cpu_set_t), &amp;set);
+</code></pre>
+<p>We perform the each of the above experiments 5 times. First, we turn on random cache line base address generation. On average, we have around 1010665367 L1 data cache read misses wtih standard deviation to be 61010967 misses. When random access is disabled, we have on average 964420324 read misses with standard deviation of 65787193 misses. We can also measure the number L1 data cache write misses by using the <code>PERF_COUNT_HW_CACHE_OP_WRITE</code> config instead. Use <code>PERF_COUNT_HW_CACHE_OP_PREFETCH</code> gives us prefetch misses, in our case, both of these metrics are unavailable. We can check the <code>/arch/x86/events/intel/core.c</code> in <a href=https://elixir.bootlin.com/linux/v5.6/source/arch/x86/events/intel/core.c>lxr</a> and we can see these metrics are not available.</p>
 <p>We can also use the <code>PERF_COUNT_HW_CACHE_DTLB</code> config option for data TLB measurement. For read access we have on average 3390719 misses with std dev being 17579, while write access has 1486451 misses with std dev being 13455. The prefetch metrics for TLB are unavailable in our case. To find out more about available metrics supported, please check the constant <code>static __initconst const u64 skl_hw_cache_event_ids</code> for specific kernel version.</p>
 <p>With random cache line access turned off, we have 517335 read misses data TLB with standard deviation of 3820 misses. For write we have on average 809671 misses with standard deviation being 9580 misses. It is a significant reduction compared to the random access implementation.</p>
 <p>To calculate the L1 cache miss rate and data TLB miss rate, we can use 100.0 * cache misses / cache_accesses and 100.0 * tlb misses / cache_accesses to calculate the results. With random access turned off, we get L1 read access miss rate to be $$miss_{cache} = 1.5%$$ and TLB read miss rate $$miss_{tlb} \approx 0$$. When random access is turned on, we have $$miss_{cache} = 1.4%$$ and $$miss_{tlb} \approx 0$$. We can see the miss rate in all scenarios is really low. This is mainly because the inner most loop in our routine is performing operations on working set already presented in L1 cache and TLB. The read/write operations use continous cache lines, which means there will almost be no faults while we access the 512 cache lines. If one fault causes the entire new working set to be cached, then there would be no subsequent faults until the entire working set is iterated.</p>
@@ -420,11 +426,13 @@ OFFSET           TYPE              VALUE
 </tbody>
 </table>
 <p><br></p>
-<h2 id=mmap>mmap <a href=#mmap class=anchor>🔗</a></h2><p>Next we are going to explore the behavior of mmap. Previously, we used <code>malloc</code> for data allocation. Next, we are going to instead use <code>mmap</code> and see what happens. Here we will only use read access for benchmark metrics since it&rsquo;s available in both L1 and TLB metrics.</p>
+<h2 id=mmap>mmap <a href=#mmap class="hash g">#</a></h2>
+<p>Next we are going to explore the behavior of mmap. Previously, we used <code>malloc</code> for data allocation. Next, we are going to instead use <code>mmap</code> and see what happens. Here we will only use read access for benchmark metrics since it&rsquo;s available in both L1 and TLB metrics.</p>
 <p>First, we use the <code>MAP_ANONYMOUS</code> as a flag passed to <code>mmap</code>. This flag means the mapping is not backed by any file; its contents are initialized to zero. The complete call is</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#111>mmap</span><span style=color:#111>(</span><span style=color:#111>NULL</span><span style=color:#111>,</span> <span style=color:#111>length</span><span style=color:#111>,</span> <span style=color:#111>PROT_READ</span> <span style=color:#f92672>|</span> <span style=color:#111>PROT_WRITE</span><span style=color:#111>,</span>
-                <span style=color:#111>MAP_PRIVATE</span> <span style=color:#f92672>|</span> <span style=color:#111>MAP_ANONYMOUS</span><span style=color:#111>,</span> <span style=color:#111>fd_ignore</span><span style=color:#111>,</span> <span style=color:#111>offset</span><span style=color:#111>);</span>
-</code></pre></div><p>For more details, refer to <a href=https://man7.org/linux/man-pages/man2/mmap.2.html target=_blank rel=noopener>mmap man page</a> for information.</p>
+<pre><code class=language-c>mmap(NULL, length, PROT_READ | PROT_WRITE,
+                MAP_PRIVATE | MAP_ANONYMOUS, fd_ignore, offset);
+</code></pre>
+<p>For more details, refer to <a href=https://man7.org/linux/man-pages/man2/mmap.2.html>mmap man page</a> for information.</p>
 <p>When we turn on the random access and use <code>perf_event_open</code> interface to collect metrics, we see the L1 data cache read misses are 956148031 (std dev 84631843). The TLB data cache read misses are 3370309 (std dev 17792). We see it is not really different to the malloc approach we used before. Doing a simple <code>strace</code> shows <code>malloc</code> calls <code>mmap</code>. The memory that backs <code>malloc()</code> allocations is handled by the kernel in much the same way as the memory that backs private anonymous mappings created with <code>mmap()</code>.</p>
 <p>Then, we try to use <code>mmap()</code> to create mapping in the virtual address space backed by a file instead of using <code>MAP_ANONYMOUS</code>.</p>
 <p>We first test <code>mmap</code> with <code>MAP_PRIVATE</code>. According to the man page, this flags means creating a private copy-on-write mapping. Updates to the mapping are not visible to other processes mapping the same file, and are not carried through to the underlying file. It is unspecified whether changes made to the file after the mmap() call are visible in the mapped region.</p>
@@ -550,144 +558,151 @@ calling process. However, it doesn&rsquo;t allocate RAM. If we call <code>memset
 <li>nvcsw was higher, there are more voluntary context switches. Writing results to disk has delay, and thus the process likely need to context switch while waiting for I/O to be finished.</li>
 </ul>
 <p>We may notice the number data TLB misses is lower than the total number of page the application uses. One obvious answer the use of huge page. One huge page can cover many small pages. Also, because we have prefetching TLB and the working set access pattern is contiguous, TLB hit rate will be high. Because we have a set-associative TLB cache, and we access the memory in a fairly deterministic way, it&rsquo;s easy to predict where the next access is pointing to. For example, if the replacement policy is FIFO, then each cache line will remain untouched for exact same clock cycle before replaced. This also applies to other policies. One way to determine the replacement algorithm is using P-Chase.</p>
-<h2 id=strace>strace <a href=#strace class=anchor>🔗</a></h2><p>We then use <code>strace</code> to trace syscalls of our application. The output contains some interesting information, one is</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback>access(&#34;/etc/ld.so.preload&#34;, R_OK)      = -1 ENOENT (No such file or directory)
+<h2 id=strace>strace <a href=#strace class="hash g">#</a></h2>
+<p>We then use <code>strace</code> to trace syscalls of our application. The output contains some interesting information, one is</p>
+<pre><code>access(&quot;/etc/ld.so.preload&quot;, R_OK)      = -1 ENOENT (No such file or directory)
 ...
 arch_prctl(ARCH_SET_FS, 0x7fdc6ad83540) = 0
-</code></pre></div><p>According to <a href=https://man7.org/linux/man-pages/man2/arch_prctl.2.html target=_blank rel=noopener>arch_prctl man page</a>, <code>arch_prctl()</code> sets architecture-specific process or thread state. The <code>ARCH_SET_FS</code> option sets the 64-bit base for the FS register to addr, in our case it&rsquo;s 0x7fdc6ad83540. Let&rsquo;s set a break point at <code>arch_prctl</code> and backtrace from there</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#0  0x00007ffff7febb55 in ?? () from /lib64/ld-linux-x86-64.so.2
+</code></pre>
+<p>According to <a href=https://man7.org/linux/man-pages/man2/arch_prctl.2.html>arch_prctl man page</a>, <code>arch_prctl()</code> sets architecture-specific process or thread state. The <code>ARCH_SET_FS</code> option sets the 64-bit base for the FS register to addr, in our case it&rsquo;s 0x7fdc6ad83540. Let&rsquo;s set a break point at <code>arch_prctl</code> and backtrace from there</p>
+<pre><code class=language-text>#0  0x00007ffff7febb55 in ?? () from /lib64/ld-linux-x86-64.so.2
 #1  0x00007ffff7fd104c in ?? () from /lib64/ld-linux-x86-64.so.2
 #2  0x00007ffff7fd0108 in ?? () from /lib64/ld-linux-x86-64.so.2
 #3  0x0000000000000001 in ?? ()
 #4  0x00007fffffffe2fa in ?? ()
 #5  0x0000000000000000 in ?? ()
-</code></pre></div><p>We can see the FS segment base is set by the <code>ld-linux</code>, which is a part of glibc, during the program loading. A simple google seach tells us <code>/lib64/ld-linux-x86-64.so.2</code> is a dynamic linker. A more detailed description can be found on this <a href=https://unix.stackexchange.com/questions/400621/what-is-lib64-ld-linux-x86-64-so-2-and-why-can-it-be-used-to-execute-file target=_blank rel=noopener>post</a> and <a href=https://lwn.net/Articles/631631/ target=_blank rel=noopener>lwn.net</a>. During the startup, the loader initalizes TLS. The includes memory allocation and setting FS base value to point to the TLS beignning, which is done via the <code>arch_prctl</code> syscall. More can be found <a href=https://unix.stackexchange.com/questions/453749/what-sets-fs0x28-stack-canary/453772 target=_blank rel=noopener>here</a>. This <code>init_tls()</code> is called <a href="https://git.launchpad.net/glibc/tree/elf/rtld.c?id=916124ed841745b7a1e0fbc43f9909340b47d373#n1397" target=_blank rel=noopener>here</a>, which subsequently calls the actuall <a href=https://git.launchpad.net/glibc/tree/sysdeps/x86_64/nptl/tls.h#n153 target=_blank rel=noopener>syscall</a> in <code>tls.h</code>.</p>
-<p>The /etc/ld.so.preload has similarities to LD_PRELOAD, in addition, it doesn&rsquo;t suffer security limitation posed by LD_PRELOAD (<a href=https://superuser.com/questions/1183037/what-is-does-ld-so-preload-do target=_blank rel=noopener>explanation here</a>). This a feature of <em>glibc</em>.</p>
-<h2 id=competing-for-memory>Competing for Memory <a href=#competing-for-memory class=anchor>🔗</a></h2><p>Next we are going to fork another process that will compete for memory with our process under test. We will use this code snippet which is going to be executed by both the parent and the child process</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#00a8c8>int</span> <span style=color:#75af00>compete_for_memory</span><span style=color:#111>(</span><span style=color:#00a8c8>void</span><span style=color:#f92672>*</span> <span style=color:#111>unused</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-   <span style=color:#00a8c8>long</span> <span style=color:#111>mem_size</span> <span style=color:#f92672>=</span> <span style=color:#111>get_mem_size</span><span style=color:#111>();</span>
-   <span style=color:#00a8c8>int</span> <span style=color:#111>page_sz</span> <span style=color:#f92672>=</span> <span style=color:#111>sysconf</span><span style=color:#111>(</span><span style=color:#111>_SC_PAGE_SIZE</span><span style=color:#111>);</span>
-   <span style=color:#111>printf</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Total memsize is %3.2f GBs</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>,</span>
-         <span style=color:#111>(</span><span style=color:#00a8c8>double</span><span style=color:#111>)</span><span style=color:#111>mem_size</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#ae81ff>1024</span><span style=color:#f92672>*</span><span style=color:#ae81ff>1024</span><span style=color:#f92672>*</span><span style=color:#ae81ff>1024</span><span style=color:#111>));</span>
-   <span style=color:#111>fflush</span><span style=color:#111>(</span><span style=color:#111>stdout</span><span style=color:#111>);</span>
-   <span style=color:#00a8c8>char</span><span style=color:#f92672>*</span> <span style=color:#111>p</span> <span style=color:#f92672>=</span> <span style=color:#111>mmap</span><span style=color:#111>(</span><span style=color:#111>NULL</span><span style=color:#111>,</span> <span style=color:#111>mem_size</span><span style=color:#111>,</span> <span style=color:#111>PROT_READ</span> <span style=color:#f92672>|</span> <span style=color:#111>PROT_WRITE</span><span style=color:#111>,</span>
-                  <span style=color:#111>MAP_NORESERVE</span><span style=color:#f92672>|</span><span style=color:#111>MAP_PRIVATE</span><span style=color:#f92672>|</span><span style=color:#111>MAP_ANONYMOUS</span><span style=color:#111>,</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#111>off_t</span><span style=color:#111>)</span> <span style=color:#ae81ff>0</span><span style=color:#111>);</span>
-   <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>p</span> <span style=color:#f92672>==</span> <span style=color:#111>MAP_FAILED</span><span style=color:#111>)</span>
-      <span style=color:#111>perror</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Failed anon MMAP competition&#34;</span><span style=color:#111>);</span>
+</code></pre>
+<p>We can see the FS segment base is set by the <code>ld-linux</code>, which is a part of glibc, during the program loading. A simple google seach tells us <code>/lib64/ld-linux-x86-64.so.2</code> is a dynamic linker. A more detailed description can be found on this <a href=https://unix.stackexchange.com/questions/400621/what-is-lib64-ld-linux-x86-64-so-2-and-why-can-it-be-used-to-execute-file>post</a> and <a href=https://lwn.net/Articles/631631/>lwn.net</a>. During the startup, the loader initalizes TLS. The includes memory allocation and setting FS base value to point to the TLS beignning, which is done via the <code>arch_prctl</code> syscall. More can be found <a href=https://unix.stackexchange.com/questions/453749/what-sets-fs0x28-stack-canary/453772>here</a>. This <code>init_tls()</code> is called <a href="https://git.launchpad.net/glibc/tree/elf/rtld.c?id=916124ed841745b7a1e0fbc43f9909340b47d373#n1397">here</a>, which subsequently calls the actuall <a href=https://git.launchpad.net/glibc/tree/sysdeps/x86_64/nptl/tls.h#n153>syscall</a> in <code>tls.h</code>.</p>
+<p>The /etc/ld.so.preload has similarities to LD_PRELOAD, in addition, it doesn&rsquo;t suffer security limitation posed by LD_PRELOAD (<a href=https://superuser.com/questions/1183037/what-is-does-ld-so-preload-do>explanation here</a>). This a feature of <em>glibc</em>.</p>
+<h2 id=competing-for-memory>Competing for Memory <a href=#competing-for-memory class="hash g">#</a></h2>
+<p>Next we are going to fork another process that will compete for memory with our process under test. We will use this code snippet which is going to be executed by both the parent and the child process</p>
+<pre><code class=language-c>int compete_for_memory(void* unused) {
+   long mem_size = get_mem_size();
+   int page_sz = sysconf(_SC_PAGE_SIZE);
+   printf(&quot;Total memsize is %3.2f GBs\n&quot;,
+         (double)mem_size/(1024*1024*1024));
+   fflush(stdout);
+   char* p = mmap(NULL, mem_size, PROT_READ | PROT_WRITE,
+                  MAP_NORESERVE|MAP_PRIVATE|MAP_ANONYMOUS, -1, (off_t) 0);
+   if (p == MAP_FAILED)
+      perror(&quot;Failed anon MMAP competition&quot;);
 
-   <span style=color:#00a8c8>int</span> <span style=color:#111>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-   <span style=color:#00a8c8>while</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-      <span style=color:#00a8c8>volatile</span> <span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>a</span><span style=color:#111>;</span>
-      <span style=color:#00a8c8>long</span> <span style=color:#111>r</span> <span style=color:#f92672>=</span> <span style=color:#111>simplerand</span><span style=color:#111>()</span> <span style=color:#f92672>%</span> <span style=color:#111>(</span><span style=color:#111>mem_size</span><span style=color:#f92672>/</span><span style=color:#111>page_sz</span><span style=color:#111>);</span>
-      <span style=color:#00a8c8>char</span> <span style=color:#111>c</span><span style=color:#111>;</span>
-      <span style=color:#00a8c8>if</span><span style=color:#111>(</span> <span style=color:#111>i</span> <span style=color:#f92672>&gt;=</span> <span style=color:#111>mem_size</span><span style=color:#f92672>/</span><span style=color:#111>page_sz</span> <span style=color:#111>)</span> <span style=color:#111>{</span>
-         <span style=color:#111>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-      <span style=color:#111>}</span>
-      <span style=color:#75715e>// One read and write per page
-</span><span style=color:#75715e></span>      <span style=color:#75715e>//a = p + i * page_sz; // sequential access
-</span><span style=color:#75715e></span>      <span style=color:#111>a</span> <span style=color:#f92672>=</span> <span style=color:#111>p</span> <span style=color:#f92672>+</span> <span style=color:#111>r</span> <span style=color:#f92672>*</span> <span style=color:#111>page_sz</span><span style=color:#111>;</span>
-      <span style=color:#111>c</span> <span style=color:#f92672>+=</span> <span style=color:#f92672>*</span><span style=color:#111>a</span><span style=color:#111>;</span>
-      <span style=color:#00a8c8>if</span><span style=color:#111>((</span><span style=color:#111>i</span><span style=color:#f92672>%</span><span style=color:#ae81ff>8</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-         <span style=color:#f92672>*</span><span style=color:#111>a</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span>
-      <span style=color:#111>}</span>
-      <span style=color:#111>i</span><span style=color:#f92672>++</span><span style=color:#111>;</span>
-   <span style=color:#111>}</span>
-   <span style=color:#00a8c8>return</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-<span style=color:#111>}</span>
-</code></pre></div><p>The <code>get_mem_size()</code> is implemented using this <a href=https://stackoverflow.com/questions/22670257/getting-ram-size-in-c-linux-non-precise-result target=_blank rel=noopener>portable code</a></p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>#if defined(_WIN32)
-</span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;Windows.h&gt;</span><span style=color:#75715e>
-</span><span style=color:#75715e></span>
-<span style=color:#75715e>#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) &amp;&amp; defined(__MACH__))
-</span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;unistd.h&gt;</span><span style=color:#75715e>
-</span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;sys/types.h&gt;</span><span style=color:#75715e>
-</span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;sys/param.h&gt;</span><span style=color:#75715e>
-</span><span style=color:#75715e>#if defined(BSD)
-</span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;sys/sysctl.h&gt;</span><span style=color:#75715e>
-</span><span style=color:#75715e>#endif
-</span><span style=color:#75715e></span>
-<span style=color:#75715e>#else
-</span><span style=color:#75715e>#error &#34;Unable to define getMemorySize( ) for an unknown OS.&#34;
-</span><span style=color:#75715e>#endif
-</span><span style=color:#75715e></span>
-<span style=color:#75715e>/**
-</span><span style=color:#75715e> * Returns the size of physical memory (RAM) in bytes.
-</span><span style=color:#75715e> */</span>
-<span style=color:#111>size_t</span> <span style=color:#75af00>getMemorySize</span><span style=color:#111>(</span> <span style=color:#111>)</span>
-<span style=color:#111>{</span>
-<span style=color:#75715e>#if defined(_WIN32) &amp;&amp; (defined(__CYGWIN__) || defined(__CYGWIN32__))
-</span><span style=color:#75715e></span>    <span style=color:#75715e>/* Cygwin under Windows. ------------------------------------ */</span>
-    <span style=color:#75715e>/* New 64-bit MEMORYSTATUSEX isn&#39;t available.  Use old 32.bit */</span>
-    <span style=color:#111>MEMORYSTATUS</span> <span style=color:#111>status</span><span style=color:#111>;</span>
-    <span style=color:#111>status</span><span style=color:#111>.</span><span style=color:#111>dwLength</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>sizeof</span><span style=color:#111>(</span><span style=color:#111>status</span><span style=color:#111>);</span>
-    <span style=color:#111>GlobalMemoryStatus</span><span style=color:#111>(</span> <span style=color:#f92672>&amp;</span><span style=color:#111>status</span> <span style=color:#111>);</span>
-    <span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>status</span><span style=color:#111>.</span><span style=color:#111>dwTotalPhys</span><span style=color:#111>;</span>
+   int i = 0;
+   while(1) {
+      volatile char *a;
+      long r = simplerand() % (mem_size/page_sz);
+      char c;
+      if( i &gt;= mem_size/page_sz ) {
+         i = 0;
+      }
+      // One read and write per page
+      //a = p + i * page_sz; // sequential access
+      a = p + r * page_sz;
+      c += *a;
+      if((i%8) == 0) {
+         *a = 1;
+      }
+      i++;
+   }
+   return 0;
+}
+</code></pre>
+<p>The <code>get_mem_size()</code> is implemented using this <a href=https://stackoverflow.com/questions/22670257/getting-ram-size-in-c-linux-non-precise-result>portable code</a></p>
+<pre><code class=language-c>#if defined(_WIN32)
+#include &lt;Windows.h&gt;
 
-<span style=color:#75715e>#elif defined(_WIN32)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>/* Windows. ------------------------------------------------- */</span>
-    <span style=color:#75715e>/* Use new 64-bit MEMORYSTATUSEX, not old 32-bit MEMORYSTATUS */</span>
-    <span style=color:#111>MEMORYSTATUSEX</span> <span style=color:#111>status</span><span style=color:#111>;</span>
-    <span style=color:#111>status</span><span style=color:#111>.</span><span style=color:#111>dwLength</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>sizeof</span><span style=color:#111>(</span><span style=color:#111>status</span><span style=color:#111>);</span>
-    <span style=color:#111>GlobalMemoryStatusEx</span><span style=color:#111>(</span> <span style=color:#f92672>&amp;</span><span style=color:#111>status</span> <span style=color:#111>);</span>
-    <span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>status</span><span style=color:#111>.</span><span style=color:#111>ullTotalPhys</span><span style=color:#111>;</span>
+#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) &amp;&amp; defined(__MACH__))
+#include &lt;unistd.h&gt;
+#include &lt;sys/types.h&gt;
+#include &lt;sys/param.h&gt;
+#if defined(BSD)
+#include &lt;sys/sysctl.h&gt;
+#endif
 
-<span style=color:#75715e>#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) &amp;&amp; defined(__MACH__))
-</span><span style=color:#75715e></span>    <span style=color:#75715e>/* UNIX variants. ------------------------------------------- */</span>
-    <span style=color:#75715e>/* Prefer sysctl() over sysconf() except sysctl() HW_REALMEM and HW_PHYSMEM */</span>
+#else
+#error &quot;Unable to define getMemorySize( ) for an unknown OS.&quot;
+#endif
 
-<span style=color:#75715e>#if defined(CTL_HW) &amp;&amp; (defined(HW_MEMSIZE) || defined(HW_PHYSMEM64))
-</span><span style=color:#75715e></span>    <span style=color:#00a8c8>int</span> <span style=color:#111>mib</span><span style=color:#111>[</span><span style=color:#ae81ff>2</span><span style=color:#111>];</span>
-    <span style=color:#111>mib</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>CTL_HW</span><span style=color:#111>;</span>
-<span style=color:#75715e>#if defined(HW_MEMSIZE)
-</span><span style=color:#75715e></span>    <span style=color:#111>mib</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>HW_MEMSIZE</span><span style=color:#111>;</span>            <span style=color:#75715e>/* OSX. --------------------- */</span>
-<span style=color:#75715e>#elif defined(HW_PHYSMEM64)
-</span><span style=color:#75715e></span>    <span style=color:#111>mib</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>HW_PHYSMEM64</span><span style=color:#111>;</span>          <span style=color:#75715e>/* NetBSD, OpenBSD. --------- */</span>
-<span style=color:#75715e>#endif
-</span><span style=color:#75715e></span>    <span style=color:#00a8c8>int64_t</span> <span style=color:#111>size</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>               <span style=color:#75715e>/* 64-bit */</span>
-    <span style=color:#111>size_t</span> <span style=color:#111>len</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>sizeof</span><span style=color:#111>(</span> <span style=color:#111>size</span> <span style=color:#111>);</span>
-    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span> <span style=color:#111>sysctl</span><span style=color:#111>(</span> <span style=color:#111>mib</span><span style=color:#111>,</span> <span style=color:#ae81ff>2</span><span style=color:#111>,</span> <span style=color:#f92672>&amp;</span><span style=color:#111>size</span><span style=color:#111>,</span> <span style=color:#f92672>&amp;</span><span style=color:#111>len</span><span style=color:#111>,</span> <span style=color:#111>NULL</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span> <span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> <span style=color:#111>)</span>
-        <span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>size</span><span style=color:#111>;</span>
-    <span style=color:#00a8c8>return</span> <span style=color:#ae81ff>0L</span><span style=color:#111>;</span>          <span style=color:#75715e>/* Failed? */</span>
+/**
+ * Returns the size of physical memory (RAM) in bytes.
+ */
+size_t getMemorySize( )
+{
+#if defined(_WIN32) &amp;&amp; (defined(__CYGWIN__) || defined(__CYGWIN32__))
+    /* Cygwin under Windows. ------------------------------------ */
+    /* New 64-bit MEMORYSTATUSEX isn't available.  Use old 32.bit */
+    MEMORYSTATUS status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatus( &amp;status );
+    return (size_t)status.dwTotalPhys;
 
-<span style=color:#75715e>#elif defined(_SC_AIX_REALMEM)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>/* AIX. ----------------------------------------------------- */</span>
-    <span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>sysconf</span><span style=color:#111>(</span> <span style=color:#111>_SC_AIX_REALMEM</span> <span style=color:#111>)</span> <span style=color:#f92672>*</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#ae81ff>1024L</span><span style=color:#111>;</span>
+#elif defined(_WIN32)
+    /* Windows. ------------------------------------------------- */
+    /* Use new 64-bit MEMORYSTATUSEX, not old 32-bit MEMORYSTATUS */
+    MEMORYSTATUSEX status;
+    status.dwLength = sizeof(status);
+    GlobalMemoryStatusEx( &amp;status );
+    return (size_t)status.ullTotalPhys;
 
-<span style=color:#75715e>#elif defined(_SC_PHYS_PAGES) &amp;&amp; defined(_SC_PAGESIZE)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>/* FreeBSD, Linux, OpenBSD, and Solaris. -------------------- */</span>
-    <span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>sysconf</span><span style=color:#111>(</span> <span style=color:#111>_SC_PHYS_PAGES</span> <span style=color:#111>)</span> <span style=color:#f92672>*</span>
-        <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>sysconf</span><span style=color:#111>(</span> <span style=color:#111>_SC_PAGESIZE</span> <span style=color:#111>);</span>
+#elif defined(__unix__) || defined(__unix) || defined(unix) || (defined(__APPLE__) &amp;&amp; defined(__MACH__))
+    /* UNIX variants. ------------------------------------------- */
+    /* Prefer sysctl() over sysconf() except sysctl() HW_REALMEM and HW_PHYSMEM */
 
-<span style=color:#75715e>#elif defined(_SC_PHYS_PAGES) &amp;&amp; defined(_SC_PAGE_SIZE)
-</span><span style=color:#75715e></span>    <span style=color:#75715e>/* Legacy. -------------------------------------------------- */</span>
-    <span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>sysconf</span><span style=color:#111>(</span> <span style=color:#111>_SC_PHYS_PAGES</span> <span style=color:#111>)</span> <span style=color:#f92672>*</span>
-        <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>sysconf</span><span style=color:#111>(</span> <span style=color:#111>_SC_PAGE_SIZE</span> <span style=color:#111>);</span>
+#if defined(CTL_HW) &amp;&amp; (defined(HW_MEMSIZE) || defined(HW_PHYSMEM64))
+    int mib[2];
+    mib[0] = CTL_HW;
+#if defined(HW_MEMSIZE)
+    mib[1] = HW_MEMSIZE;            /* OSX. --------------------- */
+#elif defined(HW_PHYSMEM64)
+    mib[1] = HW_PHYSMEM64;          /* NetBSD, OpenBSD. --------- */
+#endif
+    int64_t size = 0;               /* 64-bit */
+    size_t len = sizeof( size );
+    if ( sysctl( mib, 2, &amp;size, &amp;len, NULL, 0 ) == 0 )
+        return (size_t)size;
+    return 0L;          /* Failed? */
 
-<span style=color:#75715e>#elif defined(CTL_HW) &amp;&amp; (defined(HW_PHYSMEM) || defined(HW_REALMEM))
-</span><span style=color:#75715e></span>    <span style=color:#75715e>/* DragonFly BSD, FreeBSD, NetBSD, OpenBSD, and OSX. -------- */</span>
-    <span style=color:#00a8c8>int</span> <span style=color:#111>mib</span><span style=color:#111>[</span><span style=color:#ae81ff>2</span><span style=color:#111>];</span>
-    <span style=color:#111>mib</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>CTL_HW</span><span style=color:#111>;</span>
-<span style=color:#75715e>#if defined(HW_REALMEM)
-</span><span style=color:#75715e></span>    <span style=color:#111>mib</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>HW_REALMEM</span><span style=color:#111>;</span>        <span style=color:#75715e>/* FreeBSD. ----------------- */</span>
-<span style=color:#75715e>#elif defined(HW_PYSMEM)
-</span><span style=color:#75715e></span>    <span style=color:#111>mib</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>HW_PHYSMEM</span><span style=color:#111>;</span>        <span style=color:#75715e>/* Others. ------------------ */</span>
-<span style=color:#75715e>#endif
-</span><span style=color:#75715e></span>    <span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>int</span> <span style=color:#111>size</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>      <span style=color:#75715e>/* 32-bit */</span>
-    <span style=color:#111>size_t</span> <span style=color:#111>len</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>sizeof</span><span style=color:#111>(</span> <span style=color:#111>size</span> <span style=color:#111>);</span>
-    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span> <span style=color:#111>sysctl</span><span style=color:#111>(</span> <span style=color:#111>mib</span><span style=color:#111>,</span> <span style=color:#ae81ff>2</span><span style=color:#111>,</span> <span style=color:#f92672>&amp;</span><span style=color:#111>size</span><span style=color:#111>,</span> <span style=color:#f92672>&amp;</span><span style=color:#111>len</span><span style=color:#111>,</span> <span style=color:#111>NULL</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span> <span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span> <span style=color:#111>)</span>
-        <span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>size</span><span style=color:#111>;</span>
-    <span style=color:#00a8c8>return</span> <span style=color:#ae81ff>0L</span><span style=color:#111>;</span>          <span style=color:#75715e>/* Failed? */</span>
-<span style=color:#75715e>#endif </span><span style=color:#75715e>/* sysctl and sysconf variants */</span><span style=color:#75715e>
-</span><span style=color:#75715e></span>
-<span style=color:#75715e>#else
-</span><span style=color:#75715e></span>    <span style=color:#00a8c8>return</span> <span style=color:#ae81ff>0L</span><span style=color:#111>;</span>          <span style=color:#75715e>/* Unknown OS. */</span>
-<span style=color:#75715e>#endif
-</span><span style=color:#75715e></span><span style=color:#111>}</span>
-</code></pre></div><p>The important line is</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c> <span style=color:#00a8c8>return</span> <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>sysconf</span><span style=color:#111>(</span> <span style=color:#111>_SC_PHYS_PAGES</span> <span style=color:#111>)</span> <span style=color:#f92672>*</span>
-        <span style=color:#111>(</span><span style=color:#111>size_t</span><span style=color:#111>)</span><span style=color:#111>sysconf</span><span style=color:#111>(</span> <span style=color:#111>_SC_PAGESIZE</span> <span style=color:#111>);</span>
-</code></pre></div><p>One thing to notice in the routine for competing for memory is we used <code>fflush</code> after the <code>printf</code>. The purpose of <code>fflush(stream)</code> is to make the operating system flush any buffers to the underlying file. This mainly because stdout is buffered. The buffer is not flushed until newline. <code>fflush</code> will cause this process to happen with the absense of newline. stderr is unbuffered and thus fflush would not be necessary.</p>
-<p>For this experiment, we tested it on a VM. The reason is because the contending process will take all RAM and completely hault the mahcine if tested on the host. To ensure our VM has enough swap space, we follow this <a href=https://wiki.crowncloud.net/?adding_swap_kvm target=_blank rel=noopener>tutorial</a> to create 4GB of swap area (we allocated 2GB RAM for VM).</p>
+#elif defined(_SC_AIX_REALMEM)
+    /* AIX. ----------------------------------------------------- */
+    return (size_t)sysconf( _SC_AIX_REALMEM ) * (size_t)1024L;
+
+#elif defined(_SC_PHYS_PAGES) &amp;&amp; defined(_SC_PAGESIZE)
+    /* FreeBSD, Linux, OpenBSD, and Solaris. -------------------- */
+    return (size_t)sysconf( _SC_PHYS_PAGES ) *
+        (size_t)sysconf( _SC_PAGESIZE );
+
+#elif defined(_SC_PHYS_PAGES) &amp;&amp; defined(_SC_PAGE_SIZE)
+    /* Legacy. -------------------------------------------------- */
+    return (size_t)sysconf( _SC_PHYS_PAGES ) *
+        (size_t)sysconf( _SC_PAGE_SIZE );
+
+#elif defined(CTL_HW) &amp;&amp; (defined(HW_PHYSMEM) || defined(HW_REALMEM))
+    /* DragonFly BSD, FreeBSD, NetBSD, OpenBSD, and OSX. -------- */
+    int mib[2];
+    mib[0] = CTL_HW;
+#if defined(HW_REALMEM)
+    mib[1] = HW_REALMEM;        /* FreeBSD. ----------------- */
+#elif defined(HW_PYSMEM)
+    mib[1] = HW_PHYSMEM;        /* Others. ------------------ */
+#endif
+    unsigned int size = 0;      /* 32-bit */
+    size_t len = sizeof( size );
+    if ( sysctl( mib, 2, &amp;size, &amp;len, NULL, 0 ) == 0 )
+        return (size_t)size;
+    return 0L;          /* Failed? */
+#endif /* sysctl and sysconf variants */
+
+#else
+    return 0L;          /* Unknown OS. */
+#endif
+}
+</code></pre>
+<p>The important line is</p>
+<pre><code class=language-c> return (size_t)sysconf( _SC_PHYS_PAGES ) *
+        (size_t)sysconf( _SC_PAGESIZE );
+</code></pre>
+<p>One thing to notice in the routine for competing for memory is we used <code>fflush</code> after the <code>printf</code>. The purpose of <code>fflush(stream)</code> is to make the operating system flush any buffers to the underlying file. This mainly because stdout is buffered. The buffer is not flushed until newline. <code>fflush</code> will cause this process to happen with the absense of newline. stderr is unbuffered and thus fflush would not be necessary.</p>
+<p>For this experiment, we tested it on a VM. The reason is because the contending process will take all RAM and completely hault the mahcine if tested on the host. To ensure our VM has enough swap space, we follow this <a href=https://wiki.crowncloud.net/?adding_swap_kvm>tutorial</a> to create 4GB of swap area (we allocated 2GB RAM for VM).</p>
 <p>One thing we observe is that the execution time of the program become significantly longer to run. In our experiement we need to limit the number of iterations from 1 &#171; 20 to 1 &#171; 8 to get some sensible results without running for days.</p>
 <p>When we use PRIVATE and ANONYMUS option and random access turned on, the misses in data TLB is 335009(std dev 7298). We can&rsquo;t get access to L1 cache data because it will cause the session to be automatically logged out whenever L1D is used. here are some interesting things to notice:</p>
 <ul>
@@ -715,36 +730,11 @@ oublock: 18200(std dev 2987)<br>
 nivcsw: 8(7)</li>
 </ul>
 <p>We can see that the most of the pattern follow the previous result after the modified kernel is installed. One main difference is majflt value is reduced back down.</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/os>os</a>
-<a href=https://www.bodunhu.com/blog/tags/kernel>kernel</a>
-<a href=https://www.bodunhu.com/blog/tags/mm>mm</a>
-<a href=https://www.bodunhu.com/blog/tags/linux>linux</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div id=social>
-<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
-</a>
-<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
-</a>
-</div>
-<div class=copyright>
-©
-2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
+<hr class=hr-list>
+<footer>
+<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. </p>
 </footer>
+</div>
+</main>
 </body>
 </html>

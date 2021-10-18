@@ -1,79 +1,60 @@
-<!doctype html><html lang=en-us>
+<!doctype html><html lang=en>
 <head>
-<title>From Autotools to CMake | std::bodun::blog</title>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
-<meta name=description content="Since my paper on GPU benchmarking was published, every once in a while, I got emails asking me why Altis doesn&rsquo;t build on their platforms. It almost always has something to do a small script which is responsible for finding CUDA dependencies. This script is invoked every single time make is executed. For some reason, the regular expression in the script sometimes breaks randomly, depending on the Linux distro, the kernel version, the host architecture, or even the CUDA version.">
-<meta name=generator content="Hugo 0.88.1">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=author content="Liste - https://www.bodunhu.com/blog/">
+<title>From Autotools to CMake | std::bodun::blog</title>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<meta property="og:title" content="From Autotools to CMake">
+<meta property="og:description" content="Since my paper on GPU benchmarking was published, every once in a while, I got emails asking me why Altis doesn&rsquo;t build on their platforms. It almost always has something to do a small script which is responsible for finding CUDA dependencies. This script is invoked every single time make is executed. For some reason, the regular expression in the script sometimes breaks randomly, depending on the Linux distro, the kernel version, the host architecture, or even the CUDA version.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.bodunhu.com/blog/posts/from-autotools-to-cmake/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-06-21T00:00:00+00:00">
+<meta property="article:modified_time" content="2021-07-07T00:48:12-05:00">
+<meta itemprop=name content="From Autotools to CMake">
+<meta itemprop=description content="Since my paper on GPU benchmarking was published, every once in a while, I got emails asking me why Altis doesn&rsquo;t build on their platforms. It almost always has something to do a small script which is responsible for finding CUDA dependencies. This script is invoked every single time make is executed. For some reason, the regular expression in the script sometimes breaks randomly, depending on the Linux distro, the kernel version, the host architecture, or even the CUDA version."><meta itemprop=datePublished content="2021-06-21T00:00:00+00:00">
+<meta itemprop=dateModified content="2021-07-07T00:48:12-05:00">
+<meta itemprop=wordCount content="402">
+<meta itemprop=keywords content="other,gpu,altis,">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="From Autotools to CMake">
 <meta name=twitter:description content="Since my paper on GPU benchmarking was published, every once in a while, I got emails asking me why Altis doesn&rsquo;t build on their platforms. It almost always has something to do a small script which is responsible for finding CUDA dependencies. This script is invoked every single time make is executed. For some reason, the regular expression in the script sometimes breaks randomly, depending on the Linux distro, the kernel version, the host architecture, or even the CUDA version.">
 <meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
+<link rel=canonical href=https://www.bodunhu.com/blog/posts/from-autotools-to-cmake/>
+<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
+<link rel=dns-prefetch href=https://www.google-analytics.com>
+<link href=https://www.google-analytics.com rel=preconnect crossorigin>
+<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
+<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
+<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
+<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:2rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"From Autotools to CMake","headline":"From Autotools to CMake","alternativeHeadline":"","description":"Since my paper on GPU benchmarking was published, every once in a while, I got emails asking me why Altis doesn\u0026rsquo;t build on their platforms. It almost always has something to do a small script which is responsible for finding CUDA dependencies. This script is invoked every single time make is executed. For some reason, the regular expression in the script sometimes breaks randomly, depending on the Linux distro, the kernel version, the host architecture, or even the CUDA version.","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/from-autotools-to-cmake\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-06-21T00:00:00.00Z","datePublished":"2021-06-21T00:00:00.00Z","dateModified":"2021-07-07T00:48:12.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/from-autotools-to-cmake\/","wordCount":"402","genre":["other","gpu","altis"],"keywords":["other","gpu","altis"]}</script>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
 </head>
 <body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
-<a href=/blog/posts>Archive</a>
-<a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>From Autotools to CMake</h1>
-<div class=tip>
-<time datetime="2021-06-21 00:00:00 +0000 UTC">Jun 21, 2021</time>
-<span class=split>
-·
-</span>
-<span>
-2 minute read
-</span>
-</div>
+<a class=skip-link href=#main>Skip to main</a>
+<main id=main>
 <div class=content>
-<p>Since my <a href=https://ieeexplore.ieee.org/document/9238617 target=_blank rel=noopener>paper on GPU benchmarking</a> was published, every once in a while, I got emails asking me why <a href=https://github.com/utcs-scea/altis target=_blank rel=noopener>Altis</a> doesn&rsquo;t build on their platforms. It almost always has something to do a small <a href=https://github.com/utcs-scea/altis/blob/deprecated/config/find_cuda_libs.sh target=_blank rel=noopener>script</a> which is responsible for finding CUDA dependencies. This script is invoked every single time <code>make</code> is executed. For some reason, the regular expression in the script sometimes breaks randomly, depending on the Linux distro, the kernel version, the host architecture, or even the CUDA version. After enough requests piled up in my inbox, I decided enough is enough and it&rsquo;s time to ditch the autotools shenanigans for CMake.</p>
+<header>
+<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
+<ul style=padding:0;margin:0>
+<li><a href=https://www.bodunhu.com/>About</a></li>
+</ul>
+</header>
+<hr class=hr-list style=padding:0;margin:0>
+<h2 class=post>From Autotools to CMake</h2>
+<p>Since my <a href=https://ieeexplore.ieee.org/document/9238617>paper on GPU benchmarking</a> was published, every once in a while, I got emails asking me why <a href=https://github.com/utcs-scea/altis>Altis</a> doesn&rsquo;t build on their platforms. It almost always has something to do a small <a href=https://github.com/utcs-scea/altis/blob/deprecated/config/find_cuda_libs.sh>script</a> which is responsible for finding CUDA dependencies. This script is invoked every single time <code>make</code> is executed. For some reason, the regular expression in the script sometimes breaks randomly, depending on the Linux distro, the kernel version, the host architecture, or even the CUDA version. After enough requests piled up in my inbox, I decided enough is enough and it&rsquo;s time to ditch the autotools shenanigans for CMake.</p>
 <p>When I started this project, it already had a skeleton build system based on autotools. The old build system generates automake and autoconf files. It worked fine for me on the server I used so I never bothered to make big adjustments. However, the problem soon arises when I upgrade some packages or switched to another server in our lab.</p>
 <p>Because our servers are constantly being used for GPU research, the execution environment is constantly changing. Sometimes the benchmark suite would build in the morning and stop working in the afternoon because of a CUDA downgrade. My directories were filed with strange files like <code>configure.ac</code>, <code>Makefile.am</code>, <code>Makefile.in</code>, &mldr; It also uses a helper script called M4 which I still don&rsquo;t quite understand. Hand-made shell scripts are everywhere. automake has a million versions and you&rsquo;ll never know why it doesn&rsquo;t build on someone else&rsquo;s OS. Getting OptiX to work is like having a constipation because the LD flag doesn&rsquo;t get placed in the right location.</p>
 <p>Switching to CMake was a lot smoother than I anticipated. I took about two days to rewrite the entire build system from scratch. Contrary to autotools, CMake&rsquo;s syntax is easier to learn. The terminal output is easier to read by default, instead of throwing every single detail to my face. And, it&rsquo;s colored! Debugging build issues no longer takes multiple hours.</p>
 <p>Perhaps the best part is, since CMake 3.8, CUDA is natively supported. Compiling <code>.cu</code> files is as easy as adding <code>CUDA</code> as the project&rsquo;s LANGUAGES. That alone should be the reason to use CMake if there&rsquo;s anything CUDA related. The only caveat is there&rsquo;s a small difference between how CMake handle CUDA architecture flags in different versions. Since CMake 3.16, <code>CMAKE_CUDA_ARCHITECTURES</code> is introduced. Older versions still requires <code>find_package(CUDA)</code> to set CUDA compilation flags though.</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/other>other</a>
-<a href=https://www.bodunhu.com/blog/tags/gpu>gpu</a>
-<a href=https://www.bodunhu.com/blog/tags/altis>altis</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div id=social>
-<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
-</a>
-<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
-</a>
-</div>
-<div class=copyright>
-©
-2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
+<hr class=hr-list>
+<footer>
+<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. </p>
 </footer>
+</div>
+</main>
 </body>
 </html>

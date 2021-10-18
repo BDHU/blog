@@ -1,48 +1,54 @@
-<!doctype html><html lang=en-us>
+<!doctype html><html lang=en>
 <head>
-<title>Exokernel | std::bodun::blog</title>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=author content="Liste - https://www.bodunhu.com/blog/">
+<title>Exokernel | std::bodun::blog</title>
 <meta name=description content="Exokernel is a term every system researcher has heard of at some point in life. However, according to the [PDOS](https://pdos.csail.mit.edu/) group at MIT, there aren't any exokernel-based operating systems in active use today. It's interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice">
-<meta name=generator content="Hugo 0.88.1">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<meta property="og:title" content="Exokernel">
+<meta property="og:description" content="Exokernel is a term every system researcher has heard of at some point in life. However, according to the [PDOS](https://pdos.csail.mit.edu/) group at MIT, there aren't any exokernel-based operating systems in active use today. It's interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.bodunhu.com/blog/posts/exokernel/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2020-09-01T00:00:00+00:00">
+<meta property="article:modified_time" content="2021-05-19T16:25:59-05:00">
+<meta itemprop=name content="Exokernel">
+<meta itemprop=description content="Exokernel is a term every system researcher has heard of at some point in life. However, according to the [PDOS](https://pdos.csail.mit.edu/) group at MIT, there aren't any exokernel-based operating systems in active use today. It's interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice"><meta itemprop=datePublished content="2020-09-01T00:00:00+00:00">
+<meta itemprop=dateModified content="2021-05-19T16:25:59-05:00">
+<meta itemprop=wordCount content="1553">
+<meta itemprop=keywords content="os,kernel,">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Exokernel">
 <meta name=twitter:description content="Exokernel is a term every system researcher has heard of at some point in life. However, according to the [PDOS](https://pdos.csail.mit.edu/) group at MIT, there aren't any exokernel-based operating systems in active use today. It's interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice">
 <meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
+<link rel=canonical href=https://www.bodunhu.com/blog/posts/exokernel/>
+<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
+<link rel=dns-prefetch href=https://www.google-analytics.com>
+<link href=https://www.google-analytics.com rel=preconnect crossorigin>
+<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
+<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
+<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
+<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:2rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Exokernel","headline":"Exokernel","alternativeHeadline":"","description":"Exokernel is a term every system researcher has heard of at some point in life. However, according to the [PDOS](https:\/\/pdos.csail.mit.edu\/) group at MIT, there aren\u0027t any exokernel-based operating systems in active use today. It\u0027s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/exokernel\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2020","dateCreated":"2020-09-01T00:00:00.00Z","datePublished":"2020-09-01T00:00:00.00Z","dateModified":"2021-05-19T16:25:59.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/exokernel\/","wordCount":"1553","genre":["os","kernel"],"keywords":["os","kernel"]}</script>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
 </head>
 <body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
-<a href=/blog/posts>Archive</a>
-<a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Exokernel</h1>
-<div class=tip>
-<time datetime="2020-09-01 00:00:00 +0000 UTC">Sep 1, 2020</time>
-<span class=split>
-·
-</span>
-<span>
-8 minute read
-</span>
-</div>
+<a class=skip-link href=#main>Skip to main</a>
+<main id=main>
 <div class=content>
-<p>Exokernel is a term every system researcher has heard of at some point in life. However, according to the <a href=https://pdos.csail.mit.edu/ target=_blank rel=noopener>PDOS</a> group at MIT, there aren&rsquo;t any exokernel-based operating systems in active use today. It&rsquo;s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice.</p>
+<header>
+<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
+<ul style=padding:0;margin:0>
+<li><a href=https://www.bodunhu.com/>About</a></li>
+</ul>
+</header>
+<hr class=hr-list style=padding:0;margin:0>
+<h2 class=post>Exokernel</h2>
+<p>Exokernel is a term every system researcher has heard of at some point in life. However, according to the <a href=https://pdos.csail.mit.edu/>PDOS</a> group at MIT, there aren&rsquo;t any exokernel-based operating systems in active use today. It&rsquo;s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice.</p>
 <p>Perhaps the most important thing to keep in mind is that exokernel operating system architecture pushes management of physical resources to the application level, contrary to what most monolithic kernel would do: providing hardware resource management through some form of abstraction, usually hiding hardware-related details.</p>
-<h2 id=limitations-of-traditional-approaches>Limitations of Traditional Approaches <a href=#limitations-of-traditional-approaches class=anchor>🔗</a></h2><p>Monolithic kernels usually enforce centralized resource management via a set of abstractions. In microkernel-based system, they are usually provided through some form of trusted user-level servers. There are several drawbacks:</p>
+<h2 id=limitations-of-traditional-approaches>Limitations of Traditional Approaches <a href=#limitations-of-traditional-approaches class="hash g">#</a></h2>
+<p>Monolithic kernels usually enforce centralized resource management via a set of abstractions. In microkernel-based system, they are usually provided through some form of trusted user-level servers. There are several drawbacks:</p>
 <ul>
 <li>
 <p>Too general. Over generalizing can limit application diversity and have performance implications (domain/application-specific approach usually have performance improvements, in the cost of, well, being more &ldquo;specific&rdquo;.). For example, in UNIX, two applications exhibiting rather different memory access patterns are subject to the general-purpose OS scheduler and page replacement policy. Letting applications define such policies can open doors for performance improvements since applications have better knowledge of their behaviors.</p>
@@ -55,7 +61,8 @@
 </li>
 </ul>
 <p>However, generalization may not be a bad thing. As discussed in the <em>UNIX the Timesharing System</em> paper, having a generalized and unified yet limited file system API can simplify programming efforts. Accessing both ordinary files and I/O devices is achieved by utilizing a unified interface. Nobody today wants to implement a different set of policies just for character device or block device.</p>
-<h2 id=design>Design <a href=#design class=anchor>🔗</a></h2><p>Essentially, exokernel consists of thin veneet that multiplexes and exports physical resources through a set of primitives. The libraries, running in the application space, use them to implement with special-purpose functionalities in a higher abstraction level. The architecture is shown in the Paper:</p>
+<h2 id=design>Design <a href=#design class="hash g">#</a></h2>
+<p>Essentially, exokernel consists of thin veneet that multiplexes and exports physical resources through a set of primitives. The libraries, running in the application space, use them to implement with special-purpose functionalities in a higher abstraction level. The architecture is shown in the Paper:</p>
 <p align=center>
 <a href=https://pdos.csail.mit.edu/6.828/2008/readings/engler95exokernel.pdf>
 <img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/exokernel_arch.png width=90%>
@@ -86,14 +93,17 @@
 </li>
 </ul>
 <p>In general, exokernel should expose hardware resources such as disk memory, CPU, interrupts, through low-level primitives with as few abstractions as possible. The resource management policy should be enforced by the library OS instead. <strong>The policy control boils down to whether the exokernel permits resource allocation</strong>.</p>
-<h2 id=secure-binding>Secure Binding <a href=#secure-binding class=anchor>🔗</a></h2><p>One of the primary tasks of an exokernel is to multiplex resources securely, providing protection for mutually distrustful applications. Secure binding allows the kernel to protect resources without understanding them.</p>
+<h2 id=secure-binding>Secure Binding <a href=#secure-binding class="hash g">#</a></h2>
+<p>One of the primary tasks of an exokernel is to multiplex resources securely, providing protection for mutually distrustful applications. Secure binding allows the kernel to protect resources without understanding them.</p>
 <p>There are three techniques to implement secure bindings:
 hardware mechanisms,software caching, and downloading application code.</p>
-<h2 id=understanding-secure-binding-through-examples>Understanding Secure Binding through Examples <a href=#understanding-secure-binding-through-examples class=anchor>🔗</a></h2><p>Secure binding is rather abstract and hard-to-comprehend concept without concrete examples. Here are some examples illustrating how secure multiplying is achieved through secure binding.</p>
+<h2 id=understanding-secure-binding-through-examples>Understanding Secure Binding through Examples <a href=#understanding-secure-binding-through-examples class="hash g">#</a></h2>
+<p>Secure binding is rather abstract and hard-to-comprehend concept without concrete examples. Here are some examples illustrating how secure multiplying is achieved through secure binding.</p>
 <p>Take memory allocation for an example. When a library OS tries to allocate a physical memory page, the exokernel creates a secure binding for that page by recording the owner and the capabilities specified by the library OS. Essentially, accessing memory resources is achieved through capability. The exokernel acts as a door-keeper that checks the validity of the capability from the library OS.</p>
 <p>I personally like to think the role of the exokernel in memory system is to act as a security guard that protects resources that can be access by the library OS through some form of interface. For example, if the hardware defines a page-table interface, which can be accessed by the lib OS, the exokernel must guard the page table. If the lib OS tries to enter a new virtual-to-physical memory mapping, then the exokernel must check the corresponding memory capability.</p>
 <p>In summary, privileged machine operations must be guarded by the exokernel.</p>
-<h3 id=aegis-the-exokernel>Aegis: the exokernel <a href=#aegis-the-exokernel class=anchor>🔗</a></h3><p>Up to this point I find it still hard to full understand what exokernel is capable of. Having a concrete system to study for is much more helpful. So here comes Aegis.</p>
+<h3 id=aegis-the-exokernel>Aegis: the exokernel <a href=#aegis-the-exokernel class="hash g">#</a></h3>
+<p>Up to this point I find it still hard to full understand what exokernel is capable of. Having a concrete system to study for is much more helpful. So here comes Aegis.</p>
 <p>Here is a subset of Aegis&rsquo;s primitives and sys call interfaces that encapsulate these exported primitives. Having a concrete list feels so much better than reading a list of abstract terms!</p>
 <p>Here is a sublist of primitives:</p>
 <table>
@@ -137,7 +147,8 @@ hardware mechanisms,software caching, and downloading application code.</p>
 </tr>
 </tbody>
 </table>
-<h3 id=address-translation>Address Translation <a href=#address-translation class=anchor>🔗</a></h3><p>It&rsquo;s important to first mention that Aegis provides a small number of guaranteed mappings by partitioning an application&rsquo;s virtual address space into two segments. The first segments hold normal application data; the other one has guaranteed mapping and holds exception code and page-table. (Guaranteed mapping is sort of a safe lock.)</p>
+<h3 id=address-translation>Address Translation <a href=#address-translation class="hash g">#</a></h3>
+<p>It&rsquo;s important to first mention that Aegis provides a small number of guaranteed mappings by partitioning an application&rsquo;s virtual address space into two segments. The first segments hold normal application data; the other one has guaranteed mapping and holds exception code and page-table. (Guaranteed mapping is sort of a safe lock.)</p>
 <p>When a TLB miss happens, there are several steps happening:</p>
 <ul>
 <li>
@@ -155,7 +166,8 @@ hardware mechanisms,software caching, and downloading application code.</p>
 </ul>
 <p>The key takeaway here is the exokernel itself is involved in very few privileged operations such as interacting directly with the hardware via low-level primitives. the bulk of the work is done in the application level.</p>
 <p>Because the kernel contains minimal functionalities, it can be extremely fast compared to a monolithic kernel. However, does that mean the overhead is shifted to the library OS instead?</p>
-<h3 id=exos-the-library-os>ExOS: the Library OS <a href=#exos-the-library-os class=anchor>🔗</a></h3><p>The most prominent feature about library OS is that it manages operating system abstractions at application level.</p>
+<h3 id=exos-the-library-os>ExOS: the Library OS <a href=#exos-the-library-os class="hash g">#</a></h3>
+<p>The most prominent feature about library OS is that it manages operating system abstractions at application level.</p>
 <p>The GEMM operation on both ExOS and Ultrix (a monolithic kernel OS) doesn&rsquo;t seem to have much difference since GEMM doesn&rsquo;t use any special abilities of both OSes. It does indicates that the performance gain from the minimal design of exokernel is somewhat cancelled out by the application-space overhead.</p>
 <blockquote>
 <p>The exokernel paper mentions that in the context of networking, the major reason for ExOS to download code is that the network buffers on our machines cannot be easily mapped into application space in a secure way. Downloading the code into the kernel allows applications integrating operations such as checksum during the copy of the message from these buffers to user space. However, I&rsquo;m a little bit skeptical of this statement today. Usually a highly performant TCP stack will be implemented in userspace, along with some polling (DPDK for example). But it will be interesting to compare the exokernel approach to the gigantic Linux TCP stack. The second reason is downloaded code is bounded, thus allowed full context switch to an unscheduled application.</p>
@@ -166,37 +178,16 @@ hardware mechanisms,software caching, and downloading application code.</p>
 <img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/throughput.png width=80%>
 </a>
 </p>
-<h2 id=modularity>Modularity <a href=#modularity class=anchor>🔗</a></h2><p>It a natural property of exokernel since the exokernel itself is simplistic. Thus, operating system abstractions can be redefined simply by changing the library OS. Thus, applications have finer-grained control over resources. However, I think it comes at a cost. In a monolithic kernel, applications are subject to general purpose scheduler. Having modular domain-specific schedulers can indeed improve performances, however, it might also leads to multiple scheduler contention, which is not covered in the paper.</p>
-<h2 id=conclusion>Conclusion <a href=#conclusion class=anchor>🔗</a></h2><p>Exokernel does offer some new insights into system design. The simple design concept of the exokernel itself has major performance benefits as well as a limited set of primitives which gives much freedom to the application. However, that means the library OS has to take more responsibility. The paper didn&rsquo;t cover enough analytics on more general use cases. The performance gain seems to come from some highly specialized, exokernel-specific implementations of OS abstractions (such as IPC, VM, etc.). The more general case, such as GEMM, seem to be much less performance, when compared to traditional approaches. It will be good to see how exokernel performs under more diverse workloads.</p>
+<h2 id=modularity>Modularity <a href=#modularity class="hash g">#</a></h2>
+<p>It a natural property of exokernel since the exokernel itself is simplistic. Thus, operating system abstractions can be redefined simply by changing the library OS. Thus, applications have finer-grained control over resources. However, I think it comes at a cost. In a monolithic kernel, applications are subject to general purpose scheduler. Having modular domain-specific schedulers can indeed improve performances, however, it might also leads to multiple scheduler contention, which is not covered in the paper.</p>
+<h2 id=conclusion>Conclusion <a href=#conclusion class="hash g">#</a></h2>
+<p>Exokernel does offer some new insights into system design. The simple design concept of the exokernel itself has major performance benefits as well as a limited set of primitives which gives much freedom to the application. However, that means the library OS has to take more responsibility. The paper didn&rsquo;t cover enough analytics on more general use cases. The performance gain seems to come from some highly specialized, exokernel-specific implementations of OS abstractions (such as IPC, VM, etc.). The more general case, such as GEMM, seem to be much less performance, when compared to traditional approaches. It will be good to see how exokernel performs under more diverse workloads.</p>
 <p>I&rsquo;ve also heard that one reason microkernels never took off was partially due to the performance slowdown compared to monolithic kernels. Since exokernel shared many similarities with microkernels (seems like exokernel is a more stripped-down version of microkernel since it barely has an OS core), it will likely fall into the same caveat. However, there doesn&rsquo;t seems to have a comprehensive benchmarking trials to compare all major types of kernels.</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/os>os</a>
-<a href=https://www.bodunhu.com/blog/tags/kernel>kernel</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div id=social>
-<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
-</a>
-<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
-</a>
-</div>
-<div class=copyright>
-©
-2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
+<hr class=hr-list>
+<footer>
+<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. </p>
 </footer>
+</div>
+</main>
 </body>
 </html>

@@ -1,48 +1,53 @@
-<!doctype html><html lang=en-us>
+<!doctype html><html lang=en>
 <head>
-<title>Lamport Distributed Mutual Exclusion | std::bodun::blog</title>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=author content="Liste - https://www.bodunhu.com/blog/">
+<title>Lamport Distributed Mutual Exclusion | std::bodun::blog</title>
 <meta name=description content="Normally, having consistent event ordering in a distributed system is hard because we have no common clock. Since we don't have a common clock to measure with, we rely on logical properties of time in the absence of clock.">
-<meta name=generator content="Hugo 0.88.1">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<meta property="og:title" content="Lamport Distributed Mutual Exclusion">
+<meta property="og:description" content="Normally, having consistent event ordering in a distributed system is hard because we have no common clock. Since we don't have a common clock to measure with, we rely on logical properties of time in the absence of clock.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.bodunhu.com/blog/posts/lamport-distributed-mutual-exclusion/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-09-21T00:00:00+00:00">
+<meta property="article:modified_time" content="2021-10-17T22:33:08-05:00">
+<meta itemprop=name content="Lamport Distributed Mutual Exclusion">
+<meta itemprop=description content="Normally, having consistent event ordering in a distributed system is hard because we have no common clock. Since we don't have a common clock to measure with, we rely on logical properties of time in the absence of clock."><meta itemprop=datePublished content="2021-09-21T00:00:00+00:00">
+<meta itemprop=dateModified content="2021-10-17T22:33:08-05:00">
+<meta itemprop=wordCount content="2218">
+<meta itemprop=keywords content="distributed-system,ivy,">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Lamport Distributed Mutual Exclusion">
 <meta name=twitter:description content="Normally, having consistent event ordering in a distributed system is hard because we have no common clock. Since we don't have a common clock to measure with, we rely on logical properties of time in the absence of clock.">
 <meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
+<link rel=canonical href=https://www.bodunhu.com/blog/posts/lamport-distributed-mutual-exclusion/>
+<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
+<link rel=dns-prefetch href=https://www.google-analytics.com>
+<link href=https://www.google-analytics.com rel=preconnect crossorigin>
+<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
+<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
+<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
+<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:2rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Lamport Distributed Mutual Exclusion","headline":"Lamport Distributed Mutual Exclusion","alternativeHeadline":"","description":"Normally, having consistent event ordering in a distributed system is hard because we have no common clock. Since we don\u0027t have a common clock to measure with, we rely on logical properties of time in the absence of clock.","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/lamport-distributed-mutual-exclusion\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-09-21T00:00:00.00Z","datePublished":"2021-09-21T00:00:00.00Z","dateModified":"2021-10-17T22:33:08.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/lamport-distributed-mutual-exclusion\/","wordCount":"2218","genre":["distributed-system","ivy"],"keywords":["distributed-system","ivy"]}</script>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
 </head>
 <body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
-<a href=/blog/posts>Archive</a>
-<a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Lamport Distributed Mutual Exclusion</h1>
-<div class=tip>
-<time datetime="2021-09-21 00:00:00 +0000 UTC">Sep 21, 2021</time>
-<span class=split>
-·
-</span>
-<span>
-11 minute read
-</span>
-</div>
+<a class=skip-link href=#main>Skip to main</a>
+<main id=main>
 <div class=content>
+<header>
+<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
+<ul style=padding:0;margin:0>
+<li><a href=https://www.bodunhu.com/>About</a></li>
+</ul>
+</header>
+<hr class=hr-list style=padding:0;margin:0>
+<h2 class=post>Lamport Distributed Mutual Exclusion</h2>
 <p>Normally, having consistent event ordering in a distributed system is hard because we have no common clock. Since we don&rsquo;t have a common clock to measure with, we rely on logical properties of time in the absence of clock. Here we use <em>causality</em> replation between events.</p>
 <p>In essence, <em>Causality</em> indicates a clock \(C\) is map from events to time satisfying: \(e\rightarrow e'\) implies \(C(e) &lt; C(e')\)</p>
-<p>We can synthesize a clock by a simple protocol, usually referred as <em>scalar clock</em> or <a href=https://en.wikipedia.org/wiki/Lamport_timestamp target=_blank rel=noopener><em>Lamport clock</em></a>:</p>
+<p>We can synthesize a clock by a simple protocol, usually referred as <em>scalar clock</em> or <a href=https://en.wikipedia.org/wiki/Lamport_timestamp><em>Lamport clock</em></a>:</p>
 <ul>
 <li>Each process \(p\) has a local clock \(C(p)\).</li>
 <li>A message send by a process is stampled with the its corresponding local clock.</li>
@@ -50,418 +55,397 @@
 </ul>
 <p>This will give us a consistent total order of events in a distributed system.</p>
 <p>Let&rsquo;s take Lamport distributed mutual exclusion (DME) as an example. We use scalar clock to agree on the order of access to critical sections. Each process broadcasts a request with its local clock time. Receiver stores the request time and responds with its update local time (\(max(C(p), C(M)) + 1\)).</p>
-<p><p class=markdown-image>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/lamport-dme/lamport-dme.png#center alt=lamport-dme>
+<p>
+<p class=markdown-image style=text-align:center>
+<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/lamport-dme/lamport-dme.png#center alt=lamport-dme class=center loading=lazy decoding=async>
 </p></p>
 <p>A process can only enter critical section given the condition \(W\) is met: \(W \equiv \forall q \neq p,\ t(p,q) > r(p,p) \land r(p,p) &lt; r(p,q)\). \(t(p, q)\) represents the latest time received by \(p\) from \(q\). \(r(p, q)\) is the request time received by \(p\) from \(q\) or \(+\infty\). Intuitively, it says if a process&rsquo;s request time is smaller than all repsonses time and the process&rsquo;s request time is smaller than all the other request time, then this process is the first one to send out the request and thus should enter critical section.</p>
 <p>The reason why this protocol works is illustrated below:</p>
-<p><p class=markdown-image>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/lamport-dme/lamport-dme-process.png#center alt=lamport-dme-process>
+<p>
+<p class=markdown-image style=text-align:center>
+<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/lamport-dme/lamport-dme-process.png#center alt=lamport-dme-process class=center loading=lazy decoding=async>
 </p></p>
 <p>When \(p_1\) sends a request at timestamp 2 and gets a repsonse with timestamp 3, we know \(p_1\) has the greatest clock value and \(p_0\) will update its own clock based on the timestamp sent from \(p_1\). Now \(p_1\) sees the response message from \(p_0\) with timestamp 3, it knows any request from \(p_0\) must have already been received, because the network channel is ordered and any request sent by \(p_0\) already arrived before the response with timestamp 3.</p>
-<p>To see Lamport DME in action, we use <a href=https://microsoft.github.io/ivy/language.html target=_blank rel=noopener>Ivy</a> to specify the protocol. The source file is borrowed from <a href=https://mcmil.net/wordpress/ target=_blank rel=noopener>Ken&rsquo;s</a> presentation. The code is annotated and self-explanatory:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>#lang ivy1.8
-</span><span style=color:#75715e></span>
-<span style=color:#75715e># This is an implememtation of Lamport&#39;s distributed mutual excluson
-</span><span style=color:#75715e># (DME) algorithm.
-</span><span style=color:#75715e></span>
-<span style=color:#111>include</span> <span style=color:#111>order</span>
-<span style=color:#111>include</span> <span style=color:#111>network</span>
+<p>To see Lamport DME in action, we use <a href=https://microsoft.github.io/ivy/language.html>Ivy</a> to specify the protocol. The source file is borrowed from <a href=https://mcmil.net/wordpress/>Ken&rsquo;s</a> presentation. The code is annotated and self-explanatory:</p>
+<pre><code class=language-c>#lang ivy1.8
 
-<span style=color:#75715e># We start the module with a &#39;global&#39; section. This contaions the
-</span><span style=color:#75715e># declarations of any resources that are used in common by all
-</span><span style=color:#75715e># processes. These usually include:
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e># - Data types
-</span><span style=color:#75715e># - Services, such as network services
-</span><span style=color:#75715e># - Immutable global parameters, such as netwrok addresses
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e># We can&#39;t have mutable global variables, since processes, being
-</span><span style=color:#75715e># distributed, don&#39;t have shared memory.
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e></span>
-<span style=color:#111>global</span> <span style=color:#111>{</span>
+# This is an implememtation of Lamport's distributed mutual excluson
+# (DME) algorithm.
 
-    <span style=color:#75715e># Our first global data type is the type of host identifiers.  We
-</span><span style=color:#75715e></span>    <span style=color:#75715e># will have one process for each value of this type. Host
-</span><span style=color:#75715e></span>    <span style=color:#75715e># identifiers take on integer values from `0` to `node_max`.
-</span><span style=color:#75715e></span>    <span style=color:#75715e># We create the host identifier type by instantiating the
-</span><span style=color:#75715e></span>    <span style=color:#75715e># `host_iterable` module. It has a parameter `max` that gives the
-</span><span style=color:#75715e></span>    <span style=color:#75715e># maximum value of the type (and is supplied at run time). 
-</span><span style=color:#75715e></span>
-    <span style=color:#111>instance</span> <span style=color:#111>host_id</span> <span style=color:#111>:</span> <span style=color:#111>iterable</span>
+include order
+include network
 
-    <span style=color:#75715e># Since we have three kinds of messages in our protocol, we define
-</span><span style=color:#75715e></span>    <span style=color:#75715e># an enumerated type for the message kind with three symbolic
-</span><span style=color:#75715e></span>    <span style=color:#75715e># values.
-</span><span style=color:#75715e></span>
-    <span style=color:#111>type</span> <span style=color:#111>msg_kind</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span><span style=color:#111>request_kind</span><span style=color:#111>,</span><span style=color:#111>reply_kind</span><span style=color:#111>,</span><span style=color:#111>release_kind</span><span style=color:#111>}</span>
+# We start the module with a 'global' section. This contaions the
+# declarations of any resources that are used in common by all
+# processes. These usually include:
+#
+# - Data types
+# - Services, such as network services
+# - Immutable global parameters, such as netwrok addresses
+#
+# We can't have mutable global variables, since processes, being
+# distributed, don't have shared memory.
+#
 
-    <span style=color:#75715e># In addition, we use a sequence type to represent timestamps. The
-</span><span style=color:#75715e></span>    <span style=color:#75715e># `unbounded_sequence` template in the `order` library gives a
-</span><span style=color:#75715e></span>    <span style=color:#75715e># discrete totally ordered type with a least value `0` and a
-</span><span style=color:#75715e></span>    <span style=color:#75715e># `next` operator.
-</span><span style=color:#75715e></span>
-    <span style=color:#111>instance</span> <span style=color:#111>timestamp</span> <span style=color:#111>:</span> <span style=color:#111>unbounded_sequence</span>
+global {
 
-    <span style=color:#75715e># Our messages are stucts with three fields: the message kind and the
-</span><span style=color:#75715e></span>    <span style=color:#75715e># host identifier of the sender and a timestamp. We order messages
-</span><span style=color:#75715e></span>    <span style=color:#75715e># according to the timestamp. This ordering is useful in the proof
-</span><span style=color:#75715e></span>    <span style=color:#75715e># of correctness. 
-</span><span style=color:#75715e></span>
-    <span style=color:#111>class</span> <span style=color:#111>msg_t</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
-        <span style=color:#111>field</span> <span style=color:#111>kind</span> <span style=color:#111>:</span> <span style=color:#111>msg_kind</span>
-        <span style=color:#111>field</span> <span style=color:#111>sender_id</span> <span style=color:#111>:</span> <span style=color:#111>host_id</span>
-        <span style=color:#111>field</span> <span style=color:#111>ts</span> <span style=color:#111>:</span> <span style=color:#111>timestamp</span>
-        <span style=color:#75715e># definition (M1:msg_t &lt; M2:msg_t) = ts(M1) &lt; ts(M2)
-</span><span style=color:#75715e></span>    <span style=color:#111>}</span>
+    # Our first global data type is the type of host identifiers.  We
+    # will have one process for each value of this type. Host
+    # identifiers take on integer values from `0` to `node_max`.
+    # We create the host identifier type by instantiating the
+    # `host_iterable` module. It has a parameter `max` that gives the
+    # maximum value of the type (and is supplied at run time). 
 
-    <span style=color:#75715e># A useful enumerated type to describe node state:
-</span><span style=color:#75715e></span>
-    <span style=color:#111>type</span> <span style=color:#111>state_t</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span><span style=color:#111>idle</span><span style=color:#111>,</span><span style=color:#111>waiting</span><span style=color:#111>,</span><span style=color:#111>critical</span><span style=color:#111>}</span>
+    instance host_id : iterable
 
-    <span style=color:#75715e># Finally we instantiate a network service via which our processes
-</span><span style=color:#75715e></span>    <span style=color:#75715e># will communicate. Here, `transport.net` is a template defined in the
-</span><span style=color:#75715e></span>    <span style=color:#75715e># `network` library that we included above. The template takes one
-</span><span style=color:#75715e></span>    <span style=color:#75715e># parameter, which is the type of messages to be sent. Our instance
-</span><span style=color:#75715e></span>    <span style=color:#75715e># of this template is an object called `net`. 
-</span><span style=color:#75715e></span>
-    <span style=color:#111>instance</span> <span style=color:#111>net</span> <span style=color:#111>:</span> <span style=color:#111>tcp</span><span style=color:#111>.</span><span style=color:#111>net</span><span style=color:#111>(</span><span style=color:#111>msg_t</span><span style=color:#111>)</span>
-<span style=color:#111>}</span>
+    # Since we have three kinds of messages in our protocol, we define
+    # an enumerated type for the message kind with three symbolic
+    # values.
 
+    type msg_kind = {request_kind,reply_kind,release_kind}
 
-<span style=color:#75715e># After the global section, we introduce some distribtued processes.
-</span><span style=color:#75715e># A process with parameters has one instance for each value of the
-</span><span style=color:#75715e># parameters. In this case we have one parameter of type `host_id`
-</span><span style=color:#75715e># which means there is one process in the system for each value of
-</span><span style=color:#75715e># `host_id` in the range `0..host_id.max`. The parameter is named `self`.
-</span><span style=color:#75715e># This means that the process can refer to its own host identifier by
-</span><span style=color:#75715e># the name `self`.
-</span><span style=color:#75715e></span>
-<span style=color:#111>process</span> <span style=color:#111>node</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
+    # In addition, we use a sequence type to represent timestamps. The
+    # `unbounded_sequence` template in the `order` library gives a
+    # discrete totally ordered type with a least value `0` and a
+    # `next` operator.
 
-    <span style=color:#75715e># A process usually begins by declaring an *interface*. This
-</span><span style=color:#75715e></span>    <span style=color:#75715e># consists of a set of *actions* that are either calls in from the
-</span><span style=color:#75715e></span>    <span style=color:#75715e># environment (exports) or calls out to the environment (imports).
-</span><span style=color:#75715e></span>
-    <span style=color:#75715e># Our action is an export `request`, which our client uses to
-</span><span style=color:#75715e></span>    <span style=color:#75715e># request to enter the critical section. It takes no parameters.
-</span><span style=color:#75715e></span>
-    <span style=color:#111>export</span> <span style=color:#111>action</span> <span style=color:#111>request</span>
+    instance timestamp : unbounded_sequence
 
-    <span style=color:#75715e># Our second action is an import `grant`. This is a callback to
-</span><span style=color:#75715e></span>    <span style=color:#75715e># the client indicating that is is safe to enter the critical
-</span><span style=color:#75715e></span>    <span style=color:#75715e># section.
-</span><span style=color:#75715e></span>
-    <span style=color:#111>import</span> <span style=color:#111>action</span> <span style=color:#111>grant</span>
+    # Our messages are stucts with three fields: the message kind and the
+    # host identifier of the sender and a timestamp. We order messages
+    # according to the timestamp. This ordering is useful in the proof
+    # of correctness. 
 
-    <span style=color:#75715e># Our third action is an export `release`. This is called by the
-</span><span style=color:#75715e></span>    <span style=color:#75715e># client when exiting the critical section, indicating it is safe to
-</span><span style=color:#75715e></span>    <span style=color:#75715e># another process to enter.
-</span><span style=color:#75715e></span>
-    <span style=color:#111>export</span> <span style=color:#111>action</span> <span style=color:#111>release</span>
+    class msg_t = {
+        field kind : msg_kind
+        field sender_id : host_id
+        field ts : timestamp
+        # definition (M1:msg_t &lt; M2:msg_t) = ts(M1) &lt; ts(M2)
+    }
+
+    # A useful enumerated type to describe node state:
+
+    type state_t = {idle,waiting,critical}
+
+    # Finally we instantiate a network service via which our processes
+    # will communicate. Here, `transport.net` is a template defined in the
+    # `network` library that we included above. The template takes one
+    # parameter, which is the type of messages to be sent. Our instance
+    # of this template is an object called `net`. 
+
+    instance net : tcp.net(msg_t)
+}
 
 
+# After the global section, we introduce some distribtued processes.
+# A process with parameters has one instance for each value of the
+# parameters. In this case we have one parameter of type `host_id`
+# which means there is one process in the system for each value of
+# `host_id` in the range `0..host_id.max`. The parameter is named `self`.
+# This means that the process can refer to its own host identifier by
+# the name `self`.
 
-    <span style=color:#111>common</span> <span style=color:#111>{</span>
-        <span style=color:#111>specification</span> <span style=color:#111>{</span>
+process node(self:host_id) = {
 
-            <span style=color:#111>var</span> <span style=color:#111>client_state</span><span style=color:#111>(</span><span style=color:#111>H</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#f92672>:</span> <span style=color:#111>state_t</span>
+    # A process usually begins by declaring an *interface*. This
+    # consists of a set of *actions* that are either calls in from the
+    # environment (exports) or calls out to the environment (imports).
 
-            <span style=color:#111>after</span> <span style=color:#111>init</span> <span style=color:#111>{</span>
-                <span style=color:#111>client_state</span><span style=color:#111>(</span><span style=color:#111>H</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#111>idle</span><span style=color:#111>;</span>
-            <span style=color:#111>}</span>
+    # Our action is an export `request`, which our client uses to
+    # request to enter the critical section. It takes no parameters.
 
-            <span style=color:#111>before</span> <span style=color:#111>request</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-                <span style=color:#111>require</span> <span style=color:#111>client_state</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>idle</span><span style=color:#111>;</span>
-                <span style=color:#111>client_state</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#111>waiting</span><span style=color:#111>;</span>
-            <span style=color:#111>}</span>
+    export action request
 
-            <span style=color:#111>before</span> <span style=color:#111>grant</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-                <span style=color:#111>require</span> <span style=color:#111>client_state</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>waiting</span><span style=color:#111>;</span>
-                <span style=color:#111>require</span> <span style=color:#75af00>client_state</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>)</span> <span style=color:#f92672>~=</span> <span style=color:#111>critical</span><span style=color:#111>;</span>
-                <span style=color:#111>client_state</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#111>critical</span><span style=color:#111>;</span>
-            <span style=color:#111>}</span>
+    # Our second action is an import `grant`. This is a callback to
+    # the client indicating that is is safe to enter the critical
+    # section.
 
-            <span style=color:#111>before</span> <span style=color:#111>release</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-                <span style=color:#111>require</span> <span style=color:#111>client_state</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>critical</span><span style=color:#111>;</span>
-                <span style=color:#111>client_state</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#111>idle</span><span style=color:#111>;</span>
-            <span style=color:#111>}</span>
+    import action grant
 
-        <span style=color:#111>}</span>
-    <span style=color:#111>}</span>
+    # Our third action is an export `release`. This is called by the
+    # client when exiting the critical section, indicating it is safe to
+    # another process to enter.
 
-    <span style=color:#111>implementation</span> <span style=color:#111>{</span>
-
-        <span style=color:#75715e># Next we declare per-process objects. Each process needs a socket
-</span><span style=color:#75715e></span>        <span style=color:#75715e># on network `net` in order to communicate. We declare the socket
-</span><span style=color:#75715e></span>        <span style=color:#75715e># here. The socket `sock` is an instance of the template `socket`
-</span><span style=color:#75715e></span>        <span style=color:#75715e># declared by the network service `net`. 
-</span><span style=color:#75715e></span>
-        <span style=color:#111>instance</span> <span style=color:#111>sock</span> <span style=color:#111>:</span> <span style=color:#111>net</span><span style=color:#111>.</span><span style=color:#111>socket</span>
-
-        <span style=color:#75715e># We also declare some local (per-process) types and variables. 
-</span><span style=color:#75715e></span>
-        <span style=color:#111>var</span> <span style=color:#111>state</span> <span style=color:#111>:</span> <span style=color:#111>state_t</span>
-
-        <span style=color:#75715e># We also keep track of the current timestamp
-</span><span style=color:#75715e></span>
-        <span style=color:#111>var</span> <span style=color:#111>ts</span> <span style=color:#111>:</span> <span style=color:#111>timestamp</span>
-
-        <span style=color:#75715e># Each process maintains a &#39;request queue&#39;, which a map from host_ids to
-</span><span style=color:#75715e></span>        <span style=color:#75715e># the timestamp of the current request from that host, or `0` if none.
-</span><span style=color:#75715e></span>
-        <span style=color:#111>var</span> <span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#f92672>:</span> <span style=color:#111>timestamp</span>
-
-        <span style=color:#75715e># This map records the highest timestamp of a reply received from
-</span><span style=color:#75715e></span>        <span style=color:#75715e># each host.
-</span><span style=color:#75715e></span>
-        <span style=color:#111>var</span> <span style=color:#111>reply_ts</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#f92672>:</span> <span style=color:#111>timestamp</span>
-
-        <span style=color:#75715e># Having declared our variables, we initialize them. Code in an
-</span><span style=color:#75715e></span>        <span style=color:#75715e># `after init` section runs on initialization of the process. You
-</span><span style=color:#75715e></span>        <span style=color:#75715e># aren&#39;t allowed to do much here, just assign values to local
-</span><span style=color:#75715e></span>        <span style=color:#75715e># variables.
-</span><span style=color:#75715e></span>
-        <span style=color:#111>after</span> <span style=color:#111>init</span> <span style=color:#111>{</span>
-            <span style=color:#111>state</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>idle</span><span style=color:#111>;</span>
-            <span style=color:#111>ts</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-            <span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-            <span style=color:#111>reply_ts</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-        <span style=color:#111>}</span>
-
-        <span style=color:#75715e># Now we come to the implementation code. Here we implement our
-</span><span style=color:#75715e></span>        <span style=color:#75715e># exported actions, if any, and also any callback actions from the
-</span><span style=color:#75715e></span>        <span style=color:#75715e># services we use (i.e., actions that these services import from
-</span><span style=color:#75715e></span>        <span style=color:#75715e># us).
-</span><span style=color:#75715e></span>
-        <span style=color:#75715e># We start with the `request` action. This builds a request message,
-</span><span style=color:#75715e></span>        <span style=color:#75715e># appends it to the request queue, and broadcasts it. The action `broadcast` is
-</span><span style=color:#75715e></span>        <span style=color:#75715e># a local action (i.e., a subroutine) and is defined later.
-</span><span style=color:#75715e></span>
-        <span style=color:#111>implement</span> <span style=color:#111>request</span> <span style=color:#111>{</span>
-            <span style=color:#111>ts</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>ts</span><span style=color:#111>.</span><span style=color:#111>next</span><span style=color:#111>;</span>
-            <span style=color:#111>var</span> <span style=color:#111>outgoing</span> <span style=color:#111>:</span> <span style=color:#111>msg_t</span><span style=color:#111>;</span>
-            <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>kind</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>request_kind</span><span style=color:#111>;</span>
-            <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>sender_id</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#111>;</span>
-            <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>ts</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>ts</span><span style=color:#111>;</span>
-            <span style=color:#111>broadcast</span><span style=color:#111>(</span><span style=color:#111>outgoing</span><span style=color:#111>);</span>
-            <span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#111>ts</span><span style=color:#111>;</span>
-            <span style=color:#111>state</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>waiting</span><span style=color:#111>;</span>
-            <span style=color:#75715e># BUG: should check waiting condition here, if host_id.max = 0
-</span><span style=color:#75715e></span>        <span style=color:#111>}</span>
-
-        <span style=color:#75715e># Next we implement the callback `recv` from our network socket,
-</span><span style=color:#75715e></span>        <span style=color:#75715e># indicating we have an incoming message. This is called
-</span><span style=color:#75715e></span>        <span style=color:#75715e># `sock.recv`. It gives us as input parameters the network address
-</span><span style=color:#75715e></span>        <span style=color:#75715e># of the sending socket (not useful here) and the incoming
-</span><span style=color:#75715e></span>        <span style=color:#75715e># message.
-</span><span style=color:#75715e></span>
-
-        <span style=color:#111>implement</span> <span style=color:#111>sock</span><span style=color:#111>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#111>src</span><span style=color:#111>:</span><span style=color:#111>tcp</span><span style=color:#111>.</span><span style=color:#111>endpoint</span><span style=color:#111>,</span><span style=color:#111>incoming</span><span style=color:#111>:</span><span style=color:#111>msg_t</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-
-            <span style=color:#75715e># debug &#34;recv&#34; with self = self, src = src, msg = incoming;
-</span><span style=color:#75715e></span>
-            <span style=color:#75715e># First, we update out timestamp to reflect the incoming
-</span><span style=color:#75715e></span>            <span style=color:#75715e># message.
-</span><span style=color:#75715e></span>
-            <span style=color:#111>ts</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>timestamp</span><span style=color:#111>.</span><span style=color:#111>max2</span><span style=color:#111>(</span><span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>ts</span><span style=color:#111>,</span><span style=color:#111>ts</span><span style=color:#111>).</span><span style=color:#111>next</span><span style=color:#111>;</span>
-
-            <span style=color:#75715e># We partly construct an outgoing message
-</span><span style=color:#75715e></span>
-            <span style=color:#111>var</span> <span style=color:#111>outgoing</span> <span style=color:#111>:</span> <span style=color:#111>msg_t</span><span style=color:#111>;</span>
-            <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>sender_id</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#111>;</span>
-            <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>ts</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>ts</span><span style=color:#111>;</span>
-
-            <span style=color:#75715e># What we do here depends on the kind of message.
-</span><span style=color:#75715e></span>
-            <span style=color:#75715e># When we receive a `request` message, we put it on our request queue,
-</span><span style=color:#75715e></span>            <span style=color:#75715e># and return a reply message to the sender.
-</span><span style=color:#75715e></span>
-            <span style=color:#00a8c8>if</span> <span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>kind</span> <span style=color:#f92672>=</span> <span style=color:#111>request_kind</span> <span style=color:#111>{</span>
-                <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>kind</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>reply_kind</span><span style=color:#111>;</span>
-                <span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>sender_id</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>ts</span><span style=color:#111>;</span>
-                <span style=color:#111>unicast</span><span style=color:#111>(</span><span style=color:#111>outgoing</span><span style=color:#111>,</span><span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>sender_id</span><span style=color:#111>);</span>
-            <span style=color:#111>}</span>
-
-            <span style=color:#75715e># When we receive a `release` message, the sender&#39;s request
-</span><span style=color:#75715e></span>            <span style=color:#75715e># must be at the head of our queue.  We dequeue it.
-</span><span style=color:#75715e></span>
-            <span style=color:#00a8c8>else</span> <span style=color:#00a8c8>if</span> <span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>kind</span> <span style=color:#f92672>=</span> <span style=color:#111>release_kind</span> <span style=color:#111>{</span>
-                <span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>sender_id</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-
-            <span style=color:#111>}</span>
-
-            <span style=color:#75715e># On a reply, we update the highest timestamp received from
-</span><span style=color:#75715e></span>            <span style=color:#75715e># this sender. Because of in-order devlivery, the timestamps
-</span><span style=color:#75715e></span>            <span style=color:#75715e># are received in increasing order, so the incoming one must
-</span><span style=color:#75715e></span>            <span style=color:#75715e># be the greatest so far.
-</span><span style=color:#75715e></span>
-            <span style=color:#00a8c8>else</span> <span style=color:#00a8c8>if</span> <span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>kind</span> <span style=color:#f92672>=</span> <span style=color:#111>reply_kind</span> <span style=color:#111>{</span>
-                <span style=color:#111>reply_ts</span><span style=color:#111>(</span><span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>sender_id</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#111>incoming</span><span style=color:#111>.</span><span style=color:#111>ts</span><span style=color:#111>;</span>
-            <span style=color:#111>}</span>
-
-            <span style=color:#75715e># Having proceesed the incoming message, we might now be able
-</span><span style=color:#75715e></span>            <span style=color:#75715e># to enter our critical section. We do this if:
-</span><span style=color:#75715e></span>            <span style=color:#75715e>#
-</span><span style=color:#75715e></span>            <span style=color:#75715e># - We are in the waiting state
-</span><span style=color:#75715e></span>            <span style=color:#75715e># - Our request message has the least timestamp in lexicographic order
-</span><span style=color:#75715e></span>            <span style=color:#75715e># - Every host has sent a reply later than our request
-</span><span style=color:#75715e></span>
-            <span style=color:#75715e># debug &#34;waiting&#34; with self = self, rq = request_ts(X), ts = reply_ts(X);
-</span><span style=color:#75715e></span>
-            <span style=color:#00a8c8>if</span> <span style=color:#111>state</span> <span style=color:#f92672>=</span> <span style=color:#111>waiting</span>
-            <span style=color:#f92672>&amp;</span> <span style=color:#111>forall</span> <span style=color:#111>X</span><span style=color:#111>.</span> <span style=color:#111>X</span> <span style=color:#f92672>~=</span> <span style=color:#111>self</span> <span style=color:#f92672>-&gt;</span>
-                          <span style=color:#111>(</span><span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>|</span> <span style=color:#111>lexord</span><span style=color:#111>(</span><span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>),</span><span style=color:#111>self</span><span style=color:#111>,</span><span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>),</span><span style=color:#111>X</span><span style=color:#111>))</span>
-                             <span style=color:#f92672>&amp;</span> <span style=color:#111>reply_ts</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>)</span> <span style=color:#f92672>&gt;</span> <span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span>
-            <span style=color:#111>{</span>
-                <span style=color:#111>state</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>critical</span><span style=color:#111>;</span>
-                <span style=color:#111>grant</span><span style=color:#111>;</span>
-            <span style=color:#111>}</span>
-        <span style=color:#111>}</span>                    
-
-        <span style=color:#111>implement</span> <span style=color:#111>release</span> <span style=color:#111>{</span>
-            <span style=color:#111>ts</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>ts</span><span style=color:#111>.</span><span style=color:#111>next</span><span style=color:#111>;</span>
-            <span style=color:#111>request_ts</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>)</span> <span style=color:#f92672>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-            <span style=color:#111>var</span> <span style=color:#111>outgoing</span> <span style=color:#111>:</span> <span style=color:#111>msg_t</span><span style=color:#111>;</span>
-            <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>sender_id</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#111>;</span>
-            <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>ts</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>ts</span><span style=color:#111>;</span>
-            <span style=color:#111>outgoing</span><span style=color:#111>.</span><span style=color:#111>kind</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>release_kind</span><span style=color:#111>;</span>
-            <span style=color:#111>broadcast</span><span style=color:#111>(</span><span style=color:#111>outgoing</span><span style=color:#111>);</span>
-            <span style=color:#111>state</span> <span style=color:#111>:</span><span style=color:#f92672>=</span> <span style=color:#111>idle</span><span style=color:#111>;</span>
-        <span style=color:#111>}</span>
-
-        <span style=color:#75715e># At the end, we have definitions of internal (non-interface)
-</span><span style=color:#75715e></span>        <span style=color:#75715e># actions (in other words, subroutines) and functions (i.e., pure
-</span><span style=color:#75715e></span>        <span style=color:#75715e># functions).
-</span><span style=color:#75715e></span>
-        <span style=color:#75715e># This function takes two timestamp-host_id pairs and determines
-</span><span style=color:#75715e></span>        <span style=color:#75715e># whether (X1,Y1) &lt; (X2,Y2) in lexicogrpahic order.
-</span><span style=color:#75715e></span>
-        <span style=color:#111>function</span> <span style=color:#111>lexord</span><span style=color:#111>(</span><span style=color:#111>X1</span><span style=color:#111>:</span><span style=color:#111>timestamp</span><span style=color:#111>,</span><span style=color:#111>Y1</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>,</span><span style=color:#111>X2</span><span style=color:#111>:</span><span style=color:#111>timestamp</span><span style=color:#111>,</span><span style=color:#111>Y2</span><span style=color:#111>:</span><span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#f92672>=</span>
-            <span style=color:#111>X1</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>X2</span> <span style=color:#f92672>|</span> <span style=color:#111>X1</span> <span style=color:#f92672>=</span> <span style=color:#111>X2</span> <span style=color:#f92672>&amp;</span> <span style=color:#111>Y1</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>Y2</span>
+    export action release
 
 
-        <span style=color:#75715e># The action `unicast` sends a message to just one process.
-</span><span style=color:#75715e></span>        <span style=color:#75715e># To actually send a mesage to a socket, we call the `send` action
-</span><span style=color:#75715e></span>        <span style=color:#75715e># of our socket, giving it the receiving socket&#39;s network address
-</span><span style=color:#75715e></span>        <span style=color:#75715e># and the message to be sent. Notice we can get the network
-</span><span style=color:#75715e></span>        <span style=color:#75715e># address of process with identifier `idx` with the expression
-</span><span style=color:#75715e></span>        <span style=color:#75715e># `node(idx).sock.id`. This might seem odd, as we asre asking for
-</span><span style=color:#75715e></span>        <span style=color:#75715e># the local state of an object in another process. This is allowed
-</span><span style=color:#75715e></span>        <span style=color:#75715e># because the network addresses of the sockets are immutable
-</span><span style=color:#75715e></span>        <span style=color:#75715e># parameters that are determined at initialization and are
-</span><span style=color:#75715e></span>        <span style=color:#75715e># provided to all processes.
-</span><span style=color:#75715e></span>
-        <span style=color:#111>action</span> <span style=color:#111>unicast</span><span style=color:#111>(</span><span style=color:#111>outgoing</span><span style=color:#111>:</span><span style=color:#111>msg_t</span><span style=color:#111>,</span> <span style=color:#111>dst_id</span> <span style=color:#111>:</span> <span style=color:#111>host_id</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
-            <span style=color:#75715e># debug &#34;send&#34; with dst = dst_id, msg = outgoing;
-</span><span style=color:#75715e></span>            <span style=color:#111>sock</span><span style=color:#111>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#111>node</span><span style=color:#111>(</span><span style=color:#111>dst_id</span><span style=color:#111>).</span><span style=color:#111>sock</span><span style=color:#111>.</span><span style=color:#111>id</span><span style=color:#111>,</span><span style=color:#111>outgoing</span><span style=color:#111>);</span>
-        <span style=color:#111>}</span>
 
-        <span style=color:#75715e># Action `broadcast` sends a message to all processes with
-</span><span style=color:#75715e></span>        <span style=color:#75715e># identifiers not equal to `self`. We use a &#39;for&#39; loop to
-</span><span style=color:#75715e></span>        <span style=color:#75715e># iterate over the type `host_id`. The &#39;for&#39; construct defines
-</span><span style=color:#75715e></span>        <span style=color:#75715e># two variables:
-</span><span style=color:#75715e></span>        <span style=color:#75715e>#
-</span><span style=color:#75715e></span>        <span style=color:#75715e># - `it` is an &#39;iterator&#39; of type `host.iter`
-</span><span style=color:#75715e></span>        <span style=color:#75715e># - `dst_id` is the value of the type the iterator refers to
-</span><span style=color:#75715e></span>        <span style=color:#75715e>#
-</span><span style=color:#75715e></span>        <span style=color:#75715e># The reason we do it this way is the the finite subrange type
-</span><span style=color:#75715e></span>        <span style=color:#75715e># `host_id` has no value the is &#39;past the end&#39; of the type, so
-</span><span style=color:#75715e></span>        <span style=color:#75715e># you can&#39;t write a traditional &#39;for&#39; loop over this type. The
-</span><span style=color:#75715e></span>        <span style=color:#75715e># iterator type, however, does have a value corresponding to
-</span><span style=color:#75715e></span>        <span style=color:#75715e># &#39;past the end&#39;.
-</span><span style=color:#75715e></span>
-        <span style=color:#111>action</span> <span style=color:#111>broadcast</span><span style=color:#111>(</span><span style=color:#111>outgoing</span><span style=color:#111>:</span><span style=color:#111>msg_t</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
-            <span style=color:#00a8c8>for</span> <span style=color:#111>it</span><span style=color:#111>,</span><span style=color:#111>dst_id</span> <span style=color:#111>in</span> <span style=color:#111>host_id</span><span style=color:#111>.</span><span style=color:#111>iter</span> <span style=color:#111>{</span>
-                <span style=color:#75715e># do not send to self!
-</span><span style=color:#75715e></span>                <span style=color:#00a8c8>if</span> <span style=color:#111>dst_id</span> <span style=color:#f92672>~=</span> <span style=color:#111>self</span> <span style=color:#111>{</span>
-                    <span style=color:#111>unicast</span><span style=color:#111>(</span><span style=color:#111>outgoing</span><span style=color:#111>,</span> <span style=color:#111>dst_id</span><span style=color:#111>);</span>
-                <span style=color:#111>}</span>
-            <span style=color:#111>}</span>
-        <span style=color:#111>}</span>
-    <span style=color:#111>}</span>
-<span style=color:#111>}</span>
+    common {
+        specification {
 
-<span style=color:#75715e># To compile and run with 3 nodes:
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e>#     $ ivyc lamport_mutex.ivy
-</span><span style=color:#75715e>#     $ ivy_launch host_id.max=3
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e># To test:
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e>#     $ ivyc target=test lamport_mutex.ivy
-</span><span style=color:#75715e>#     $ ivy_launch host_id.max=3
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e># Bounded model checking:
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e># TODO: As usual, we need the assumption that all endpoint id&#39;s are
-</span><span style=color:#75715e># distinct.
-</span><span style=color:#75715e></span>
-<span style=color:#111>axiom</span> <span style=color:#111>node</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>).</span><span style=color:#111>sock</span><span style=color:#111>.</span><span style=color:#111>id</span> <span style=color:#f92672>=</span> <span style=color:#111>node</span><span style=color:#111>(</span><span style=color:#111>Y</span><span style=color:#111>).</span><span style=color:#111>sock</span><span style=color:#111>.</span><span style=color:#111>id</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>X</span> <span style=color:#f92672>=</span> <span style=color:#111>Y</span>
+            var client_state(H:host_id) : state_t
 
-<span style=color:#75715e># This says to try bounded model checking up to 20 steps (but Ivy
-</span><span style=color:#75715e># won&#39;t actually get that far). The second parameter say to unroll the
-</span><span style=color:#75715e># loops three times. This means that BMC ignores all executions in
-</span><span style=color:#75715e># which a loop is executed more than three times. We need this because of
-</span><span style=color:#75715e># the loop in `node.broadcast`
-</span><span style=color:#75715e></span>
-<span style=color:#111>attribute</span> <span style=color:#111>method</span> <span style=color:#f92672>=</span> <span style=color:#111>bmc</span><span style=color:#111>[</span><span style=color:#ae81ff>20</span><span style=color:#111>][</span><span style=color:#ae81ff>3</span><span style=color:#111>]</span>
+            after init {
+                client_state(H) := idle;
+            }
 
-<span style=color:#75715e># Try adding a bug and see if you can find it with testing and bmc. Change
-</span><span style=color:#75715e># this definition above:
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e>#     function lexord(X1:timestamp,Y1:host_id,X2:timestamp,Y2:host_id) =
-</span><span style=color:#75715e>#         X1 &lt; X2 | X1 = X2 &amp; Y1 &lt; Y2
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e># to this:
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e>#     function lexord(X1:timestamp,Y1:host_id,X2:timestamp,Y2:host_id) =
-</span><span style=color:#75715e>#         X1 &lt;= X2 | X1 = X2 &amp; Y1 &lt; Y2
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e># This mistake could allow two nodes with requests with the same timestamp
-</span><span style=color:#75715e># to enter the CS at the same time. Here&#39;s a counter-example produced
-</span><span style=color:#75715e># by BMC (it takes a while!):
-</span><span style=color:#75715e>#
-</span><span style=color:#75715e>#     &gt; node.request(1)
-</span><span style=color:#75715e>#     &gt; node.request(0)
-</span><span style=color:#75715e>#     &gt; node.sock.recv(0,{tcp.endpoint.addr:...,tcp.endpoint.port:...},{msg_t.kind:request,msg_t.sender_id:1,msg_t.ts:1})
-</span><span style=color:#75715e>#     &gt; node.sock.recv(1,{tcp.endpoint.addr:...,tcp.endpoint.port:...},{msg_t.kind:request,msg_t.sender_id:0,msg_t.ts:1})
-</span><span style=color:#75715e>#     &gt; node.sock.recv(1,{tcp.endpoint.addr:...,tcp.endpoint.port:...},{msg_t.kind:reply,msg_t.sender_id:0,msg_t.ts:2})
-</span><span style=color:#75715e>#     &lt; node.enter_cs(1)
-</span><span style=color:#75715e>#     &gt; node.sock.recv(0,{tcp.endpoint.addr:...,tcp.endpoint.port:...},{msg_t.kind:reply,msg_t.sender_id:1,msg_t.ts:2})
-</span><span style=color:#75715e>#     &lt; node.enter_cs(0)
-</span><span style=color:#75715e>#     lamport_mutex_save.ivy: line 137: error: assertion failed
-</span><span style=color:#75715e></span>
-</code></pre></div>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/distributed-system>distributed-system</a>
-<a href=https://www.bodunhu.com/blog/tags/ivy>ivy</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div id=social>
-<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
-</a>
-<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
-</a>
-</div>
-<div class=copyright>
-©
-2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
+            before request(self:host_id) {
+                require client_state(self) = idle;
+                client_state(self) := waiting;
+            }
+
+            before grant(self:host_id) {
+                require client_state(self) = waiting;
+                require client_state(X) ~= critical;
+                client_state(self) := critical;
+            }
+
+            before release(self:host_id) {
+                require client_state(self) = critical;
+                client_state(self) := idle;
+            }
+
+        }
+    }
+
+    implementation {
+
+        # Next we declare per-process objects. Each process needs a socket
+        # on network `net` in order to communicate. We declare the socket
+        # here. The socket `sock` is an instance of the template `socket`
+        # declared by the network service `net`. 
+
+        instance sock : net.socket
+
+        # We also declare some local (per-process) types and variables. 
+
+        var state : state_t
+
+        # We also keep track of the current timestamp
+
+        var ts : timestamp
+
+        # Each process maintains a 'request queue', which a map from host_ids to
+        # the timestamp of the current request from that host, or `0` if none.
+
+        var request_ts(X:host_id) : timestamp
+
+        # This map records the highest timestamp of a reply received from
+        # each host.
+
+        var reply_ts(X:host_id) : timestamp
+
+        # Having declared our variables, we initialize them. Code in an
+        # `after init` section runs on initialization of the process. You
+        # aren't allowed to do much here, just assign values to local
+        # variables.
+
+        after init {
+            state := idle;
+            ts := 0;
+            request_ts(X) := 0;
+            reply_ts(X) := 0;
+        }
+
+        # Now we come to the implementation code. Here we implement our
+        # exported actions, if any, and also any callback actions from the
+        # services we use (i.e., actions that these services import from
+        # us).
+
+        # We start with the `request` action. This builds a request message,
+        # appends it to the request queue, and broadcasts it. The action `broadcast` is
+        # a local action (i.e., a subroutine) and is defined later.
+
+        implement request {
+            ts := ts.next;
+            var outgoing : msg_t;
+            outgoing.kind := request_kind;
+            outgoing.sender_id := self;
+            outgoing.ts := ts;
+            broadcast(outgoing);
+            request_ts(self) := ts;
+            state := waiting;
+            # BUG: should check waiting condition here, if host_id.max = 0
+        }
+
+        # Next we implement the callback `recv` from our network socket,
+        # indicating we have an incoming message. This is called
+        # `sock.recv`. It gives us as input parameters the network address
+        # of the sending socket (not useful here) and the incoming
+        # message.
+
+
+        implement sock.recv(src:tcp.endpoint,incoming:msg_t) {
+
+            # debug &quot;recv&quot; with self = self, src = src, msg = incoming;
+
+            # First, we update out timestamp to reflect the incoming
+            # message.
+
+            ts := timestamp.max2(incoming.ts,ts).next;
+
+            # We partly construct an outgoing message
+
+            var outgoing : msg_t;
+            outgoing.sender_id := self;
+            outgoing.ts := ts;
+
+            # What we do here depends on the kind of message.
+
+            # When we receive a `request` message, we put it on our request queue,
+            # and return a reply message to the sender.
+
+            if incoming.kind = request_kind {
+                outgoing.kind := reply_kind;
+                request_ts(incoming.sender_id) := incoming.ts;
+                unicast(outgoing,incoming.sender_id);
+            }
+
+            # When we receive a `release` message, the sender's request
+            # must be at the head of our queue.  We dequeue it.
+
+            else if incoming.kind = release_kind {
+                request_ts(incoming.sender_id) := 0;
+
+            }
+
+            # On a reply, we update the highest timestamp received from
+            # this sender. Because of in-order devlivery, the timestamps
+            # are received in increasing order, so the incoming one must
+            # be the greatest so far.
+
+            else if incoming.kind = reply_kind {
+                reply_ts(incoming.sender_id) := incoming.ts;
+            }
+
+            # Having proceesed the incoming message, we might now be able
+            # to enter our critical section. We do this if:
+            #
+            # - We are in the waiting state
+            # - Our request message has the least timestamp in lexicographic order
+            # - Every host has sent a reply later than our request
+
+            # debug &quot;waiting&quot; with self = self, rq = request_ts(X), ts = reply_ts(X);
+
+            if state = waiting
+            &amp; forall X. X ~= self -&gt;
+                          (request_ts(X) = 0 | lexord(request_ts(self),self,request_ts(X),X))
+                             &amp; reply_ts(X) &gt; request_ts(self)
+            {
+                state := critical;
+                grant;
+            }
+        }                    
+
+        implement release {
+            ts := ts.next;
+            request_ts(self) := 0;
+            var outgoing : msg_t;
+            outgoing.sender_id := self;
+            outgoing.ts := ts;
+            outgoing.kind := release_kind;
+            broadcast(outgoing);
+            state := idle;
+        }
+
+        # At the end, we have definitions of internal (non-interface)
+        # actions (in other words, subroutines) and functions (i.e., pure
+        # functions).
+
+        # This function takes two timestamp-host_id pairs and determines
+        # whether (X1,Y1) &lt; (X2,Y2) in lexicogrpahic order.
+
+        function lexord(X1:timestamp,Y1:host_id,X2:timestamp,Y2:host_id) =
+            X1 &lt; X2 | X1 = X2 &amp; Y1 &lt; Y2
+
+
+        # The action `unicast` sends a message to just one process.
+        # To actually send a mesage to a socket, we call the `send` action
+        # of our socket, giving it the receiving socket's network address
+        # and the message to be sent. Notice we can get the network
+        # address of process with identifier `idx` with the expression
+        # `node(idx).sock.id`. This might seem odd, as we asre asking for
+        # the local state of an object in another process. This is allowed
+        # because the network addresses of the sockets are immutable
+        # parameters that are determined at initialization and are
+        # provided to all processes.
+
+        action unicast(outgoing:msg_t, dst_id : host_id) = {
+            # debug &quot;send&quot; with dst = dst_id, msg = outgoing;
+            sock.send(node(dst_id).sock.id,outgoing);
+        }
+
+        # Action `broadcast` sends a message to all processes with
+        # identifiers not equal to `self`. We use a 'for' loop to
+        # iterate over the type `host_id`. The 'for' construct defines
+        # two variables:
+        #
+        # - `it` is an 'iterator' of type `host.iter`
+        # - `dst_id` is the value of the type the iterator refers to
+        #
+        # The reason we do it this way is the the finite subrange type
+        # `host_id` has no value the is 'past the end' of the type, so
+        # you can't write a traditional 'for' loop over this type. The
+        # iterator type, however, does have a value corresponding to
+        # 'past the end'.
+
+        action broadcast(outgoing:msg_t) = {
+            for it,dst_id in host_id.iter {
+                # do not send to self!
+                if dst_id ~= self {
+                    unicast(outgoing, dst_id);
+                }
+            }
+        }
+    }
+}
+
+# To compile and run with 3 nodes:
+#
+#     $ ivyc lamport_mutex.ivy
+#     $ ivy_launch host_id.max=3
+#
+# To test:
+#
+#     $ ivyc target=test lamport_mutex.ivy
+#     $ ivy_launch host_id.max=3
+#
+# Bounded model checking:
+#
+# TODO: As usual, we need the assumption that all endpoint id's are
+# distinct.
+
+axiom node(X).sock.id = node(Y).sock.id -&gt; X = Y
+
+# This says to try bounded model checking up to 20 steps (but Ivy
+# won't actually get that far). The second parameter say to unroll the
+# loops three times. This means that BMC ignores all executions in
+# which a loop is executed more than three times. We need this because of
+# the loop in `node.broadcast`
+
+attribute method = bmc[20][3]
+
+# Try adding a bug and see if you can find it with testing and bmc. Change
+# this definition above:
+#
+#     function lexord(X1:timestamp,Y1:host_id,X2:timestamp,Y2:host_id) =
+#         X1 &lt; X2 | X1 = X2 &amp; Y1 &lt; Y2
+#
+# to this:
+#
+#     function lexord(X1:timestamp,Y1:host_id,X2:timestamp,Y2:host_id) =
+#         X1 &lt;= X2 | X1 = X2 &amp; Y1 &lt; Y2
+#
+# This mistake could allow two nodes with requests with the same timestamp
+# to enter the CS at the same time. Here's a counter-example produced
+# by BMC (it takes a while!):
+#
+#     &gt; node.request(1)
+#     &gt; node.request(0)
+#     &gt; node.sock.recv(0,{tcp.endpoint.addr:...,tcp.endpoint.port:...},{msg_t.kind:request,msg_t.sender_id:1,msg_t.ts:1})
+#     &gt; node.sock.recv(1,{tcp.endpoint.addr:...,tcp.endpoint.port:...},{msg_t.kind:request,msg_t.sender_id:0,msg_t.ts:1})
+#     &gt; node.sock.recv(1,{tcp.endpoint.addr:...,tcp.endpoint.port:...},{msg_t.kind:reply,msg_t.sender_id:0,msg_t.ts:2})
+#     &lt; node.enter_cs(1)
+#     &gt; node.sock.recv(0,{tcp.endpoint.addr:...,tcp.endpoint.port:...},{msg_t.kind:reply,msg_t.sender_id:1,msg_t.ts:2})
+#     &lt; node.enter_cs(0)
+#     lamport_mutex_save.ivy: line 137: error: assertion failed
+
+</code></pre>
+<hr class=hr-list>
+<footer>
+<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. </p>
 </footer>
+</div>
+</main>
 </body>
 </html>

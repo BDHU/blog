@@ -1,46 +1,51 @@
-<!doctype html><html lang=en-us>
+<!doctype html><html lang=en>
 <head>
-<title>Writing Specifications in a Distributed System using Ivy | std::bodun::blog</title>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge,chrome=1">
-<meta name=viewport content="width=device-width,minimum-scale=1">
+<meta http-equiv=x-ua-compatible content="IE=edge">
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=author content="Liste - https://www.bodunhu.com/blog/">
+<title>Writing Specifications in a Distributed System using Ivy | std::bodun::blog</title>
 <meta name=description content="Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http://mcmil.net/wordpress/): a specification is a *statement*">
-<meta name=generator content="Hugo 0.88.1">
-<meta name=ROBOTS content="INDEX, FOLLOW">
-<link rel=stylesheet href=/blog/css/style.css>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script async src=https://www.google-analytics.com/analytics.js></script>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
-<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<meta property="og:title" content="Writing Specifications in a Distributed System using Ivy">
+<meta property="og:description" content="Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http://mcmil.net/wordpress/): a specification is a *statement*">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.bodunhu.com/blog/posts/writing-specifications-in-a-distributed-system-using-ivy/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-09-08T00:00:00+00:00">
+<meta property="article:modified_time" content="2021-09-11T23:33:58-05:00">
+<meta itemprop=name content="Writing Specifications in a Distributed System using Ivy">
+<meta itemprop=description content="Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http://mcmil.net/wordpress/): a specification is a *statement*"><meta itemprop=datePublished content="2021-09-08T00:00:00+00:00">
+<meta itemprop=dateModified content="2021-09-11T23:33:58-05:00">
+<meta itemprop=wordCount content="986">
+<meta itemprop=keywords content="distributed-system,ivy,">
 <meta name=twitter:card content="summary">
 <meta name=twitter:title content="Writing Specifications in a Distributed System using Ivy">
 <meta name=twitter:description content="Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http://mcmil.net/wordpress/): a specification is a *statement*">
 <meta name=twitter:site content="@https://twitter.com/BodunHu">
-<script>document.getElementById("scroll-to-top").addEventListener("click",function(){window.scrollTo({top:0,left:0,behavior:'smooth'})})</script>
+<link rel=canonical href=https://www.bodunhu.com/blog/posts/writing-specifications-in-a-distributed-system-using-ivy/>
+<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
+<link rel=dns-prefetch href=https://www.google-analytics.com>
+<link href=https://www.google-analytics.com rel=preconnect crossorigin>
+<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
+<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
+<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
+<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:2rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
+<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Writing Specifications in a Distributed System using Ivy","headline":"Writing Specifications in a Distributed System using Ivy","alternativeHeadline":"","description":"Before we jump into how to write specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent [Ken McMillan](http:\/\/mcmil.net\/wordpress\/): a specification is a *statement*","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/writing-specifications-in-a-distributed-system-using-ivy\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-09-08T00:00:00.00Z","datePublished":"2021-09-08T00:00:00.00Z","dateModified":"2021-09-11T23:33:58.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/writing-specifications-in-a-distributed-system-using-ivy\/","wordCount":"986","genre":["distributed-system","ivy"],"keywords":["distributed-system","ivy"]}</script>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
 </head>
 <body>
-<nav class=navigation>
-<a href=/blog/> <span class=arrow>←</span>Home</a>
-<a href=/blog/posts>Archive</a>
-<a href=https://www.bodunhu.com/>About</a>
-<a class=button href=https://www.bodunhu.com/blog/index.xml>Subscribe</a>
-</nav>
-<main class=main>
-<section id=single>
-<h1 class=title>Writing Specifications in a Distributed System using Ivy</h1>
-<div class=tip>
-<time datetime="2021-09-08 00:00:00 +0000 UTC">Sep 8, 2021</time>
-<span class=split>
-·
-</span>
-<span>
-5 minute read
-</span>
-</div>
+<a class=skip-link href=#main>Skip to main</a>
+<main id=main>
 <div class=content>
-<p>Before we jump into writing specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent <a href=http://mcmil.net/wordpress/ target=_blank rel=noopener>Ken McMillan</a>: a specification is a <em>statement</em>.</p>
+<header>
+<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
+<ul style=padding:0;margin:0>
+<li><a href=https://www.bodunhu.com/>About</a></li>
+</ul>
+</header>
+<hr class=hr-list style=padding:0;margin:0>
+<h2 class=post>Writing Specifications in a Distributed System using Ivy</h2>
+<p>Before we jump into writing specifications in a distributed setting, we first define what a specification is. I take the definition from the magnificent <a href=http://mcmil.net/wordpress/>Ken McMillan</a>: a specification is a <em>statement</em>.</p>
 <p>A statement describes an abstract view of a program. The view itself is often at an interface, which hides or abstracts internal states. A specification is stated in terms of two elements:</p>
 <ul>
 <li>Assumption: properties of the environment the system relies on</li>
@@ -70,64 +75,66 @@
 <blockquote>
 <p>Liveness property means a good thing eventually happens. A liveness property can be <em>refuted</em> by finite execution. Safety property means a bad thing never happens. A safety property can always be refuted by a finite execution.</p>
 </blockquote>
-<p>To see how replicated file specification plays in action, we use the example given in <a href=http://mcmil.net/wordpress/ target=_blank rel=noopener>Prof. McMillan</a>&rsquo;s presentation. The code is written in <a href=http://microsoft.github.io/ivy/language.html target=_blank rel=noopener>Ivy</a> and is pretty self-explanatory. In this demo we only have two processes.</p>
+<p>To see how replicated file specification plays in action, we use the example given in <a href=http://mcmil.net/wordpress/>Prof. McMillan</a>&rsquo;s presentation. The code is written in <a href=http://microsoft.github.io/ivy/language.html>Ivy</a> and is pretty self-explanatory. In this demo we only have two processes.</p>
 <blockquote>
 <p>To install Ivy, simply execute <code>virtualenv ivyenv && source ivyenv/bin/activate && pip install ms-ivy</code>. This is tested on Ubuntu 18.04 LTS and may vary slight on other distros.</p>
 </blockquote>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#f92672>#</span><span style=color:#111>lang</span> <span style=color:#111>ivy1</span><span style=color:#f92672>.</span><span style=color:#ae81ff>8</span>
+<pre><code class=language-haskell>#lang ivy1.8
 
-<span style=color:#75af00>include</span> <span style=color:#111>numbers</span>
-<span style=color:#75af00>include</span> <span style=color:#111>collections</span>
-<span style=color:#75af00>include</span> <span style=color:#111>network</span>
+include numbers
+include collections
+include network
 
-<span style=color:#75af00>global</span> <span style=color:#111>{</span>
-    <span style=color:#111>alias</span> <span style=color:#111>byte</span> <span style=color:#f92672>=</span> <span style=color:#111>uint</span><span style=color:#111>[</span><span style=color:#ae81ff>8</span><span style=color:#111>]</span>
-    <span style=color:#00a8c8>instance</span> <span style=color:#111>file</span> <span style=color:#00a8c8>:</span> <span style=color:#111>vector</span><span style=color:#111>(</span><span style=color:#111>byte</span><span style=color:#111>)</span>
-    <span style=color:#00a8c8>type</span> <span style=color:#111>pid</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span><span style=color:#ae81ff>0</span><span style=color:#f92672>..</span><span style=color:#ae81ff>1</span><span style=color:#111>}</span>
-    <span style=color:#00a8c8>instance</span> <span style=color:#111>net</span> <span style=color:#00a8c8>:</span> <span style=color:#111>tcp</span><span style=color:#f92672>.</span><span style=color:#111>net</span><span style=color:#111>(</span><span style=color:#111>byte</span><span style=color:#111>)</span>
-<span style=color:#111>}</span>
+global {
+    alias byte = uint[8]
+    instance file : vector(byte)
+    type pid = {0..1}
+    instance net : tcp.net(byte)
+}
 
-<span style=color:#75af00>process</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#00a8c8>:</span><span style=color:#111>pid</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span>
-    <span style=color:#111>export</span> <span style=color:#111>action</span> <span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>val</span><span style=color:#00a8c8>:</span><span style=color:#111>byte</span><span style=color:#111>)</span>
-    <span style=color:#00a8c8>import</span> <span style=color:#111>action</span> <span style=color:#111>show</span><span style=color:#111>(</span><span style=color:#111>content</span><span style=color:#00a8c8>:</span><span style=color:#111>file</span><span style=color:#111>)</span>
-    <span style=color:#00a8c8>instance</span> <span style=color:#111>sock</span> <span style=color:#00a8c8>:</span> <span style=color:#111>net</span><span style=color:#f92672>.</span><span style=color:#111>socket</span>
-    <span style=color:#111>var</span> <span style=color:#111>contents</span> <span style=color:#00a8c8>:</span> <span style=color:#111>file</span>
+process host(self:pid) = {
+    export action append(val:byte)
+    import action show(content:file)
+    instance sock : net.socket
+    var contents : file
 
-    <span style=color:#111>after</span> <span style=color:#111>init</span><span style=color:#111>{</span>
-        <span style=color:#111>contents</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>file</span><span style=color:#f92672>.</span><span style=color:#111>empty</span><span style=color:#111>;</span>
-    <span style=color:#111>}</span>
+    after init{
+        contents := file.empty;
+    }
 
-    <span style=color:#111>implement</span> <span style=color:#111>append</span> <span style=color:#111>{</span>
-        <span style=color:#111>contents</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>contents</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>val</span><span style=color:#111>);</span>
-        <span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>-</span><span style=color:#111>self</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>id</span><span style=color:#111>,</span> <span style=color:#111>val</span><span style=color:#111>);</span>
-        <span style=color:#111>show</span><span style=color:#111>(</span><span style=color:#111>contents</span><span style=color:#111>);</span>
-    <span style=color:#111>}</span>
+    implement append {
+        contents := contents.append(val);
+        sock.send(host(1-self).sock.id, val);
+        show(contents);
+    }
 
-    <span style=color:#111>implement</span> <span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#111>src</span><span style=color:#00a8c8>:</span><span style=color:#111>tcp</span><span style=color:#f92672>.</span><span style=color:#111>endpoint</span><span style=color:#111>,</span> <span style=color:#111>val</span><span style=color:#00a8c8>:</span><span style=color:#111>byte</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-        <span style=color:#111>contents</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>contents</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>val</span><span style=color:#111>);</span>
-        <span style=color:#111>show</span><span style=color:#111>(</span><span style=color:#111>contents</span><span style=color:#111>);</span>
-    <span style=color:#111>}</span>
-<span style=color:#111>}</span>
-</code></pre></div><p>Then we form our specification based on the guarantee that if all sent messages are delivered, the two replicas are identical. The specification is equivalent to the <em>guarded command</em> we&rsquo;ve talked about earlier.</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#75af00>specification</span> <span style=color:#111>{</span>
-    <span style=color:#111>var</span> <span style=color:#111>msg_count</span> <span style=color:#00a8c8>:</span> <span style=color:#111>nat</span>
+    implement sock.recv(src:tcp.endpoint, val:byte) {
+        contents := contents.append(val);
+        show(contents);
+    }
+}
+</code></pre>
+<p>Then we form our specification based on the guarantee that if all sent messages are delivered, the two replicas are identical. The specification is equivalent to the <em>guarded command</em> we&rsquo;ve talked about earlier.</p>
+<pre><code class=language-haskell>specification {
+    var msg_count : nat
 
-    <span style=color:#111>after</span> <span style=color:#111>init</span> <span style=color:#111>{</span>
-        <span style=color:#111>msg_count</span> <span style=color:#00a8c8>:=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
-    <span style=color:#111>}</span>
+    after init {
+        msg_count := 0;
+    }
 
-    <span style=color:#111>after</span> <span style=color:#111>host</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>send</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#00a8c8>:</span><span style=color:#111>pid</span><span style=color:#111>,</span> <span style=color:#111>dst</span><span style=color:#00a8c8>:</span><span style=color:#111>tcp</span><span style=color:#f92672>.</span><span style=color:#111>endpoint</span><span style=color:#111>,</span> <span style=color:#111>val</span><span style=color:#00a8c8>:</span><span style=color:#111>byte</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-        <span style=color:#111>msg_count</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>msg_count</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span>
-    <span style=color:#111>}</span>
+    after host.sock.send(self:pid, dst:tcp.endpoint, val:byte) {
+        msg_count := msg_count + 1;
+    }
 
-    <span style=color:#111>after</span> <span style=color:#111>host</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>recv</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#00a8c8>:</span><span style=color:#111>pid</span><span style=color:#111>,</span> <span style=color:#111>src</span><span style=color:#00a8c8>:</span><span style=color:#111>tcp</span><span style=color:#f92672>.</span><span style=color:#111>endpoint</span><span style=color:#111>,</span> <span style=color:#111>val</span><span style=color:#00a8c8>:</span><span style=color:#111>byte</span><span style=color:#111>)</span> <span style=color:#111>{</span>
-        <span style=color:#111>msg_count</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>msg_count</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span>
-        <span style=color:#111>ensure</span> <span style=color:#111>msg_count</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>contents</span><span style=color:#f92672>.</span><span style=color:#111>eq</span><span style=color:#111>(</span><span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>contents</span><span style=color:#111>);</span>
-    <span style=color:#111>}</span>
-<span style=color:#111>}</span>
-</code></pre></div><p>We wrote the above code into a file named <code>append.ivy</code> and we generate the testing code using <code>ivyc target=test append.ivy</code>. Then we run the code using <code>ivy_launch append.ivy</code>.</p>
+    after host.sock.recv(self:pid, src:tcp.endpoint, val:byte) {
+        msg_count := msg_count - 1;
+        ensure msg_count = 0 -&gt; host(0).contents.eq(host(1).contents);
+    }
+}
+</code></pre>
+<p>We wrote the above code into a file named <code>append.ivy</code> and we generate the testing code using <code>ivyc target=test append.ivy</code>. Then we run the code using <code>ivy_launch append.ivy</code>.</p>
 <p>Interestingly, the program yields an error message:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>`ivy_shell`; ./append &#34;[[0,{addr:0x7f000001,port:49124}],[1,{addr:0x7f000001,port:49125}]]&#34;
+<pre><code class=language-text>`ivy_shell`; ./append &quot;[[0,{addr:0x7f000001,port:49124}],[1,{addr:0x7f000001,port:49125}]]&quot;
 &gt; host.append(1,251)
 &lt; host.show(1,[251])
 &lt; host.show(0,[251])
@@ -137,19 +144,21 @@
 &lt; host.show(0,[251,183])
 &lt; host.show(0,[251,183,46])
 &lt; host.show(1,[251,46,183])
-assertion_failed(&#34;append.ivy: line 49&#34;)
+assertion_failed(&quot;append.ivy: line 49&quot;)
 append.ivy: line 49: error: assertion failed
-</code></pre></div><p>What happens is the program generates tests that randomizes message arrival times and we can see a delivered message may arrive after its target sends another message, therefore creating corrupted file contents.</p>
-<p>Notice that here we are actually running on real network to find counter examples, the downside is the test may be arbitrary long depending on the randomized testing cases. Instead, we will use bounded model checking (BMC) to test if the specification is correct. This way we can reply purely on the logic of our specification instead of running on the real network. The Ivy checker uses <a href=https://en.wikipedia.org/wiki/Z3_Theorem_Prover target=_blank rel=noopener>Z3 Theorem Prover</a>.</p>
+</code></pre>
+<p>What happens is the program generates tests that randomizes message arrival times and we can see a delivered message may arrive after its target sends another message, therefore creating corrupted file contents.</p>
+<p>Notice that here we are actually running on real network to find counter examples, the downside is the test may be arbitrary long depending on the randomized testing cases. Instead, we will use bounded model checking (BMC) to test if the specification is correct. This way we can reply purely on the logic of our specification instead of running on the real network. The Ivy checker uses <a href=https://en.wikipedia.org/wiki/Z3_Theorem_Prover>Z3 Theorem Prover</a>.</p>
 <blockquote>
 <p>BMC construct a boolean formula that is satisfiable if and only if the underlying state transition system can realize a finite sequence of state transitions that reaches certain states of interest.</p>
 </blockquote>
 <p>To tell Ivy using bounded model checking, we add the following lines to <code>append.ivy</code>:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#75af00>axiom</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>id</span> <span style=color:#f92672>~=</span> <span style=color:#111>host</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>sock</span><span style=color:#f92672>.</span><span style=color:#111>id</span>
+<pre><code class=language-haskell>axiom host(0).sock.id ~= host(1).sock.id
 
-<span style=color:#75af00>attribute</span> <span style=color:#111>method</span><span style=color:#f92672>=</span><span style=color:#111>bmc</span><span style=color:#111>[</span><span style=color:#ae81ff>10</span><span style=color:#111>]</span>
-</code></pre></div><p>Executing <code>ivy_check detailed=false append.ivy</code>, we see an error message:</p>
-<div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>&gt; host.append(1,80)
+attribute method=bmc[10]
+</code></pre>
+<p>Executing <code>ivy_check detailed=false append.ivy</code>, we see an error message:</p>
+<pre><code class=language-text>&gt; host.append(1,80)
 &lt; host.show(1,[80])
 &gt; host.append(0,64)
 &lt; host.show(0,[64])
@@ -158,35 +167,13 @@ append.ivy: line 49: error: assertion failed
 &gt; host.sock.recv(1,{tcp.endpoint.addr:...,tcp.endpoint.port:...},64)
 &lt; host.show(1,[80,64])
 append.ivy: line 49: error: assertion failed
-</code></pre></div><p>Sometimes BMC can help us find the error faster because it is systematically checking all possible actions. However, increasing the number of steps for the BMC can result in the exploration space growing exponentially, so we are going to use some combination of BMC and randomized test cases.</p>
-</div>
-<div class=tags>
-<a href=https://www.bodunhu.com/blog/tags/distributed-system>distributed-system</a>
-<a href=https://www.bodunhu.com/blog/tags/ivy>ivy</a>
-</div>
-<div id=comment>
-<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=github-light crossorigin=anonymous async></script>
-</div>
-</section>
-</main>
-<footer id=footer>
-<div id=social>
-<a class=symbol href=https://github.com/BDHU rel=me target=_blank><svg fill="#bbb" width="28" height="28" viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><title>Github</title><desc>Created with Sketch.</desc><defs/><g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd"><g id="Social-Icons---Rounded-Black" transform="translate(-264.000000, -939.000000)"><g id="Github" transform="translate(264.000000, 939.000000)"><path d="M8 72H64c4.418278.0 8-3.581722 8-8V8c0-4.418278-3.581722-8-8-8H8c-4.418278 811624501e-24-8 3.581722-8 8V64c541083001e-24 4.418278 3.581722 8 8 8z" id="Rounded" fill="#bbb"/><path d="M35.9985 13C22.746 13 12 23.7870921 12 37.096644c0 10.6440272 6.876 19.6751861 16.4145 22.8617681C29.6145 60.1797862 30.0525 59.4358488 30.0525 58.7973276 30.0525 58.2250681 30.0315 56.7100863 30.0195 54.6996482c-6.6765 1.4562499-8.085-3.2302544-8.085-3.2302544-1.0905-2.7829884-2.664-3.5239139-2.664-3.5239139C17.091 46.4500754 19.4355 46.4801943 19.4355 46.4801943c2.4075.1701719 3.675 2.4833051 3.675 2.4833051 2.142 3.6820383 5.6175 2.6188404 6.9855 2.0014024C30.3135 49.4077535 30.9345 48.3460615 31.62 47.7436831 26.2905 47.1352808 20.688 45.0691228 20.688 35.8361671c0-2.6308879.9345-4.781379 2.4705-6.4665327C22.911 28.7597262 22.0875 26.3110578 23.3925 22.9934585c0 0 2.016-.6475568 6.6 2.4697516C31.908 24.9285993 33.96 24.6620468 36.0015 24.6515052 38.04 24.6620468 40.0935 24.9285993 42.0105 25.4632101c4.581-3.1173084 6.5925-2.4697516 6.5925-2.4697516C49.9125 26.3110578 49.089 28.7597262 48.8415 29.3696344 50.3805 31.0547881 51.309 33.2052792 51.309 35.8361671c0 9.2555448-5.6115 11.29309-10.9575 11.8894446.860999999999997.7439374 1.629 2.2137408 1.629 4.4621184C41.9805 55.4089489 41.9505 58.0067059 41.9505 58.7973276 41.9505 59.4418726 42.3825 60.1918338 43.6005 59.9554002 53.13 56.7627944 60 47.7376593 60 37.096644 60 23.7870921 49.254 13 35.9985 13" fill="#fff"/></g></g></g></svg>
-</a>
-<a class=symbol href=https://twitter.com/BodunHu rel=me target=_blank><svg fill="#bbb" width="28" height="28" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="438.536" height="438.536" viewBox="0 0 438.536 438.536" style="enable-background:new 0 0 438.536 438.536"><g><path d="M414.41 24.123C398.333 8.042 378.963.0 356.315.0H82.228C59.58.0 40.21 8.042 24.126 24.123 8.045 40.207.003 59.576.003 82.225v274.084c0 22.647 8.042 42.018 24.123 58.102 16.084 16.084 35.454 24.126 58.102 24.126h274.084c22.648.0 42.018-8.042 58.095-24.126 16.084-16.084 24.126-35.454 24.126-58.102V82.225C438.532 59.576 430.49 40.204 414.41 24.123zM335.471 168.735c.191 1.713.288 4.278.288 7.71.0 15.989-2.334 32.025-6.995 48.104-4.661 16.087-11.8 31.504-21.416 46.254-9.606 14.749-21.074 27.791-34.396 39.115-13.325 11.32-29.311 20.365-47.968 27.117-18.648 6.762-38.637 10.143-59.953 10.143-33.116.0-63.76-8.952-91.931-26.836 4.568.568 9.329.855 14.275.855 27.6.0 52.439-8.565 74.519-25.7-12.941-.185-24.506-4.179-34.688-11.991-10.185-7.803-17.273-17.699-21.271-29.691 4.947.76 8.658 1.137 11.132 1.137 4.187.0 9.042-.76 14.56-2.279-13.894-2.669-25.598-9.562-35.115-20.697-9.519-11.136-14.277-23.84-14.277-38.114v-.571c10.085 4.755 19.602 7.229 28.549 7.422-17.321-11.613-25.981-28.265-25.981-49.963.0-10.66 2.758-20.747 8.278-30.264 15.035 18.464 33.311 33.213 54.816 44.252 21.507 11.038 44.54 17.227 69.092 18.558-.95-3.616-1.427-8.186-1.427-13.704.0-16.562 5.853-30.692 17.56-42.399 11.703-11.706 25.837-17.561 42.394-17.561 17.515.0 32.079 6.283 43.688 18.846 13.134-2.474 25.892-7.33 38.26-14.56-4.757 14.652-13.613 25.788-26.55 33.402 12.368-1.716 23.88-4.95 34.537-9.708C357.458 149.793 347.462 160.166 335.471 168.735z"/></g></svg>
-</a>
-</div>
-<div class=copyright>
-©
-2016-2021
-<a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved.
-</div>
-<div class=powerby>
-Powered by <a href=http://www.gohugo.io/>Hugo</a> Theme By <a href=https://github.com/nodejh/hugo-theme-cactus-plus>nodejh</a>
-</div>
-<a href=#top aria-label="go to top" title="Go to Top (Alt + G)">
-<button class=top-link id=top-link><i class="fa fa-chevron-up"></i></button>
-</a>
+</code></pre>
+<p>Sometimes BMC can help us find the error faster because it is systematically checking all possible actions. However, increasing the number of steps for the BMC can result in the exploration space growing exponentially, so we are going to use some combination of BMC and randomized test cases.</p>
+<hr class=hr-list>
+<footer>
+<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. </p>
 </footer>
+</div>
+</main>
 </body>
 </html>
