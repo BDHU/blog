@@ -260,7 +260,7 @@ preheat out such as</p>
 <p>According to CUDA documentation, GK110 adds the ability for read-only data in global memory to be loaded through the same cache used by the texture pipeline via a standard pointer without the need to bind a texture beforehand and without the sizing limitations of standard textures. The read-only data cache is loaded by calling __ldg(const restricted * address). We modified the code used to test texture L1 cache. The basic logic remains the same. When the arrays size is set to 6144 integers no cache misses occur with stride set as 32 (s=32 bytes). As soon as we increased one more element in the array cache misses start occurring. This shows the read-only cache is 24kb. We then noticed that the misses occur in a group of either 4 or 8. We infer the cache line to be 32 bytes and the replacement policy is LRU, same as Maxwell. We we increase the array to include 6248 elements(6144+32<em>3+8, 6144 is the max capacity of the cache, 32 consecutive number in a set, 32</em>3 to cause cache miss in set1, set2, and set3, only need to include 8 more to cause cache miss in set4 since s=32bytes), no caches hits occur. Therefore, we infer the caches set number to be 4, each cache line is 32 bytes, and each set contains 192 cache lines, the same as the texture L1 cache. The memory mapping seems arbitrary because the hit and miss patterns didn&rsquo;t follow that of the texture L1 cache.</p>
 <hr class=hr-list>
 <footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. </p>
+<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
 </footer>
 </div>
 </main>
