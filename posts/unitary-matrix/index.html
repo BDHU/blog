@@ -1,52 +1,34 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Unitary Matrix | std::bodun::blog</title>
-<meta name=description content="Recently, I was trying to get the hang of quantum computing. I found myself in a position where I forgot most of the linear algebra stuff I've learned in past semesters. So again, I decide to put them down in hope that some of the knowledge here will stay in my memory a bit longer">
-<meta property="og:title" content="Unitary Matrix">
-<meta property="og:description" content="Recently, I was trying to get the hang of quantum computing. I found myself in a position where I forgot most of the linear algebra stuff I've learned in past semesters. So again, I decide to put them down in hope that some of the knowledge here will stay in my memory a bit longer">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/unitary-matrix/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-07-14T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-07-25T00:37:21-05:00">
-<meta itemprop=name content="Unitary Matrix">
-<meta itemprop=description content="Recently, I was trying to get the hang of quantum computing. I found myself in a position where I forgot most of the linear algebra stuff I've learned in past semesters. So again, I decide to put them down in hope that some of the knowledge here will stay in my memory a bit longer"><meta itemprop=datePublished content="2021-07-14T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-07-25T00:37:21-05:00">
-<meta itemprop=wordCount content="877">
-<meta itemprop=keywords content="linear-algebra,quantum-computing,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Unitary Matrix">
-<meta name=twitter:description content="Recently, I was trying to get the hang of quantum computing. I found myself in a position where I forgot most of the linear algebra stuff I've learned in past semesters. So again, I decide to put them down in hope that some of the knowledge here will stay in my memory a bit longer">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/unitary-matrix/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Unitary Matrix","headline":"Unitary Matrix","alternativeHeadline":"","description":"Recently, I was trying to get the hang of quantum computing. I found myself in a position where I forgot most of the linear algebra stuff I\u0027ve learned in past semesters. So again, I decide to put them down in hope that some of the knowledge here will stay in my memory a bit longer","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/unitary-matrix\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-07-14T00:00:00.00Z","datePublished":"2021-07-14T00:00:00.00Z","dateModified":"2021-07-25T00:37:21.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/unitary-matrix\/","wordCount":"877","genre":["linear-algebra","quantum-computing"],"keywords":["linear-algebra","quantum-computing"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Unitary Matrix</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Unitary Matrix</h2>
-<p>Recently, I was trying to get the hang of quantum computing. I found myself in a position where I forgot most of the linear algebra stuff I&rsquo;ve learned in past semesters. So again, I decide to put them down in hope that some of the knowledge here will stay in my memory a bit longer.</p>
-<h2 id=general-single-qubit-gates>General single-qubit Gates <a href=#general-single-qubit-gates class="hash g">#</a></h2>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Unitary Matrix</h1>
+<div>
+Updated <time>July 25, 2021</time>
+</div>
+</header><p>Recently, I was trying to get the hang of quantum computing. I found myself in a position where I forgot most of the linear algebra stuff I&rsquo;ve learned in past semesters. So again, I decide to put them down in hope that some of the knowledge here will stay in my memory a bit longer.</p>
+<h2 id=general-single-qubit-gates>General single-qubit Gates</h2>
 <p>Trying to understand unitary matrix in the context of pure linear algebra is, I must admit, rather boring. Perhaps that is one reason why I brushed them off so quickly and so easily. However, explaining it in the context of quantum computing feels a lot more fun. Maybe it&rsquo;s because I can associate a unitary matrix with a quantum gate, which is something a bit more concrete, or simply because the term &lsquo;&lsquo;quantum computing&rsquo;&rsquo; makes me sound smarter.</p>
 <p>Speaking of something concrete, here ara two example unitary matrices: the NOT gate (\(X\)) and <a href=https://en.wikipedia.org/wiki/Quantum_logic_gate>Hadamard gate</a> (\(H\)):</p>
 <p>\[
@@ -66,11 +48,11 @@ H^{\dagger} = \begin{pmatrix} \begin{pmatrix}\frac{1}{\sqrt{2}} \begin{bmatrix}
 \]</p>
 <p>We know the transpose of \(H\) is still \(H\), and taking the complex conjugate of \(H^T\) doesn&rsquo;t do anything since \(H^T\) is a real matrix. Thus, we can verify that \(H^{\dagger}H = I\).</p>
 <p>There are other single-qubit quantum gates such as the <a href=https://en.wikipedia.org/wiki/Pauli_matrices>\(Y\) and \(Z\) matrices</a> (Pauli matrices) introduced by physicist <a href=https://en.wikipedia.org/wiki/Wolfgang_Pauli>Wolfgang Pauli</a>. It&rsquo;s a good exercise to verify they are also unitary matrices.</p>
-<h2 id=what-does-it-mean-for-a-matrix-to-be-unitary>What does it mean for a matrix to be unitary <a href=#what-does-it-mean-for-a-matrix-to-be-unitary class="hash g">#</a></h2>
+<h2 id=what-does-it-mean-for-a-matrix-to-be-unitary>What does it mean for a matrix to be unitary</h2>
 <p>The most important property of unitary matrices is that they <em>preserve the length of inputs</em>. It means that given a quantum state, represented as vector \(|\psi\rangle\), it must be that \( \left\lVert U|\psi\rangle \rangle \right\rVert = \left\lVert |\psi\rangle \right\rVert \).</p>
 <p>Proving unitary matrix is length-preserving is straightforward. We wanna show that \( \left\lVert U |\psi\rangle \right\rVert_2 = \left\lVert |\psi\rangle \right\rVert_2 \):</p>
 <p>\[\begin{aligned} \left\lVert U |\psi\rangle \right\rVert_2^2 &= (U |\psi\rangle)^H(U |\psi\rangle) \\ &= |\psi\rangle^H U^H U |\psi\rangle \\ &=|\psi\rangle^H |\psi\rangle \\ &= \left\lVert |\psi\rangle \right\rVert_2^2 \end{aligned}\]</p>
-<h2 id=why-are-unitaries-the-only-matrices-that-preserve-length>Why are unitaries the only matrices that preserve length <a href=#why-are-unitaries-the-only-matrices-that-preserve-length class="hash g">#</a></h2>
+<h2 id=why-are-unitaries-the-only-matrices-that-preserve-length>Why are unitaries the only matrices that preserve length</h2>
 <p>Previously, we use the <em>ket</em> notation for quantum state vectors. We can extend the two-dimensional quantum state vectors to more general vectors and the properties of unitary matrix will still hold.</p>
 <p>Putting our questions in formal terms, we want to show that if \(A \in \mathbb{C}^{m \times m}\) preserves length (\(\left\lVert A x \right\rVert_2 = \left\lVert x \right\rVert_{2}\ \forall x \in \mathbb{C}^m\), then \(A\) is unitary).</p>
 <p>We first prove that \((Ax)^H(Ay) = x^Hy\) for all \(x\), \(y\) by considering that \( \left\lVert x - y \right\rVert_2^2 = \left\lVert A(x - y) \right\rVert_2^2 \). Then we will the result to evaluate \(e_i^H A^HAe_j\).</p>
@@ -108,11 +90,8 @@ e_i A^HA e_i = \left\lVert Ae_i \right\rVert^2 = \left\lVert e_i \right\rVert^2 
 <p>A side question remains, how do we prove that all the off-diagonal elements in \(A^HA\) are \(0\)? Turns out it very straightforward to illustrate the process if we resort back to the two-dimensional quantum vector state matrix.</p>
 <p>Suppose we have \(|\psi\rangle = |e_i\rangle + |e_j\rangle\), we already know that \(\left\lVert A |\psi\rangle \right\rVert^2 = \left\lVert |\psi\rangle \right\rVert^2 = 1 + 1 = 2\), and we know we can expand \(\left\lVert A |\psi\rangle \right\rVert^2\) to \(1 + e_i A^HA e_j + e_j A^HA e_i + 1\), we would get \(e_i A^HA e_j + e_j A^HA e_i = 0\).</p>
 <p>Then, suppose instead we have \(|\psi\rangle = |e_i\rangle + i|e_j\rangle\), following the same process, we would get \(e_i A^HA e_j - e_j A^HA e_i = 0\). Combining with the fact that \(e_i A^HA e_j + e_j A^HA e_i = 0\), we&rsquo;ve proven that the off-diagonal elements in \(A^HA\) are all \(0\). We can extend the vector \(\psi\) to higher-dimensional vectors and the proof will be similar.</p>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

@@ -1,63 +1,42 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>A Little Review on Barrelfish Memory Managements | std::bodun::blog</title>
 <meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
-<meta property="og:title" content="A Little Review on Barrelfish Memory Managements">
-<meta property="og:description" content="The memory management has been mentioned numerous times and still remains huge topic. virtual vs. physical memory, physical frame allocation, MMUs, page faults, address space layout, and demand paging and swapping are familiar terms for every undergrad in college. In monolithic kernels such as Linux, much of the functionality is handled in kernel. However, there are OSes, such as Barrelfish, that takes a different approach by pushing these functionalities to user space.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/a-little-review-on-barrelfish-memory-managements/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2019-02-18T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-09-05T17:36:27-05:00">
-<meta itemprop=name content="A Little Review on Barrelfish Memory Managements">
-<meta itemprop=description content="The memory management has been mentioned numerous times and still remains huge topic. virtual vs. physical memory, physical frame allocation, MMUs, page faults, address space layout, and demand paging and swapping are familiar terms for every undergrad in college. In monolithic kernels such as Linux, much of the functionality is handled in kernel. However, there are OSes, such as Barrelfish, that takes a different approach by pushing these functionalities to user space."><meta itemprop=datePublished content="2019-02-18T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-09-05T17:36:27-05:00">
-<meta itemprop=wordCount content="1817">
-<meta itemprop=keywords content="os,mm,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="A Little Review on Barrelfish Memory Managements">
-<meta name=twitter:description content="The memory management has been mentioned numerous times and still remains huge topic. virtual vs. physical memory, physical frame allocation, MMUs, page faults, address space layout, and demand paging and swapping are familiar terms for every undergrad in college. In monolithic kernels such as Linux, much of the functionality is handled in kernel. However, there are OSes, such as Barrelfish, that takes a different approach by pushing these functionalities to user space.">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/a-little-review-on-barrelfish-memory-managements/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"A Little Review on Barrelfish Memory Managements","headline":"A Little Review on Barrelfish Memory Managements","alternativeHeadline":"","description":"The memory management has been mentioned numerous times and still remains huge topic. virtual vs. physical memory, physical frame allocation, MMUs, page faults, address space layout, and demand paging and swapping are familiar terms for every undergrad in college. In monolithic kernels such as Linux, much of the functionality is handled in kernel. However, there are OSes, such as Barrelfish, that takes a different approach by pushing these functionalities to user space.","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/a-little-review-on-barrelfish-memory-managements\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2019","dateCreated":"2019-02-18T00:00:00.00Z","datePublished":"2019-02-18T00:00:00.00Z","dateModified":"2021-09-05T17:36:27.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/a-little-review-on-barrelfish-memory-managements\/","wordCount":"1817","genre":["os","mm"],"keywords":["os","mm"]}</script>
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>A Little Review on Barrelfish Memory Managements</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>A Little Review on Barrelfish Memory Managements</h2>
-<p>The memory management has been mentioned numerous times and still remains huge topic. virtual vs. physical memory, physical frame allocation, MMUs, page faults, address space layout, and demand paging and swapping are familiar terms for every undergrad in college. In monolithic kernels such as Linux, much of the functionality is handled in kernel. However, there are OSes, such as Barrelfish, that takes a different approach by pushing these functionalities to user space. Many concept here will thus be borrowed from the <a href=http://www.barrelfish.org/>Barrelfish OS</a>. I also borrow some materials from the main pdf from Barrelfish course materials provided by Professor <a href=https://www.cs.utexas.edu/~simon/>Simon Peter</a>.</p>
-<h2 id=memory-management-in-general>Memory Management in General <a href=#memory-management-in-general class="hash g">#</a></h2>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>A Little Review on Barrelfish Memory Managements</h1>
+<div>
+Updated <time>September 5, 2021</time>
+</div>
+</header><p>The memory management has been mentioned numerous times and still remains huge topic. virtual vs. physical memory, physical frame allocation, MMUs, page faults, address space layout, and demand paging and swapping are familiar terms for every undergrad in college. In monolithic kernels such as Linux, much of the functionality is handled in kernel. However, there are OSes, such as Barrelfish, that takes a different approach by pushing these functionalities to user space. Many concept here will thus be borrowed from the <a href=http://www.barrelfish.org/>Barrelfish OS</a>. I also borrow some materials from the main pdf from Barrelfish course materials provided by Professor <a href=https://www.cs.utexas.edu/~simon/>Simon Peter</a>.</p>
+<h2 id=memory-management-in-general>Memory Management in General</h2>
 <p>Microkernels like <a href=https://en.wikipedia.org/wiki/L4_microkernel_family>L4</a>, <a href=https://en.wikipedia.org/wiki/Mach_(kernel)>Mach</a>, <a href=https://en.wikipedia.org/wiki/ChorusOS>Chorus</a>, and <a href=https://en.wikipedia.org/wiki/Spring_(operating_system)>Spring</a>, trapped page faults in the kernel but then reflected them up to other processes which carried out the
 actual page fault handling. This was done on a per-region basis, so each area of
 virtual memory was associated with some paging server. Memory objects could be shared between different processes and mapped differently in different address spaces.</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/os.png#center alt=operating-system-kernel class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/os.png#center alt=operating-system-kernel></p>
 <p>Such abstraction means that what happens when a page fault happens is entirely dependent on the code in the user-level pager. This design is highly extensible since it&rsquo;s all user code and thus isolated, which means that if a user-level pager crashes, there&rsquo;s a good chance the rest of the OS can continue quite happily since much of the functionality is moved away from the kernel.</p>
 <p>However, moving functionality out of the kernel an important question: if user-space processes can manipulate virtual address spaces, how can
 we make sure that one user&rsquo;s program can&rsquo;t manipulate another address space and memory? Here we will introduce the concept of capabilities.</p>
-<h2 id=capabilities>Capabilities <a href=#capabilities class="hash g">#</a></h2>
+<h2 id=capabilities>Capabilities</h2>
 <p>Capabilities are introduced to solve the access control problem in operating systems. Access control is the problem of specifying, and enforcing, which subjects (or principals) can perform particular actions on particular objects in an operating system.</p>
 <p>The Barrelfish documentation does a good job illustrating capabilities: abstractly, access control can be thought of as a matrix, which represents all possible combinations of operations in the system. Each row of the matrix represents a
 different subject, and each column represents a different object. Each entry in the
@@ -69,31 +48,21 @@ matrix contains a list of permissible actions.</p>
 <p>Note that to be correct, any capability representation must protect capabilities
 against forgery. Capabilities can be implemented in various ways such as tagged capabilities, sparse capabilities, or partitioned capabilities. In Barrelfish we used the partitioned capabilities.</p>
 <p>In partitioned capabilities, the kernel ensures that memory used to store capabilities is always separated from that used by user processes to store data and code, for example by using the MMU or ensuring that capability memory is only accessible in kernel mode. The OS maintains the list of capabilities each user principal holds (the clist), and explicitly validates access when performing any privileged operation. Thus, whenever the user accesses memory, the operation can only be done through the resources' corresponding capability. For example, one can map a page frame in the page table page through functions calls with only capabilities.</p>
-<pre><code class=language-c>Caprefa-&gt;install(Caprefb, slot, flags)
-</code></pre>
-<h2 id=capabilities-in-barrelfish>Capabilities in Barrelfish <a href=#capabilities-in-barrelfish class="hash g">#</a></h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>Caprefa<span style=color:#f92672>-&gt;</span>install(Caprefb, slot, flags)
+</code></pre></div><h2 id=capabilities-in-barrelfish>Capabilities in Barrelfish</h2>
 <p>According to Barrelfish documentation, all memory in Barrelfish (and some other system resources which do not occupy memory) is described using capabilities. Capabilities are typed, and capabilities can be retyped by users holding them according to certain rules and restrictions. The official documentation has very good explanation on the capability management in Barrelfish. Here is the permissible types for the retype invocation capability retyping:</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/cap.png#center alt=barrelfish-os-capability class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/cap.png#center alt=barrelfish-os-capability></p>
 <p align=center>
 <a href=http://www.barrelfish.org/publications/TN-013-CapabilityManagement.pdf>Image source</a></p>
 <p>Capabilities referring to memory regions. Capabilities can also be split, resulting 2 new capabilities of the same type, one for each half of the region. Some of the more important capability types in Barrelfish are shown in figure below. The picture is from the Barrelfish manual provided in CS378 Multi-core class by Simon Peter:</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/cap_aos.png#center alt=barrelfish-os-capability-aos class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/cap_aos.png#center alt=barrelfish-os-capability-aos></p>
 <p>Allocation and management of physical memory is achieved by retyping and splitting operations on capabilities. For most kernels, the implementation is to constantly allocate and deallocate memory for a wide variety of purposes, much as any large C program relies heavily on malloc and free.</p>
 <p>The problem is what the kernel should do when this runs out. The current solution in Linux is little more than &ldquo;kill a random process and reclaim its memory&rdquo;, which can be a problem for system stability. In Barrelfish, all kernel objects are actually allocated by user programs. If a user process wants to create another process (or dispatcher in Barrelfish parlance), it has to get a capability to a DRAM area of the right size, retype this capability to type Dispatcher, and hand this to the kernel. This will be covered in later posts. To access different types of memory resources, the corresponding capability has to be retyped to the right type.</p>
-<h2 id=more-on-implementation>More On Implementation <a href=#more-on-implementation class="hash g">#</a></h2>
+<h2 id=more-on-implementation>More On Implementation</h2>
 <p>In Barrelfish, every capability resides in a slot in a CNode, so a pair (CNode, slot) would identify a capability. It is important to point out that the CNode is another capability itself. Each process in Barrelfish has a CSpace which is structured as a two-level table. So there are actually two different CNode capability types - one for the first level of the table, and one for the second. Every process has, within its &ldquo;dispatcher control block&rdquo;, a pointer to the top-level or root CNode which the kernel can traverse.</p>
 <p>A capability reference in Barrelfish is very similar to VA: the first few bits can represent an index into the first level L1CNode, while the next few bits refer to a slot in a CNode referred to by the capability in the L1CNode slot. Here is a picture from the main pdf showing how the the CSpace is represented in Barrelfish:</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/Cspace.png#center alt=barrelfish-os-cspace class=center loading=lazy decoding=async>
-</p></p>
-<h2 id=thoughts-on-design-decisions>Thoughts on Design Decisions <a href=#thoughts-on-design-decisions class="hash g">#</a></h2>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/Cspace.png#center alt=barrelfish-os-cspace></p>
+<h2 id=thoughts-on-design-decisions>Thoughts on Design Decisions</h2>
 <p>Even though it is pretty straight forward to understand the CSpace structure, the actual implementation is a lot more complicated than that. Since the CSpace is not directly accessible by user space program, there are additional data structures used to keep track of available memory resources.</p>
 <p>In our implementation, the user process keeps a doubly linked list of <em>struct mmnode</em> to indicate the memory available for allocation. Each element in the free list tracks the information corresponding to one capability. However, there is a big problem with this seemingly simple implementation. Every time we allocate a practical memory space from the memory region, a new capability is created while the old capability still remain in the physical memory pointing to a memory range before the allocation happens. Therefore, the old capability would cover extra memory spaces that are already allocated and managed by other capabilities.</p>
 <p>To solve this problem, we maintain the allocation information in the <em>struct mmnode</em> each time an allocation occurs. If a capability covering physical address space from 0 to 100 is requested for 20 units of memory space, then the memory available for the next allocation would be from 20 to 100 even though the capability itself still manages 0 to 100. By restricting subsequent accesses only to the new memory range, the old capability can still be kept around and used later for retyping.</p>
@@ -106,11 +75,8 @@ against forgery. Capabilities can be implemented in various ways such as tagged 
 <p>After that, the memory manager insert the node into the free list. If the memory manager finds out that there are capabilities adjacent to the just-added node, then we simply need to update the attributes of the corresponding mmnode to indicate that merging succeeds. The old mmnode is simply thrown away.</p>
 <p>The advantage of this implementation is that root or parent capabilities are kept around and the next retype will be fairly simple. The implementation is also very straightforward.</p>
 <p>There is of course more efficient solution than a linked list. For example, Linux uses both linked list and red-black tree to store thread information. The redundant data structures can be used in different scenarios when appropriate. However, we only use this simplified version to prove our concepts. Optimizations vary but the general concept still works pretty well.</p>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

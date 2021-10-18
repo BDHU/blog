@@ -1,56 +1,38 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Quantum State in a Nutshell | std::bodun::blog</title>
-<meta name=description content="There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to the state of a qubit is 0, 1, or 0 and 1 at the same time">
-<meta property="og:title" content="Quantum State in a Nutshell">
-<meta property="og:description" content="There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to the state of a qubit is 0, 1, or 0 and 1 at the same time">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/quantum-state-in-a-nutshell/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-08-19T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-10-05T02:40:26-05:00">
-<meta itemprop=name content="Quantum State in a Nutshell">
-<meta itemprop=description content="There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to the state of a qubit is 0, 1, or 0 and 1 at the same time"><meta itemprop=datePublished content="2021-08-19T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-10-05T02:40:26-05:00">
-<meta itemprop=wordCount content="605">
-<meta itemprop=keywords content="quantum-computing,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Quantum State in a Nutshell">
-<meta name=twitter:description content="There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to the state of a qubit is 0, 1, or 0 and 1 at the same time">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/quantum-state-in-a-nutshell/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Quantum State in a Nutshell","headline":"Quantum State in a Nutshell","alternativeHeadline":"","description":"There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to the state of a qubit is 0, 1, or 0 and 1 at the same time","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/quantum-state-in-a-nutshell\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-08-19T00:00:00.00Z","datePublished":"2021-08-19T00:00:00.00Z","dateModified":"2021-10-05T02:40:26.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/quantum-state-in-a-nutshell\/","wordCount":"605","genre":["quantum-computing"],"keywords":["quantum-computing"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Quantum State in a Nutshell</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Quantum State in a Nutshell</h2>
-<p>There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to &ldquo;the state of a qubit is 0, 1, or 0 and 1 at the same time&rdquo;. This statement leads to both confusion and misinterpretation. The explanation I found on <a href=https://quantum.country/qcvc>Quantum computing for the very curious</a> is by far the most elegant and simplest:</p>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Quantum State in a Nutshell</h1>
+<div>
+Updated <time>October 5, 2021</time>
+</div>
+</header><p>There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to &ldquo;the state of a qubit is 0, 1, or 0 and 1 at the same time&rdquo;. This statement leads to both confusion and misinterpretation. The explanation I found on <a href=https://quantum.country/qcvc>Quantum computing for the very curious</a> is by far the most elegant and simplest:</p>
 <blockquote>
 <p>The state of a qubit is a vector in a two-dimensional vector space. This vector space is known as state space.</p>
 </blockquote>
 <p>I will use many of great content from <a href=https://quantum.country/qcvc>Quantum computing for the very curious</a> to explain things.</p>
-<h2 id=mapping-qubits-to-classical-bits>Mapping qubits to classical bits <a href=#mapping-qubits-to-classical-bits class="hash g">#</a></h2>
+<h2 id=mapping-qubits-to-classical-bits>Mapping qubits to classical bits</h2>
 <p>We&rsquo;ve described what a qubit state is, but provided no link between a qubit state and a classical bit state. There are two possible states for a classical bit: 0 and 1. The corresponding states for a qubit is slightly fancier: \(|0\rangle \) and \(|1\rangle \).</p>
 <p>The notation with \(|\) and \(\rangle\) is called a \(ket\) notation. With a number wrapped between them, \(0\) or \(1\) are called \(kets\). A \(ket\) is a fancy term for a vector. In fact, \(|0\rangle\) is really just \(
 \begin{bmatrix}
@@ -63,35 +45,26 @@
 1
 \end{bmatrix}
 \).</p>
-<h2 id=states-between-0-and-1>States between 0 and 1 <a href=#states-between-0-and-1 class="hash g">#</a></h2>
+<h2 id=states-between-0-and-1>States between 0 and 1</h2>
 <p>Both the states \(|0\rangle\) and \(|1\rangle\) are called computational basis states, which maps to classical 0 and 1 states. There are more states for a qubit. We&rsquo;ve already learned that a quantum state is a two-dimensional vector. An example is given:</p>
-<p><a href=https://quantum.country/qcvc#general-states-of-a-qubit>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/quantum-state-in-a-nutshell/quantum-state-eg.png#center alt=quantum-state-example class=center loading=lazy decoding=async>
-</p></a></p>
+<p><a href=https://quantum.country/qcvc#general-states-of-a-qubit><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/quantum-state-in-a-nutshell/quantum-state-eg.png#center alt=quantum-state-example></a></p>
 <p>The state \(0.6|0\rangle + 0.8|1\rangle\) is just a combination of the \(|0\rangle\) vector and the \(|1\rangle\) vector. A state like this is a <em>superposition</em> of \(|0\rangle\) and \(|1\rangle\), a fancy way of saying a linear combination of \(|0\rangle\) and \(|1\rangle\). \(0.6\) is the <em>amplitude</em> for state \(|0\rangle\), and \(0.8\) is the <em>amplitude</em> for state \(|1\rangle\).</p>
 <p>Not all linear combination of vector \(|0\rangle\) and \(|1\rangle\) are qubit states. There is one constraint: <em>the sums of the squares of the amplitudes must be 1</em>. For example, we can compute \(0.6^2 + 0.8^2\) and verify the result is 1.</p>
 <p>For general quantum states, the amplitudes can be complex numbers as well. Denoting both amplitudes as \(\alpha\) and \(\beta\), a quantum state can be formally written as:</p>
 <p>\[\alpha |0\rangle + \beta |1\rangle \wedge \alpha^2 + \beta^2 = 1\]</p>
 <p>\(\alpha^2 + \beta^2 = 1\) is called the <em>normalization constraint</em>.</p>
 <p>If we think of \(|0\rangle\) and \(|1\rangle\) as orthonormal vectors, we can visualize the possible linear combination of these two vectors as a circle of radius 1:</p>
-<p><a href=https://quantum.country/qcvc#general-states-of-a-qubit>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/quantum-state-in-a-nutshell/quantum-states.png#center alt=quantum-states class=center loading=lazy decoding=async>
-</p></a></p>
+<p><a href=https://quantum.country/qcvc#general-states-of-a-qubit><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/quantum-state-in-a-nutshell/quantum-states.png#center alt=quantum-states></a></p>
 <p>Since amplitudes can be complex numbers, the state space really becomes a sphere. Summing all these up:</p>
 <blockquote>
 <p>the quantum state of a qubit is a vector of unit length in a two-dimensional complex vector space known as state space.</p>
 <p>&ndash; <em>Quantum computing for the very curious</em></p>
 </blockquote>
-<h2 id=measuring-a-qubit>Measuring a qubit <a href=#measuring-a-qubit class="hash g">#</a></h2>
+<h2 id=measuring-a-qubit>Measuring a qubit</h2>
 <p>Suppose we have qubit in a quantum state \(\alpha |0\rangle + \beta |1\rangle\). We want to observe the state of this specific qubit. It turns out the law of physics prohibits us from figuring out the the amplitudes \(\alpha\) and \(\beta\) if they start out unknown. In short, the quantum state of any system is not directly observable.</p>
 <p>To figure out the quantum state. We rely on a process called <em>measurement in the computational basis</em>. Suppose a qubit is in the state \(\alpha |0\rangle + \beta |1\rangle\). Measuring the state of this qubit gives us the outcome \(0\) with probability \(|\alpha|^2\), or 1 with probability \(|\beta|^2\). The state of the qubit after the measurement is thus either \(|0\rangle\) or \(|1\rangle\). After the measurement, \(\alpha\) and \(\beta\) are gone.</p>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

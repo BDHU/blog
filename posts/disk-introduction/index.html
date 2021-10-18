@@ -1,64 +1,43 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Disk Introduction | std::bodun::blog</title>
-<meta name=description content="This chapter is all about disk. Before we start. We won't go deep into the mechanical part of disk operation; rather we will be focusing on general concept related to disk and algorithms to improve disk performance">
-<meta property="og:title" content="Disk Introduction">
-<meta property="og:description" content="This chapter is all about disk. Before we start. We won't go deep into the mechanical part of disk operation; rather we will be focusing on general concept related to disk and algorithms to improve disk performance">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/disk-introduction/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2017-10-25T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-07-21T23:46:24-05:00">
-<meta itemprop=name content="Disk Introduction">
-<meta itemprop=description content="This chapter is all about disk. Before we start. We won't go deep into the mechanical part of disk operation; rather we will be focusing on general concept related to disk and algorithms to improve disk performance"><meta itemprop=datePublished content="2017-10-25T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-07-21T23:46:24-05:00">
-<meta itemprop=wordCount content="822">
-<meta itemprop=keywords content="os,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Disk Introduction">
-<meta name=twitter:description content="This chapter is all about disk. Before we start. We won't go deep into the mechanical part of disk operation; rather we will be focusing on general concept related to disk and algorithms to improve disk performance">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/disk-introduction/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Disk Introduction","headline":"Disk Introduction","alternativeHeadline":"","description":"This chapter is all about disk. Before we start. We won\u0027t go deep into the mechanical part of disk operation; rather we will be focusing on general concept related to disk and algorithms to improve disk performance","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/disk-introduction\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2017","dateCreated":"2017-10-25T00:00:00.00Z","datePublished":"2017-10-25T00:00:00.00Z","dateModified":"2021-07-21T23:46:24.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/disk-introduction\/","wordCount":"822","genre":["os"],"keywords":["os"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Disk Introduction</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Disk Introduction</h2>
-<p>This chapter is all about disk. Before we start. We won&rsquo;t go deep into the mechanical part of disk operation; rather we will be focusing on general concept related to disk and algorithms to improve disk performance.</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/images/Chapter10/10_01_DiskMechanism.jpg alt=disk-structure class=center loading=lazy decoding=async>
-</p></p>
-<h2 id=the-evaluation-criteria>The Evaluation Criteria <a href=#the-evaluation-criteria class="hash g">#</a></h2>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Disk Introduction</h1>
+<div>
+Updated <time>July 21, 2021</time>
+</div>
+</header><p>This chapter is all about disk. Before we start. We won&rsquo;t go deep into the mechanical part of disk operation; rather we will be focusing on general concept related to disk and algorithms to improve disk performance.</p>
+<p><img src=https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/images/Chapter10/10_01_DiskMechanism.jpg alt=disk-structure></p>
+<h2 id=the-evaluation-criteria>The Evaluation Criteria</h2>
 <p>Here we are introducing the basic components used to evaluate the performance of disk operation.</p>
-<h3 id=seek-time>Seek Time <a href=#seek-time class="hash g">#</a></h3>
+<h3 id=seek-time>Seek Time</h3>
 <p>This is the time to position the head over the track. Maximum can be going from innermost track to outer most track. It usually ranges from 10ms to over 20 ms. However, the average seek time is usually to seek 1/3 of the way across the disk.</p>
-<h3 id=head-switch-time>Head Switch Time <a href=#head-switch-time class="hash g">#</a></h3>
+<h3 id=head-switch-time>Head Switch Time</h3>
 <p>This is time spent to move from one track on one surface to another track on a different surface. The range is similar to seek time.</p>
-<h4 id=rotation-delay>Rotation Delay <a href=#rotation-delay class="hash g">#</a></h4>
+<h4 id=rotation-delay>Rotation Delay</h4>
 <p>This is the time spend for the sector to spin underneath the head. It varies depends on how fast the disk rotates.</p>
-<h4 id=transfer-time>Transfer Time <a href=#transfer-time class="hash g">#</a></h4>
+<h4 id=transfer-time>Transfer Time</h4>
 <p>The time spend to read or write sector as it spins by.</p>
 <ul>
 <li>Transfer time: time to move the bytes from disk to memory</li>
@@ -68,27 +47,27 @@ first sector</li>
 <li>Host transfer time: time to transfer data between host
 memory and disk buffer</li>
 </ul>
-<h2 id=disk-head-scheduling-mainly-focusing-on-hdd>Disk Head Scheduling (Mainly focusing on HDD) <a href=#disk-head-scheduling-mainly-focusing-on-hdd class="hash g">#</a></h2>
+<h2 id=disk-head-scheduling-mainly-focusing-on-hdd>Disk Head Scheduling (Mainly focusing on HDD)</h2>
 <p>Now we&rsquo;ve looked at the basic performance evaluation critiria for HDD, it&rsquo;s reasonable to discuss how to reduce head movement so that the amount of time spent on moving the head from on track to the other will decrease because the disk I/O request for can be stored in a queue. (Note the seek time takes the most amount of time so it&rsquo;s reasonable to reduce it.)</p>
-<h3 id=fifo>FIFO <a href=#fifo class="hash g">#</a></h3>
+<h3 id=fifo>FIFO</h3>
 <p>This technique is easy to understand, the head will move to the corresponding track based the order of the queue of requests. Since the requested data can be read/written on random tracks, the performance can be heavily affected.</p>
-<h3 id=sstf-shortest-seek-time-first>SSTF (Shortest Seek Time first) <a href=#sstf-shortest-seek-time-first class="hash g">#</a></h3>
+<h3 id=sstf-shortest-seek-time-first>SSTF (Shortest Seek Time first)</h3>
 <p>The queue of requests is reordered such that the head will only look for the closest track it can move to and thus ignore the global state of locations of all requests. This is a greedy algorithm and thus can be trapped in local optimal value.</p>
-<h3 id=scanelevatorlook>SCAN/Elevator/LOOK <a href=#scanelevatorlook class="hash g">#</a></h3>
+<h3 id=scanelevatorlook>SCAN/Elevator/LOOK</h3>
 <p>Simply move the head to one direction until the request that is closest to that end of the disk is reached, then reverse the direction of the head and find the rest of the requests.</p>
 <ul>
 <li>Optimization: the head is reset when no more requests exist between the current head position and the approaching edge of the disk (LOOK scheduling)</li>
 </ul>
-<h3 id=c-scanc-look-circular-scan-scheduling>C-SCAN/C-LOOK (&ldquo;Circular Scan&rdquo; scheduling) <a href=#c-scanc-look-circular-scan-scheduling class="hash g">#</a></h3>
+<h3 id=c-scanc-look-circular-scan-scheduling>C-SCAN/C-LOOK (&ldquo;Circular Scan&rdquo; scheduling)</h3>
 <p>Move the head in one direction until an edge of the disk is reached and then reset to the opposite edge.
 optimization: the head is reset when no more requests exist between the current head position and the approaching edge of the disk (called C-LOOK
 scheduling).</p>
 <blockquote>
 <p>Note the only difference between SCAN and C-SCAN is that in C-SCAN, after the head reaches one edge, an optimized jump implemented by the hardware is used to directly move the head to the opposite edge instead of reversing the movement direction.)</p>
 </blockquote>
-<h2 id=partitioning>Partitioning <a href=#partitioning class="hash g">#</a></h2>
+<h2 id=partitioning>Partitioning</h2>
 <p>Disks are partitioned in order to minize the largest seek possible time since each partition is a logically seperate disk. (It&rsquo;s just merely a collection of cylinders.) More information covering partitioning will be covered in file system.</p>
-<h2 id=other-techniques-to-reduce-overhead>Other Techniques to Reduce Overhead <a href=#other-techniques-to-reduce-overhead class="hash g">#</a></h2>
+<h2 id=other-techniques-to-reduce-overhead>Other Techniques to Reduce Overhead</h2>
 <p>To minimize rotational latency and seek time, we can also:</p>
 <ul>
 <li>Make disks smaller (less movement distance)</li>
@@ -103,26 +82,20 @@ scheduling).</p>
 </ul>
 </li>
 </ul>
-<h2 id=ssd>SSD <a href=#ssd class="hash g">#</a></h2>
+<h2 id=ssd>SSD</h2>
 <p>The basic advantage of SSD is that it doesn&rsquo;t have moving parts and thus random access is blazingly fast. It&rsquo;s implemented using NAND and is non-volatile.</p>
-<h3 id=basic-nand-flash-units>Basic NAND Flash Units <a href=#basic-nand-flash-units class="hash g">#</a></h3>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://miro.medium.com/max/480/1*0T4__A7XygT1xQUIrEKQXw.png#center alt=structure-of-flash-die class=center loading=lazy decoding=async>
-</p></p>
+<h3 id=basic-nand-flash-units>Basic NAND Flash Units</h3>
+<p><img src=https://miro.medium.com/max/480/1*0T4__A7XygT1xQUIrEKQXw.png#center alt=structure-of-flash-die></p>
 <p>The fundamental unit is a page which is 4KB. 128 pages are organized together forming a block of size 512KB. Each block is the unit forming a plane. There are 1024 blocks on one plane and the size of the plane is 512MB.</p>
-<h3 id=operations>Operations <a href=#operations class="hash g">#</a></h3>
+<h3 id=operations>Operations</h3>
 <ul>
 <li>Read page: fast in terms of nano seconds compared to micro seconds for spinning disk.</li>
 <li>Write page: can only write to empty page, same as above.</li>
 <li>Erase block: (ms) Before a page can be written, all bits in the page need to be set to 1. Note the only way to set bits in a page to 1 is to erase the whole block.</li>
 <li>Read and Write occur in page unit.</li>
 </ul>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

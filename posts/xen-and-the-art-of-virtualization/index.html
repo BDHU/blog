@@ -1,79 +1,49 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Xen and the Art of Virtualization | std::bodun::blog</title>
 <meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
-<meta property="og:title" content="Xen and the Art of Virtualization">
-<meta property="og:description" content="Xen is an x86 virtual machine monitor which allows multiple commodity operating systems to share conventional hardware in a safe and resource managed fashion, without sacrificing either performance or functionality. Xen is type I hypervisor, which directly runs on top of bare metal. We will summarize what Xen is what its attributes are.
- paravirtualization - presents a virtual machine abstraction that is similar but not identical to the underlying hardware.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/xen-and-the-art-of-virtualization/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2020-09-16T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-08-27T21:13:20-05:00">
-<meta itemprop=name content="Xen and the Art of Virtualization">
-<meta itemprop=description content="Xen is an x86 virtual machine monitor which allows multiple commodity operating systems to share conventional hardware in a safe and resource managed fashion, without sacrificing either performance or functionality. Xen is type I hypervisor, which directly runs on top of bare metal. We will summarize what Xen is what its attributes are.
- paravirtualization - presents a virtual machine abstraction that is similar but not identical to the underlying hardware."><meta itemprop=datePublished content="2020-09-16T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-08-27T21:13:20-05:00">
-<meta itemprop=wordCount content="439">
-<meta itemprop=keywords content="os,virtualization,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Xen and the Art of Virtualization">
-<meta name=twitter:description content="Xen is an x86 virtual machine monitor which allows multiple commodity operating systems to share conventional hardware in a safe and resource managed fashion, without sacrificing either performance or functionality. Xen is type I hypervisor, which directly runs on top of bare metal. We will summarize what Xen is what its attributes are.
- paravirtualization - presents a virtual machine abstraction that is similar but not identical to the underlying hardware.">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/xen-and-the-art-of-virtualization/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Xen and the Art of Virtualization","headline":"Xen and the Art of Virtualization","alternativeHeadline":"","description":"Xen is an x86 virtual machine monitor which allows multiple commodity operating systems to share conventional hardware in a safe and resource managed fashion, without sacrificing either performance or functionality. Xen is type I hypervisor, which directly runs on top of bare metal. We will summarize what Xen is what its attributes are.\n paravirtualization - presents a virtual machine abstraction that is similar but not identical to the underlying hardware.","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/xen-and-the-art-of-virtualization\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2020","dateCreated":"2020-09-16T00:00:00.00Z","datePublished":"2020-09-16T00:00:00.00Z","dateModified":"2021-08-27T21:13:20.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/xen-and-the-art-of-virtualization\/","wordCount":"439","genre":["os","virtualization"],"keywords":["os","virtualization"]}</script>
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Xen and the Art of Virtualization</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Xen and the Art of Virtualization</h2>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/0791e7ebcbe4f2bcd31731894055dc928f105911/posts/Xen/Xen.png#center alt=xen-architecture class=center loading=lazy decoding=async>
-</p></p>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Xen and the Art of Virtualization</h1>
+<div>
+Updated <time>August 27, 2021</time>
+</div>
+</header><p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/0791e7ebcbe4f2bcd31731894055dc928f105911/posts/Xen/Xen.png#center alt=xen-architecture></p>
 <p>Xen is an x86 virtual machine monitor which allows multiple commodity operating systems to share conventional hardware in a safe and resource managed fashion, without sacrificing either performance or functionality. Xen is type I hypervisor, which directly runs on top of bare metal. We will summarize what Xen is what its attributes are.</p>
 <blockquote>
 <p>paravirtualization - presents a virtual machine abstraction that is similar but not identical to the underlying hardware.</p>
 </blockquote>
-<h2 id=the-virtual-machine-interface>The Virtual Machine Interface <a href=#the-virtual-machine-interface class="hash g">#</a></h2>
+<h2 id=the-virtual-machine-interface>The Virtual Machine Interface</h2>
 <p><strong>Memory</strong> is hard to virtualize mostly because x86 doesn&rsquo;t support software-managed TLB. A tagged TLB entry allows both guest OS and hypervisor to coexist because it can be associated with an address-space identifier. This is not possible on x86, thus address space changing likely requires flushing the TLB. Thus, to achieve better performance, guest OSes are responsible to managing hardware page tables. Batching can be used by the guest OS to reduce constantly requesting new pages from the hypervisor when new processes are created.</p>
 <p><strong>CPU</strong> virtualization has implications for guest OSes. Principally, OS the most privileged entity on top of hardware. A hypervisor in the middle means the guests OSes must be modified to run a lower privilege level. On x86, this is not a problem since OSes executes in ring 0 while applications execute in ring 3, leaving ring 1 and ring 2 unused.
 Privileged instructions executed by the guest has to go through the check of hypervisor in general. For performance reasons, system call exceptions can be handled directly by the CPU. As for paging faults, this needs to go through the hypervisor because only code in ring 0 can result the faulting address from <code>CR2</code>.</p>
 <p><strong>Device I/O</strong> is implemented by transfer data between guest and Xen using shared-memory async buffer-descriptor rings. Event delivery is achieved by hypervisor sending notification to its guest asynchronously. When and whether to hold off these callbacks is at the discretion of the guest.</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Xen/xen_ringbug.png#center alt=xen-ring-buffer class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Xen/xen_ringbug.png#center alt=xen-ring-buffer></p>
 <p>Essentially, the virtualization interface design is based on a number of factors. The hypervisor acts as a security guard that validates the guest&rsquo;s request which would go directly to hardware normally if running in ring 0. The bottom line is the hypervisor shouldn&rsquo;t be involved unless the there are hardware limitations, or when resource validation or management are required. The goal is to separate policy from mechanism wherever possible. This similar to exokernel in that the hypervisor merely provides basic functionalities without understanding higher level issues.</p>
-<h2 id=questions>Questions <a href=#questions class="hash g">#</a></h2>
+<h2 id=questions>Questions</h2>
 <p>a. Why does x86 make it hard to support efficient virtualization?<br>
 b. How does Xen exists in 64MB section at the top of every address space avoid TLB flushes when entering and leaving the hypervisor?</p>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

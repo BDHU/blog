@@ -1,56 +1,35 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Start Linux Kernel Hacking | std::bodun::blog</title>
-<meta name=description content="This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well">
-<meta property="og:title" content="Start Linux Kernel Hacking">
-<meta property="og:description" content="This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/start-linux-kernel-hacking/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2020-09-14T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-07-21T23:46:24-05:00">
-<meta itemprop=name content="Start Linux Kernel Hacking">
-<meta itemprop=description content="This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well"><meta itemprop=datePublished content="2020-09-14T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-07-21T23:46:24-05:00">
-<meta itemprop=wordCount content="2515">
-<meta itemprop=keywords content="os,linux,kernel,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Start Linux Kernel Hacking">
-<meta name=twitter:description content="This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/start-linux-kernel-hacking/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Start Linux Kernel Hacking","headline":"Start Linux Kernel Hacking","alternativeHeadline":"","description":"This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/start-linux-kernel-hacking\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2020","dateCreated":"2020-09-14T00:00:00.00Z","datePublished":"2020-09-14T00:00:00.00Z","dateModified":"2021-07-21T23:46:24.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/start-linux-kernel-hacking\/","wordCount":"2515","genre":["os","linux","kernel"],"keywords":["os","linux","kernel"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Start Linux Kernel Hacking</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Start Linux Kernel Hacking</h2>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/linux_kernel_hacking/linux.jpg#center alt=Linux class=center loading=lazy decoding=async>
-</p></p>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Start Linux Kernel Hacking</h1>
+<div>
+Updated <time>July 21, 2021</time>
+</div>
+</header><p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/linux_kernel_hacking/linux.jpg#center alt=Linux></p>
 <p>This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well.</p>
-<h2 id=getting-the-vm-running-in-kvm>Getting the VM running in KVM <a href=#getting-the-vm-running-in-kvm class="hash g">#</a></h2>
+<h2 id=getting-the-vm-running-in-kvm>Getting the VM running in KVM</h2>
 <p>The Ubuntu ISO image is downloaded from the <a href=https://ubuntu.com/download/desktop>Canonical website</a>. The kernel is downloaded directly from <a href=https://www.kernel.org/>kernel.org</a>. The specs of our test environment is:</p>
 <ul>
 <li>CPU: Intel(R) Core(TM) i7-6800K CPU @ 3.40GHz</li>
@@ -63,16 +42,14 @@
 </ul>
 <p>After we obtained the Ubuntu ISO image, we use GUI virt-manager to install the OS. One thing to notice here is the default directory for virtual disks is <code>/var/lib/libvirt/images</code>, since my system partition is located on a separate SSD with limited space, the virtual disk directory is changed to my <code>/home</code> directory instead.</p>
 <p>We also create the new virtual disk inside virt-manager. We chose raw format instead of qcow2. Creating a new image file can also be done in command line using:</p>
-<pre><code class=language-shell>qemu-img create -f raw -o preallocation=full vmdisk.img 40G
-</code></pre>
-<p>The preallocation can be turn either on or off depends on personal choices. After the disk image is created, we proceeds in virt-manager to install Ubuntu on the newly allocated virtual disk. We enabled storage for this virtual machine so that we don&rsquo;t need to repeat the installation process every time we launch the VM. One thing to be noticed here is we don&rsquo;t need swap area inside a virtual machine. We can simply use the whole virtual disk for <code>/</code> partition.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>qemu-img create -f raw -o preallocation<span style=color:#f92672>=</span>full vmdisk.img 40G
+</code></pre></div><p>The preallocation can be turn either on or off depends on personal choices. After the disk image is created, we proceeds in virt-manager to install Ubuntu on the newly allocated virtual disk. We enabled storage for this virtual machine so that we don&rsquo;t need to repeat the installation process every time we launch the VM. One thing to be noticed here is we don&rsquo;t need swap area inside a virtual machine. We can simply use the whole virtual disk for <code>/</code> partition.</p>
 <p>To start the VM from cmd, you might need to change the owner of the disk image. We add the user to both <code>kvm</code> and <code>libvirt</code>. The image created or accessed by virt-manager seems to change the file owner to libvirt-qemu, which may cause problems when starting from cmd.</p>
 <p>After the installation is finished, we can simply launch the virtual machine inside virt-manager through its GUI interface. We can also use command line to start the VM:</p>
-<pre><code class=language-shell>kvm -accel kvm -m 8G -smp 6 --snapshot -drive format=raw,file=/home/ed/virtimg/ubuntu20.04
-</code></pre>
-<p>The argument <code>-accel kvm</code> enables Kernel-based Virtual Machine full virtualization, which uses hardware acceleration. Without this option the VM will become extremely slow. The <code>-m 8G</code> assigns the given amount of memory to the VM. The <code>-smp 6</code> assigns the given number of cores to the guest if the host has multiple cores. The <code>--snapshot</code> ensures that no changes are made to your image during an execution so you can do something dangerous and have the original image file preserved. The <code>-drive</code> option specifies the location of the virtual disk and its format. We will use some of these options later.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>kvm -accel kvm -m 8G -smp <span style=color:#ae81ff>6</span> --snapshot -drive format<span style=color:#f92672>=</span>raw,file<span style=color:#f92672>=</span>/home/ed/virtimg/ubuntu20.04
+</code></pre></div><p>The argument <code>-accel kvm</code> enables Kernel-based Virtual Machine full virtualization, which uses hardware acceleration. Without this option the VM will become extremely slow. The <code>-m 8G</code> assigns the given amount of memory to the VM. The <code>-smp 6</code> assigns the given number of cores to the guest if the host has multiple cores. The <code>--snapshot</code> ensures that no changes are made to your image during an execution so you can do something dangerous and have the original image file preserved. The <code>-drive</code> option specifies the location of the virtual disk and its format. We will use some of these options later.</p>
 <p>To confirm the VM has internet access, simply execution <code>apt install pkg-name</code> in the guest terminal. No error message would indicates properly functioning network access from the guest VM. For example, when we execute <code>sudo apt install llvm</code> it shows:</p>
-<pre><code class=language-text>Reading package lists... Done
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>Reading package lists... Done
 Building dependency tree       
 Reading state information... Done
 The following additional packages will be installed:
@@ -83,90 +60,78 @@ The following NEW packages will be installed:
 Need to get 6,796 B of archives.
 After this operation, 128 kB of additional disk space will be used.
 Do you want to continue? [Y/n] 
-</code></pre>
-<h2 id=building-the-kernel>Building the Kernel <a href=#building-the-kernel class="hash g">#</a></h2>
+</code></pre></div><h2 id=building-the-kernel>Building the Kernel</h2>
 <p>We can use out customized kernel for our newly created VM. After we obtain the Linux kernel from <a href=https://www.kernel.org/>kernel.org</a>, we extract the source into &lt;kernel dir> and create a separate build directory &lt;kbuild> (outside &lt;kernel dir>).</p>
 <p>Then we enter the &lt;kbuild> directory, run</p>
-<pre><code class=language-shell>yes &quot;&quot; | make -C /home/ed/Desktop/linux_kernel/kbuild O=$(pwd) config
-</code></pre>
-<p>This will create a <code>.config</code> file inside &lt;kbuild> with the default options selected. We then open the configuration file and ensures <code>CONFIG_SATA_AHCI=y</code>, which builds the SATA disk driver into the kernel. That will allow your kernel to boot off a (virtual) SATA drive without having to load a module to do it.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>yes <span style=color:#e6db74>&#34;&#34;</span> | make -C /home/ed/Desktop/linux_kernel/kbuild O<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>pwd<span style=color:#66d9ef>)</span> config
+</code></pre></div><p>This will create a <code>.config</code> file inside &lt;kbuild> with the default options selected. We then open the configuration file and ensures <code>CONFIG_SATA_AHCI=y</code>, which builds the SATA disk driver into the kernel. That will allow your kernel to boot off a (virtual) SATA drive without having to load a module to do it.</p>
 <p>Next we build the kernel by running <code>make</code> in &lt;kbuild>. We use the -j 6 option speedup the building process using multiple processor cores. This process can take a long time.</p>
-<h2 id=build-and-install-kernel-modules>Build and Install Kernel Modules <a href=#build-and-install-kernel-modules class="hash g">#</a></h2>
+<h2 id=build-and-install-kernel-modules>Build and Install Kernel Modules</h2>
 <p>To build modules locally on host, we create another separate &lt;install_mod_dir> directory for building kernel modules. Then in &lt;kbuild>, execute</p>
-<pre><code class=language-shell>make INSTALL_MOD_PATH=/home/ed/Desktop/linux_kernel/install_mod_dir modules_install 
-</code></pre>
-<p>Now there is a <code>lib</code> directory inside <code>/home/ed/Desktop/linux_kernel/install_mod_dir</code>, which holds all the kernel modules we are about to install.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>make INSTALL_MOD_PATH<span style=color:#f92672>=</span>/home/ed/Desktop/linux_kernel/install_mod_dir modules_install 
+</code></pre></div><p>Now there is a <code>lib</code> directory inside <code>/home/ed/Desktop/linux_kernel/install_mod_dir</code>, which holds all the kernel modules we are about to install.</p>
 <p>The complete list of modules can be listed using <code>cat modules.builtin</code> inside <code>lib/moduels/5.8.6</code>. Here is a <a href=https://gist.github.com/BDHU/4d31d18ad106a13caceac4a961d04a44>link</a> to all the modules being built. We didn&rsquo;t modify anything in the configuration.</p>
 <p>Then we use guestmount to mount the virtual disk to a mount point on the host</p>
-<pre><code class=language-shell>guestmount -a /home/ed/virtimg/ubuntu20.04 -i ~/vm/linux/
-</code></pre>
-<p>In Ubuntu this step yields the following message:</p>
-<pre><code class=language-text>libguestfs: error: /usr/bin/supermin exited with error status 1.
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>guestmount -a /home/ed/virtimg/ubuntu20.04 -i ~/vm/linux/
+</code></pre></div><p>In Ubuntu this step yields the following message:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>libguestfs: error: /usr/bin/supermin exited with error status 1.
 To see full error messages you may need to enable debugging.
 Do:
   export LIBGUESTFS_DEBUG=1 LIBGUESTFS_TRACE=1
 and run the command again.  For further information, read:
   http://libguestfs.org/guestfs-faq.1.html#debugging-libguestfs
-You can also run 'libguestfs-test-tool' and post the *complete* output
+You can also run &#39;libguestfs-test-tool&#39; and post the *complete* output
 into a bug report or message to the libguestfs mailing list.
-</code></pre>
-<p>The underlying problem is that the kernel cannot be read and according to the <a href=https://askubuntu.com/questions/1046828/how-to-run-libguestfs-tools-tools-such-as-virt-make-fs-without-sudo>post</a> and the <a href=https://bugs.launchpad.net/fuel/+bug/1467579>bug report</a> on Ubuntu Launchpad.</p>
+</code></pre></div><p>The underlying problem is that the kernel cannot be read and according to the <a href=https://askubuntu.com/questions/1046828/how-to-run-libguestfs-tools-tools-such-as-virt-make-fs-without-sudo>post</a> and the <a href=https://bugs.launchpad.net/fuel/+bug/1467579>bug report</a> on Ubuntu Launchpad.</p>
 <p>To fix the issue, we need to run</p>
-<pre><code class=language-shell>sudo chmod +r /boot/vmlinuz-*
-</code></pre>
-<p>We can verify the contents inside ~/vm/linux by simply cd into it.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>sudo chmod +r /boot/vmlinuz-*
+</code></pre></div><p>We can verify the contents inside ~/vm/linux by simply cd into it.</p>
 <p>To install the modules we just built, we can copy the <code>&lt;install_mod_dir>lib/modules</code> into the mounted filesystem <code>&lt;mount_point>/lib/modules</code>.</p>
 <p>Finally, we unmount the filesystem by doing</p>
-<pre><code class=language-shell>fusermount -u /mnt/hdd1/vm/linux
-</code></pre>
-<h2 id=booting-kvm-with-the-new-kernel>Booting KVM with the new Kernel <a href=#booting-kvm-with-the-new-kernel class="hash g">#</a></h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>fusermount -u /mnt/hdd1/vm/linux
+</code></pre></div><h2 id=booting-kvm-with-the-new-kernel>Booting KVM with the new Kernel</h2>
 <p>To boot up the VM with the new kernel, we will add a few extra command line options to kvm. For convenience, we put the scripts into a file. It&rsquo;s also available on <a href=https://gist.github.com/BDHU/8c6ab518ab37571a1cae132d79ac9a9e>gist</a>:</p>
-<pre><code class=language-shell>#!/bin/bash
-
-kvm \
-    -s \
-    -display gtk \
-    -cpu host \
-    -vga qxl \
-    -accel kvm \
-    -kernel &quot;/home/ed/Desktop/linux_kernel/kbuild/arch/x86/boot/bzImage&quot; \
-    -append &quot;root=/dev/sda1 console=ttyS0,115200n8 nokaslr&quot; \
-    -drive format=raw,file=/home/ed/virtimg/ubuntu20.04 \
-    -m 8G \
-    -smp 6 \
-    --snapshot \
-    -S
-</code></pre>
-<p>Aside from the command line arguments we discussed before, there are a few new members here. the <code>-s</code> switch is a shorthand for <code>-gdb tcp::1234</code>. The <code>-display gtk</code> is optional. It enables the opengl context in the display device for gtk display output. <code>-cpu host</code> says the guest should emulate the host processor. <code>-vga qxl</code> enables 3D acceleration on the guest system. <code>-vga virtio</code> also offers good performance in our case. <code>-kernel</code> allows bootloader to pickup the new kernel. The <code>-append</code> along with its arguments specifies where the root partition of the hard disk is and the console parameter adds a serial console at boot so you can see boot messages. The <code>--snapshot</code> in QEMU says the images that refer to an original image will use Redirect-on-Write to avoid changing the original image. The <code>-S</code> means the kernel won&rsquo;t start executing unless we attach a debugger to it. We only use it later in the debugging stage.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell><span style=color:#75715e>#!/bin/bash
+</span><span style=color:#75715e></span>
+kvm <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -s <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -display gtk <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -cpu host <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -vga qxl <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -accel kvm <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -kernel <span style=color:#e6db74>&#34;/home/ed/Desktop/linux_kernel/kbuild/arch/x86/boot/bzImage&#34;</span> <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -append <span style=color:#e6db74>&#34;root=/dev/sda1 console=ttyS0,115200n8 nokaslr&#34;</span> <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -drive format<span style=color:#f92672>=</span>raw,file<span style=color:#f92672>=</span>/home/ed/virtimg/ubuntu20.04 <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -m 8G <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -smp <span style=color:#ae81ff>6</span> <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    --snapshot <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>    -S
+</code></pre></div><p>Aside from the command line arguments we discussed before, there are a few new members here. the <code>-s</code> switch is a shorthand for <code>-gdb tcp::1234</code>. The <code>-display gtk</code> is optional. It enables the opengl context in the display device for gtk display output. <code>-cpu host</code> says the guest should emulate the host processor. <code>-vga qxl</code> enables 3D acceleration on the guest system. <code>-vga virtio</code> also offers good performance in our case. <code>-kernel</code> allows bootloader to pickup the new kernel. The <code>-append</code> along with its arguments specifies where the root partition of the hard disk is and the console parameter adds a serial console at boot so you can see boot messages. The <code>--snapshot</code> in QEMU says the images that refer to an original image will use Redirect-on-Write to avoid changing the original image. The <code>-S</code> means the kernel won&rsquo;t start executing unless we attach a debugger to it. We only use it later in the debugging stage.</p>
 <p>Again, we can verify there is internet access using the new kernel using <code>apt update</code>. There are no errors shown, which indicates the network is functioning correctly.</p>
-<h2 id=booting-process>Booting Process <a href=#booting-process class="hash g">#</a></h2>
+<h2 id=booting-process>Booting Process</h2>
 <p>Now we are able to boot up the VM successfully, we can first measure how much time the kernel spends in booting. Running <code>dmesg -d</code> shows the timestamp and time delta spent between messages. The final line shows <code>[10.842998]</code>. If we use <code>systemd-analyze</code>, it outputs</p>
-<pre><code class=language-text>Startup finished in 795ms (kernel) + 5.451s (userspace) = 6.247s
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>Startup finished in 795ms (kernel) + 5.451s (userspace) = 6.247s
 graphical.target reached after 5.439s in userspace
-</code></pre>
-<p>The reason why there is a gap between these two measurement is because <code>dmesg</code> is not a reliable test of how long a boot-up process goes. <code>dmesg</code> itself merely collects information. The drivers and other system processes can output messages at any point in time. There may or may not be processes spawning between those messages.</p>
+</code></pre></div><p>The reason why there is a gap between these two measurement is because <code>dmesg</code> is not a reliable test of how long a boot-up process goes. <code>dmesg</code> itself merely collects information. The drivers and other system processes can output messages at any point in time. There may or may not be processes spawning between those messages.</p>
 <p>Next, we are going to look at how PCI device is involved in kernel startup. <code>lspci</code> outputs the follow</p>
-<pre><code class=language-text>00:00.0 Host bridge: Intel Corporation 440FX - 82441FX PMC [Natoma] (rev 02)
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>00:00.0 Host bridge: Intel Corporation 440FX - 82441FX PMC [Natoma] (rev 02)
 00:01.0 ISA bridge: Intel Corporation 82371SB PIIX3 ISA [Natoma/Triton II]
 00:01.1 IDE interface: Intel Corporation 82371SB PIIX3 IDE [Natoma/Triton II]
 00:01.3 Bridge: Intel Corporation 82371AB/EB/MB PIIX4 ACPI (rev 03)
 00:02.0 VGA compatible controller: Red Hat, Inc. Virtio GPU (rev 01)
 00:03.0 Ethernet controller: Intel Corporation 82540EM Gigabit Ethernet Controller (rev 03)
-</code></pre>
-<p>We can use the PCI address here to search for corresponding information in <code>dmesg</code>. For example, if we use the domain value \(0000:\) as query, we get something like:</p>
-<pre><code class=language-text>[    0.295026] PCI host bridge to bus 0000:00
+</code></pre></div><p>We can use the PCI address here to search for corresponding information in <code>dmesg</code>. For example, if we use the domain value \(0000:\) as query, we get something like:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>[    0.295026] PCI host bridge to bus 0000:00
 [    0.299055] pci 0000:00:00.0: [8086:1237] type 00 class 0x060000
 [    0.300133] pci 0000:00:01.0: [8086:7000] type 00 class 0x060100
 [    0.301163] pci 0000:00:01.1: [8086:7010] type 00 class 0x010180
 [    0.311006] pci 0000:00:02.0: [1af4:1050] type 00 class 0x030000
 [    0.319650] pci 0000:00:03.0: [8086:100e] type 00 class 0x020000
-</code></pre>
-<p>The full result is also available as <a href=https://gist.github.com/BDHU/4d31d18ad106a13caceac4a961d04a44#file-dmesg_output>gist</a>.</p>
+</code></pre></div><p>The full result is also available as <a href=https://gist.github.com/BDHU/4d31d18ad106a13caceac4a961d04a44#file-dmesg_output>gist</a>.</p>
 <p>The <code>lspci</code> command specifies the type of device right after the address. For example, the first one is host bridge. We specifically selected the message in the <em>type 00 class</em> format here. The significance here is that the class value actually telss us the type of the corresponding device. We can check the <a href=https://github.com/torvalds/linux/blob/master/include/linux/pci_ids.h>include/linux/pci_ids.h</a> for each macro respectively. For example,</p>
-<pre><code class=language-c>#define PCI_CLASS_NETWORK_ETHERNET  0x0200
-</code></pre>
-<p>this line shows the value 0x0200 corresponds to a network PCI device. This aligns with our <code>dmesg</code> output as well as the <code>lspci</code> result.</p>
-<h2 id=debugging-kernel>Debugging Kernel <a href=#debugging-kernel class="hash g">#</a></h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>#define PCI_CLASS_NETWORK_ETHERNET  0x0200
+</span></code></pre></div><p>this line shows the value 0x0200 corresponds to a network PCI device. This aligns with our <code>dmesg</code> output as well as the <code>lspci</code> result.</p>
+<h2 id=debugging-kernel>Debugging Kernel</h2>
 <p>To build KVM+GDB-friendly kernel, we need to have proper CONFIG_DEBUG* options set in the .config file. More specifically, we need to have the following options enabled:</p>
 <ul>
 <li>CONFIG_DEBUG_INFO y: compile the kernel with debug info. The full list of definitions can be found <a href=https://cateee.net/lkddb/web-lkddb/DEBUG_INFO.html>here</a>.</li>
@@ -181,55 +146,47 @@ graphical.target reached after 5.439s in userspace
 <li>CONFIG_SMP y: enable Symmetric multi-processing support. Definition found <a href=https://cateee.net/lkddb/web-lkddb/SMP.html>here</a>.</li>
 </ul>
 <p>Now we can recompile the kernel and attack gdb to it. We simply add <code>-S</code> option to kvm to only start the VM when gdb is attached. Then we enter our &lt;kbuild> directory and execute:</p>
-<pre><code class=language-shell>gdb vmlinux
-(gdb) target remote:1234
-</code></pre>
-<p>The step is also documented in the kernel community <a href=https://www.kernel.org/doc/html/latest/dev-tools/gdb-kernel-debugging.html>documentation</a>.</p>
-<h2 id=set-breakpoints>Set Breakpoints <a href=#set-breakpoints class="hash g">#</a></h2>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-shell data-lang=shell>gdb vmlinux
+<span style=color:#f92672>(</span>gdb<span style=color:#f92672>)</span> target remote:1234
+</code></pre></div><p>The step is also documented in the kernel community <a href=https://www.kernel.org/doc/html/latest/dev-tools/gdb-kernel-debugging.html>documentation</a>.</p>
+<h2 id=set-breakpoints>Set Breakpoints</h2>
 <p>Spin lock is easy to find in a kernel. Therefore, we will set break points on <code>spin_lock</code>. For kernel 5.8.6, we see that <code>spin_lock</code> is defined in <a href=https://elixir.bootlin.com/linux/v5.8.6/source/include/linux/spinlock.h#L351>https://elixir.bootlin.com/linux/v5.8.6/source/include/linux/spinlock.h#L351</a> as a inline function. If we trace the function, we can see the actual function we should use is <code>_raw_spin_lock</code> defined <a href=https://elixir.bootlin.com/linux/v5.8.6/source/kernel/locking/spinlock.c#L149>here</a>:</p>
-<pre><code class=language-c>#ifndef CONFIG_INLINE_SPIN_LOCK
-void __lockfunc _raw_spin_lock(raw_spinlock_t *lock)
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>#ifndef CONFIG_INLINE_SPIN_LOCK
+</span><span style=color:#75715e></span><span style=color:#66d9ef>void</span> __lockfunc <span style=color:#a6e22e>_raw_spin_lock</span>(raw_spinlock_t <span style=color:#f92672>*</span>lock)
 {
   __raw_spin_lock(lock);
 }
-</code></pre>
-<p>If we need to break the execution only when a given program is executed, we can use the program PID to as the condition. The problem is, how do we get the program PID if it doesn&rsquo;t last for long?</p>
+</code></pre></div><p>If we need to break the execution only when a given program is executed, we can use the program PID to as the condition. The problem is, how do we get the program PID if it doesn&rsquo;t last for long?</p>
 <p>We could instead first set a breakpoint on <code>fork</code>. We can break its kernel call at <code>_do_fork</code> which is defined <a href=https://elixir.bootlin.com/linux/v5.8.6/source/kernel/fork.c#L2416>here</a>. After that, we can simply continue executing the kernel until we run the program.</p>
 <blockquote>
 <p>Note: we need to compile the program and open a new terminal first. Since they both involves forking new processes, which will hit <code>_do_fork</code> before our program runs.</p>
 </blockquote>
 <p>Then we print the process PID using <code>p $lx_current().pid</code>. We then use this value as the condition for <code>b _raw_spin_lock if $lx_current().pid == pid_value</code> inside gdb.</p>
 <p>If we want <code>_raw_spin_lock</code> to break under different contexts, we can simply use PID as different contexts. We can also set break points in functions in different contexts that calls <code>spin_lock</code> and see what they do. For example, we can set break point at <code>expand_downwards</code> defined in <a href=https://elixir.bootlin.com/linux/v5.8.6/source/mm/mmap.c#L2428>here</a>, if we back trace this function, we will get a series of calls, we mention the important ones here</p>
-<pre><code class=language-text>#1  0xffffffff81284c4e in expand_stack
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#1  0xffffffff81284c4e in expand_stack
 #3 0xffffffff813843db in load_elf_binary
 #8  do_execve
 #12 0xffffffff81b1f658 in do_syscall_64
-</code></pre>
-<p>We also added a helper script in .gdbinit to print our the name of the function, which is &lsquo;&lsquo;anacron&rsquo;&rsquo; in this case.
+</code></pre></div><p>We also added a helper script in .gdbinit to print our the name of the function, which is &lsquo;&lsquo;anacron&rsquo;&rsquo; in this case.
 In short, this process execute commands periodically, and it performs a sys call which loads elf binary, thus requiring stack expansion.</p>
 <p>Another example is timer interrupt. The <code>get_next_timer_interrupt</code> calls <code>_raw_spin_lock</code>. We select some messages from backtrace:</p>
-<pre><code class=language-text>#1  0xffffffff8113b224 in get_next_timer_interrupt
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#1  0xffffffff8113b224 in get_next_timer_interrupt
 #2  0xffffffff8114d52e in tick_nohz_next_event
 #4  tick_nohz_idle_stop_tick ()
 #5  0xffffffff810df567 in cpuidle_idle_call ()
-</code></pre>
-<p>In short, the is a timer interrupt that gets called when CPU is idle.</p>
+</code></pre></div><p>In short, the is a timer interrupt that gets called when CPU is idle.</p>
 <p>The last example is <code>hrtimer_interrupt</code>. The selected messages are:</p>
-<pre><code class=language-text>#4  0xffffffff8114d80c in tick_sched_timer
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>#4  0xffffffff8114d80c in tick_sched_timer
 #7  0xffffffff8113c8e7 in hrtimer_interrupt
 #12 run_on_irqstack_cond
 #14 0xffffffff81c00cc2 in asm_sysvec_apic_timer_interrupt
-</code></pre>
-<p>In summary, <code>hrtimer_interrupt</code> is called as event handler. This function is responsible to select all timers that have expired and either move them to the expiration list (if they may be processed in softIRQ context) or call the handler function directly.</p>
-<h2 id=syscall>Syscall <a href=#syscall class="hash g">#</a></h2>
+</code></pre></div><p>In summary, <code>hrtimer_interrupt</code> is called as event handler. This function is responsible to select all timers that have expired and either move them to the expiration list (if they may be processed in softIRQ context) or call the handler function directly.</p>
+<h2 id=syscall>Syscall</h2>
 <p>Essentially, processor switches from the user mode to kernel mode and starts execution of the sys call entry - <code>entry_SYSCALL_64</code>, we can find its definition at <a href=https://elixir.bootlin.com/linux/v5.8.6/source/arch/x86/entry/entry_64.S#L94>here</a>. This is the only entry point used for 64-bit system calls. We can set a break point here. When the break point is hit, we use <code>info registers</code> in gdb to get the value of cr3. In our case, it is 0x22a6d5806. Then we simply step from this breakpoint, and will likely reach <code>SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp</code>. After this call the value in cr3 is changed to 0x22a6d4006. The macro is defined <a href=https://elixir.bootlin.com/linux/v5.8.6/source/arch/x86/entry/entry_32.S#L165>here</a>.</p>
 <p>We can see whenever the processor switch from the user mode to kernel mode the value of cr3 is changed. The root cause the Page <a href=https://www.kernel.org/doc/html/latest/x86/pti.html>Table Isolation (PTI)</a>. It is a countermeasure against attacks on the shared user/kernel address space such as the &lsquo;&lsquo;Meltdown&rsquo;&rsquo; approach. To mitigate this class of attacks, two independent page table copies are created, one in kernel space, one in user space. The cr3 register enables the processor to translate linear addresses into physical addresses by locating the page directory and page tables for the current task. So whenever the process enters kernel mode, the kernel copy requires its page directory address to be loaded into cr3 register.</p>
 <p>If we add <code>nopti</code> in <code>-append</code> in the QEMU cmd argument and perform the same steps. We get 0x231466005 before and after <code>SWITCH_TO_KERNEL_CR3 scratch_reg=%rsp</code> is executed. Based on the description in the <a href="https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/Documentation/admin-guide/kernel-parameters.txt?h=v5.1.3#L3656">linux kernel tree</a>, the <code>nopti</code> on X86_64 is equivalent to pti=off, therefore explaining the constant value of cr3.</p>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

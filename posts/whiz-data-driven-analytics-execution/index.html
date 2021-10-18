@@ -1,62 +1,38 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Whiz: Data-Driven Analytics Execution | std::bodun::blog</title>
-<meta name=description content="This paper by [UTNS](https://utns.cs.utexas.edu/) lab appeared in [NSDI 2021](https://www.usenix.org/conference/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations">
-<meta property="og:title" content="Whiz: Data-Driven Analytics Execution">
-<meta property="og:description" content="This paper by [UTNS](https://utns.cs.utexas.edu/) lab appeared in [NSDI 2021](https://www.usenix.org/conference/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/whiz-data-driven-analytics-execution/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-09-05T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-09-07T00:34:24-05:00">
-<meta itemprop=name content="Whiz: Data-Driven Analytics Execution">
-<meta itemprop=description content="This paper by [UTNS](https://utns.cs.utexas.edu/) lab appeared in [NSDI 2021](https://www.usenix.org/conference/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations"><meta itemprop=datePublished content="2021-09-05T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-09-07T00:34:24-05:00">
-<meta itemprop=wordCount content="371">
-<meta itemprop=keywords content="big-data,framework,distributed-system,paper-review,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Whiz: Data-Driven Analytics Execution">
-<meta name=twitter:description content="This paper by [UTNS](https://utns.cs.utexas.edu/) lab appeared in [NSDI 2021](https://www.usenix.org/conference/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/whiz-data-driven-analytics-execution/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Whiz: Data-Driven Analytics Execution","headline":"Whiz: Data-Driven Analytics Execution","alternativeHeadline":"","description":"This paper by [UTNS](https:\/\/utns.cs.utexas.edu\/) lab appeared in [NSDI 2021](https:\/\/www.usenix.org\/conference\/nsdi21). It presents a data-analytics framework that decouples intermediate data from computations","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/whiz-data-driven-analytics-execution\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-09-05T00:00:00.00Z","datePublished":"2021-09-05T00:00:00.00Z","dateModified":"2021-09-07T00:34:24.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/whiz-data-driven-analytics-execution\/","wordCount":"371","genre":["big-data","framework","distributed-system","paper-review"],"keywords":["big-data","framework","distributed-system","paper-review"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Whiz: Data-Driven Analytics Execution</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Whiz: Data-Driven Analytics Execution</h2>
-<p>This paper by <a href=https://utns.cs.utexas.edu/>UTNS</a> lab appeared in <a href=https://www.usenix.org/conference/nsdi21>NSDI 2021</a>. It presents a data-analytics framework that decouples intermediate data from computations.</p>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Whiz: Data-Driven Analytics Execution</h1>
+<div>
+Updated <time>September 7, 2021</time>
+</div>
+</header><p>This paper by <a href=https://utns.cs.utexas.edu/>UTNS</a> lab appeared in <a href=https://www.usenix.org/conference/nsdi21>NSDI 2021</a>. It presents a data-analytics framework that decouples intermediate data from computations.</p>
 <p>Whiz addresses several challenged posed by current analytics frameworks. The first one is data opacity. Most modern data analytics frameworks relies on MapReduce execution engine. The developer specifies the map and reduce function, which then get submitted to the analytics framework. The workflow can be expressed as a logical graph; the physical graph (which includes the cluster configuration, disk quota, etc.) is generated transparently. The workflow is shown below:</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/whiz-data-driven-analytics-execution/limitation1.png#center alt=mapreduce-limitation class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/whiz-data-driven-analytics-execution/limitation1.png#center alt=mapreduce-limitation></p>
 <p>The problem is in the region marked yellow. It shows the execution engine has limited runtime visibility into the intermediate data. Thus, adapting processing logic of tasks based on the states of intermediate data becomes challenging.</p>
 <p>In addition, task parallelism and intermediate data partition strategy are often static. In the graph above, the intermediate data partition tasks and the final reduce tasks might be determined prematurely, without taking the intermediate data partition characteristics into account. For example, <a href=https://itnext.io/handling-data-skew-in-apache-spark-9f56343e58e8>data skew</a> (unevenly distributed jobs) causes different reduce nodes to process different amount of tasks. The graph below illustrates how the shuffle stage can result in disproportional intermediate data partitions.</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/a0119d0227e48aee2dba3cb48571b11b360a68b9/posts/whiz-data-driven-analytics-execution/data-skew.png#center alt=data-skew class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/a0119d0227e48aee2dba3cb48571b11b360a68b9/posts/whiz-data-driven-analytics-execution/data-skew.png#center alt=data-skew></p>
 <p>Finally, Whiz addresses the limitation posed by compute-driven scheduling. In compute-driven scheduling, one stage usually relies on the completion of the upstream tasks, the may lead to compute idling waiting for remaining data to become available, even if the a subset of workers in the current stage is ready for execution. Decoupling data from computation enables the execution engine to treat intermediate data as first-class citizen, thus allowing finer-grained control of data processing.</p>
 <p>In summary, Whiz solves two problems presented in compute-centric execution engines:</p>
 <ul>
@@ -64,16 +40,10 @@
 <li>intermediate data agnosticity.</li>
 </ul>
 <p>Thus, Whiz creates a feedback loop between the execution service and the data service so that the execution can dynamically adjust its policy based on the information offered by the data service to optimize system performances.</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/16b3d43877c2f4f40681509e5b683bef0bfa1034/posts/whiz-data-driven-analytics-execution/whiz-control-flow.png#center alt=whiz-control-flow class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/16b3d43877c2f4f40681509e5b683bef0bfa1034/posts/whiz-data-driven-analytics-execution/whiz-control-flow.png#center alt=whiz-control-flow></p>
 <p>Whiz classifies itself as a <strong>data-driven</strong> execution engine, which drives execution based on intermediate data properties. Making intermediate data visible opens door for optimization opportunities, thus increasing performances. For more technical details regarding the architecture and implementation of Whiz, please refer to the original <a href=https://www.usenix.org/system/files/nsdi21-grandl.pdf>paper</a>.</p>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

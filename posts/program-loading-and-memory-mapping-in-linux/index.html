@@ -1,206 +1,170 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Program Loading and Memory Mapping in Linux | std::bodun::blog</title>
-<meta name=description content="The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux">
-<meta property="og:title" content="Program Loading and Memory Mapping in Linux">
-<meta property="og:description" content="The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/program-loading-and-memory-mapping-in-linux/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2020-11-03T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-08-06T22:15:10-05:00">
-<meta itemprop=name content="Program Loading and Memory Mapping in Linux">
-<meta itemprop=description content="The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux"><meta itemprop=datePublished content="2020-11-03T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-08-06T22:15:10-05:00">
-<meta itemprop=wordCount content="1025">
-<meta itemprop=keywords content="os,kernel,memory,linux,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Program Loading and Memory Mapping in Linux">
-<meta name=twitter:description content="The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/program-loading-and-memory-mapping-in-linux/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Program Loading and Memory Mapping in Linux","headline":"Program Loading and Memory Mapping in Linux","alternativeHeadline":"","description":"The goal here is to familiarize yourself with how programs are loaded, dynamically paged, and some of the mechanics of signal handling and memory mapping in Linux","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/program-loading-and-memory-mapping-in-linux\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2020","dateCreated":"2020-11-03T00:00:00.00Z","datePublished":"2020-11-03T00:00:00.00Z","dateModified":"2021-08-06T22:15:10.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/program-loading-and-memory-mapping-in-linux\/","wordCount":"1025","genre":["os","kernel","memory","linux"],"keywords":["os","kernel","memory","linux"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Program Loading and Memory Mapping in Linux</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Program Loading and Memory Mapping in Linux</h2>
-<p>This is a summary over program loading, dynamical paging, signal handling, and memory mapping in Linux.</p>
-<h2 id=execve-syscall>execve Syscall <a href=#execve-syscall class="hash g">#</a></h2>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Program Loading and Memory Mapping in Linux</h1>
+<div>
+Updated <time>August 6, 2021</time>
+</div>
+</header><p>This is a summary over program loading, dynamical paging, signal handling, and memory mapping in Linux.</p>
+<h2 id=execve-syscall>execve Syscall</h2>
 <p>One of operating systems' basic services is to load programs into memory to execute. Programs rely on <code>execve</code> syscall to get the OS to load the program into memory and start it executing as a process. The kernel version we used to testing is 5.4.0. Doing a quick search inside <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/exec.c#L1956>Elixir</a> gives us:</p>
-<pre><code class=language-c>SYSCALL_DEFINE3(execve,
-        const char __user *, filename,
-        const char __user *const __user *, argv,
-        const char __user *const __user *, envp)
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>SYSCALL_DEFINE3(execve,
+        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span> __user <span style=color:#f92672>*</span>, filename,
+        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span> __user <span style=color:#f92672>*</span><span style=color:#66d9ef>const</span> __user <span style=color:#f92672>*</span>, argv,
+        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span> __user <span style=color:#f92672>*</span><span style=color:#66d9ef>const</span> __user <span style=color:#f92672>*</span>, envp)
 {
-    return do_execve(getname(filename), argv, envp);
+    <span style=color:#66d9ef>return</span> do_execve(getname(filename), argv, envp);
 }
-</code></pre>
-<p>Follow the function call, we will eventually reach the call to <code>__do_execve_file</code>, the comment of this function says &ldquo;sys_execve() executes a new program&rdquo;, which is pretty straightforward. This function first checks the <code>filename</code> pointer. Then it checks the flags of the current process that limit of running processes is not exceeded:</p>
-<pre><code class=language-c>if (IS_ERR(filename))
-    return PTR_ERR(filename);
+</code></pre></div><p>Follow the function call, we will eventually reach the call to <code>__do_execve_file</code>, the comment of this function says &ldquo;sys_execve() executes a new program&rdquo;, which is pretty straightforward. This function first checks the <code>filename</code> pointer. Then it checks the flags of the current process that limit of running processes is not exceeded:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#66d9ef>if</span> (IS_ERR(filename))
+    <span style=color:#66d9ef>return</span> PTR_ERR(filename);
 
-/*
- * We move the actual failure in case of RLIMIT_NPROC excess from
- * set*uid() to execve() because too many poorly written programs
- * don't check setuid() return code.  Here we additionally recheck
- * whether NPROC limit is still exceeded.
- */
-if ((current-&gt;flags &amp; PF_NPROC_EXCEEDED) &amp;&amp;
-    atomic_read(&amp;current_user()-&gt;processes) &gt; rlimit(RLIMIT_NPROC)) {
-    retval = -EAGAIN;
-    goto out_ret;
+<span style=color:#75715e>/*
+</span><span style=color:#75715e> * We move the actual failure in case of RLIMIT_NPROC excess from
+</span><span style=color:#75715e> * set*uid() to execve() because too many poorly written programs
+</span><span style=color:#75715e> * don&#39;t check setuid() return code.  Here we additionally recheck
+</span><span style=color:#75715e> * whether NPROC limit is still exceeded.
+</span><span style=color:#75715e> */</span>
+<span style=color:#66d9ef>if</span> ((current<span style=color:#f92672>-&gt;</span>flags <span style=color:#f92672>&amp;</span> PF_NPROC_EXCEEDED) <span style=color:#f92672>&amp;&amp;</span>
+    atomic_read(<span style=color:#f92672>&amp;</span>current_user()<span style=color:#f92672>-&gt;</span>processes) <span style=color:#f92672>&gt;</span> rlimit(RLIMIT_NPROC)) {
+    retval <span style=color:#f92672>=</span> <span style=color:#f92672>-</span>EAGAIN;
+    <span style=color:#66d9ef>goto</span> out_ret;
 }
 
-/* We're below the limit (still or again), so we don't want to make
-    * further execve() calls fail. */
-current-&gt;flags &amp;= ~PF_NPROC_EXCEEDED;
-</code></pre>
-<p>The next important task is to allocate the <code>struct linux_binprm</code> structure defined <a href=https://elixir.bootlin.com/linux/v5.4/source/include/linux/binfmts.h#L17>here</a>. This structure is used to hold the arguments that are used when loading binaries.</p>
-<pre><code class=language-c>bprm = kzalloc(sizeof(*bprm), GFP_KERNEL);
-    if (!bprm)
-        goto out_files;
-</code></pre>
-<p>Next, the function performs a seireis of tasks to prepare the <code>bprm</code> struct. Refer to the <a href=https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html>linux-insides</a> book to find more information on how exactly the <code>bprm</code> structure is filled up.</p>
+<span style=color:#75715e>/* We&#39;re below the limit (still or again), so we don&#39;t want to make
+</span><span style=color:#75715e>    * further execve() calls fail. */</span>
+current<span style=color:#f92672>-&gt;</span>flags <span style=color:#f92672>&amp;=</span> <span style=color:#f92672>~</span>PF_NPROC_EXCEEDED;
+</code></pre></div><p>The next important task is to allocate the <code>struct linux_binprm</code> structure defined <a href=https://elixir.bootlin.com/linux/v5.4/source/include/linux/binfmts.h#L17>here</a>. This structure is used to hold the arguments that are used when loading binaries.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>bprm <span style=color:#f92672>=</span> kzalloc(<span style=color:#66d9ef>sizeof</span>(<span style=color:#f92672>*</span>bprm), GFP_KERNEL);
+    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>bprm)
+        <span style=color:#66d9ef>goto</span> out_files;
+</code></pre></div><p>Next, the function performs a seireis of tasks to prepare the <code>bprm</code> struct. Refer to the <a href=https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html>linux-insides</a> book to find more information on how exactly the <code>bprm</code> structure is filled up.</p>
 <p>The most important function called by <code>__do_execve_file</code> is <code>search_binary_handler</code>. Based on the <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/exec.c>comment</a>, this function cycles the list of binary formats handler, until one recognizes the image. We can find one section of the code surrounded by <code>binfmt_lock</code>:</p>
-<pre><code class=language-c>list_for_each_entry(fmt, &amp;formats, lh) {
-    if (!try_module_get(fmt-&gt;module))
-        continue;
-    read_unlock(&amp;binfmt_lock);
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>list_for_each_entry(fmt, <span style=color:#f92672>&amp;</span>formats, lh) {
+    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>try_module_get(fmt<span style=color:#f92672>-&gt;</span>module))
+        <span style=color:#66d9ef>continue</span>;
+    read_unlock(<span style=color:#f92672>&amp;</span>binfmt_lock);
 
-    bprm-&gt;recursion_depth++;
-    retval = fmt-&gt;load_binary(bprm);
-    bprm-&gt;recursion_depth--;
+    bprm<span style=color:#f92672>-&gt;</span>recursion_depth<span style=color:#f92672>++</span>;
+    retval <span style=color:#f92672>=</span> fmt<span style=color:#f92672>-&gt;</span>load_binary(bprm);
+    bprm<span style=color:#f92672>-&gt;</span>recursion_depth<span style=color:#f92672>--</span>;
 
-    read_lock(&amp;binfmt_lock);
+    read_lock(<span style=color:#f92672>&amp;</span>binfmt_lock);
     put_binfmt(fmt);
-    if (retval &lt; 0 &amp;&amp; !bprm-&gt;mm) {
-        /* we got to flush_old_exec() and failed after it */
-        read_unlock(&amp;binfmt_lock);
+    <span style=color:#66d9ef>if</span> (retval <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#f92672>!</span>bprm<span style=color:#f92672>-&gt;</span>mm) {
+        <span style=color:#75715e>/* we got to flush_old_exec() and failed after it */</span>
+        read_unlock(<span style=color:#f92672>&amp;</span>binfmt_lock);
         force_sigsegv(SIGSEGV);
-        return retval;
+        <span style=color:#66d9ef>return</span> retval;
     }
-    if (retval != -ENOEXEC || !bprm-&gt;file) {
-        read_unlock(&amp;binfmt_lock);
-        return retval;
+    <span style=color:#66d9ef>if</span> (retval <span style=color:#f92672>!=</span> <span style=color:#f92672>-</span>ENOEXEC <span style=color:#f92672>||</span> <span style=color:#f92672>!</span>bprm<span style=color:#f92672>-&gt;</span>file) {
+        read_unlock(<span style=color:#f92672>&amp;</span>binfmt_lock);
+        <span style=color:#66d9ef>return</span> retval;
     }
 }
-</code></pre>
-<p>We can see it calls into <code>load_binary</code>:</p>
-<pre><code class=language-c>retval = fmt-&gt;load_binary(bprm);
-</code></pre>
-<p>Here, the <code>load_binary</code> is a pointer in a <code>linux_binfmt</code> struct. For elf format, it can be found <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/binfmt_elf.c#L94>here</a>:</p>
-<pre><code class=language-c>static struct linux_binfmt elf_format = {
-	.module		= THIS_MODULE,
-	.load_binary	= load_elf_binary,
-	.load_shlib	= load_elf_library,
-	.core_dump	= elf_core_dump,
-	.min_coredump	= ELF_EXEC_PAGESIZE,
+</code></pre></div><p>We can see it calls into <code>load_binary</code>:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>retval <span style=color:#f92672>=</span> fmt<span style=color:#f92672>-&gt;</span>load_binary(bprm);
+</code></pre></div><p>Here, the <code>load_binary</code> is a pointer in a <code>linux_binfmt</code> struct. For elf format, it can be found <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/binfmt_elf.c#L94>here</a>:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> linux_binfmt elf_format <span style=color:#f92672>=</span> {
+	.module		<span style=color:#f92672>=</span> THIS_MODULE,
+	.load_binary	<span style=color:#f92672>=</span> load_elf_binary,
+	.load_shlib	<span style=color:#f92672>=</span> load_elf_library,
+	.core_dump	<span style=color:#f92672>=</span> elf_core_dump,
+	.min_coredump	<span style=color:#f92672>=</span> ELF_EXEC_PAGESIZE,
 };
-</code></pre>
-<p>We can find the <code>load_elf_binary</code> function defined in the <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/binfmt_elf.c#L673><code>fs/binfmt_elf.c</code></a> file. Then the function will check the magic number in the ELF file header. You can find the ELF format from <a href=https://en.wikipedia.org/wiki/Executable_and_Linkable_Format>wiki</a>.
+</code></pre></div><p>We can find the <code>load_elf_binary</code> function defined in the <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/binfmt_elf.c#L673><code>fs/binfmt_elf.c</code></a> file. Then the function will check the magic number in the ELF file header. You can find the ELF format from <a href=https://en.wikipedia.org/wiki/Executable_and_Linkable_Format>wiki</a>.
 We can see for both 32-bit and 64-bit systems, the e-ident field should contain the magic number for ELF format files.</p>
-<pre><code class=language-c>/* Get the exec-header */
-loc-&gt;elf_ex = *((struct elfhdr *)bprm-&gt;buf);
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* Get the exec-header */</span>
+loc<span style=color:#f92672>-&gt;</span>elf_ex <span style=color:#f92672>=</span> <span style=color:#f92672>*</span>((<span style=color:#66d9ef>struct</span> elfhdr <span style=color:#f92672>*</span>)bprm<span style=color:#f92672>-&gt;</span>buf);
 
-retval = -ENOEXEC;
-/* First of all, some simple consistency checks */
-if (memcmp(loc-&gt;elf_ex.e_ident, ELFMAG, SELFMAG) != 0)
-    goto out;
-</code></pre>
-<p>Then, <code>load_elf_binary</code> will do some tasks to prepare for the executable file. After that, it will try to load the program header table:</p>
-<pre><code class=language-c>elf_phdata = load_elf_phdrs(&amp;loc-&gt;elf_ex, bprm-&gt;file);
-if (!elf_phdata)
-    goto out;
-</code></pre>
-<p>Then it will traverse the program header table and find the interpreter which is responsible of setting up the stack and map elf binary into the correct location in memory. After the interpreter is obtained, the function will perform simple consistency checks on the interpreter. It will load the interpreter program headers:</p>
-<pre><code class=language-c>/* Load the interpreter program headers */
-interp_elf_phdata = load_elf_phdrs(&amp;loc-&gt;interp_elf_ex,
+retval <span style=color:#f92672>=</span> <span style=color:#f92672>-</span>ENOEXEC;
+<span style=color:#75715e>/* First of all, some simple consistency checks */</span>
+<span style=color:#66d9ef>if</span> (memcmp(loc<span style=color:#f92672>-&gt;</span>elf_ex.e_ident, ELFMAG, SELFMAG) <span style=color:#f92672>!=</span> <span style=color:#ae81ff>0</span>)
+    <span style=color:#66d9ef>goto</span> out;
+</code></pre></div><p>Then, <code>load_elf_binary</code> will do some tasks to prepare for the executable file. After that, it will try to load the program header table:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>elf_phdata <span style=color:#f92672>=</span> load_elf_phdrs(<span style=color:#f92672>&amp;</span>loc<span style=color:#f92672>-&gt;</span>elf_ex, bprm<span style=color:#f92672>-&gt;</span>file);
+<span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>elf_phdata)
+    <span style=color:#66d9ef>goto</span> out;
+</code></pre></div><p>Then it will traverse the program header table and find the interpreter which is responsible of setting up the stack and map elf binary into the correct location in memory. After the interpreter is obtained, the function will perform simple consistency checks on the interpreter. It will load the interpreter program headers:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* Load the interpreter program headers */</span>
+interp_elf_phdata <span style=color:#f92672>=</span> load_elf_phdrs(<span style=color:#f92672>&amp;</span>loc<span style=color:#f92672>-&gt;</span>interp_elf_ex,
                     interpreter);
-if (!interp_elf_phdata)
-    goto out_free_dentry;
-</code></pre>
-<p>This function will call <code>setup_arg_pages</code> to finalize the stack vm_area_struct:</p>
-<pre><code class=language-c>/* Do this so that we can load the interpreter, if need be.  We will
-    change some of these later */
-retval = setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
+<span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>interp_elf_phdata)
+    <span style=color:#66d9ef>goto</span> out_free_dentry;
+</code></pre></div><p>This function will call <code>setup_arg_pages</code> to finalize the stack vm_area_struct:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* Do this so that we can load the interpreter, if need be.  We will
+</span><span style=color:#75715e>    change some of these later */</span>
+retval <span style=color:#f92672>=</span> setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
                 executable_stack);
-if (retval &lt; 0)
-    goto out_free_dentry;
-</code></pre>
-<p>It will also mmap the elf image into the correct location in memory. The bss and brk sections are prepared for the executable file:</p>
-<pre><code class=language-c>/* Now we do a little grungy work by mmapping the ELF image into
-    the correct location in memory. */
-for(i = 0, elf_ppnt = elf_phdata;
-    i &lt; loc-&gt;elf_ex.e_phnum; i++, elf_ppnt++) {
+<span style=color:#66d9ef>if</span> (retval <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span>)
+    <span style=color:#66d9ef>goto</span> out_free_dentry;
+</code></pre></div><p>It will also mmap the elf image into the correct location in memory. The bss and brk sections are prepared for the executable file:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* Now we do a little grungy work by mmapping the ELF image into
+</span><span style=color:#75715e>    the correct location in memory. */</span>
+<span style=color:#66d9ef>for</span>(i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>, elf_ppnt <span style=color:#f92672>=</span> elf_phdata;
+    i <span style=color:#f92672>&lt;</span> loc<span style=color:#f92672>-&gt;</span>elf_ex.e_phnum; i<span style=color:#f92672>++</span>, elf_ppnt<span style=color:#f92672>++</span>) {
         
         ...
 
-        /* There was a PT_LOAD segment with p_memsz &gt; p_filesz
-           before this one. Map anonymous pages, if needed,
-           and clear the area.  */
-        retval = set_brk(elf_bss + load_bias,
-                    elf_brk + load_bias,
+        <span style=color:#75715e>/* There was a PT_LOAD segment with p_memsz &gt; p_filesz
+</span><span style=color:#75715e>           before this one. Map anonymous pages, if needed,
+</span><span style=color:#75715e>           and clear the area.  */</span>
+        retval <span style=color:#f92672>=</span> set_brk(elf_bss <span style=color:#f92672>+</span> load_bias,
+                    elf_brk <span style=color:#f92672>+</span> load_bias,
                     bss_prot);
-        if (retval)
-            goto out_free_dentry;
-        nbyte = ELF_PAGEOFFSET(elf_bss);
-        if (nbyte) {
-            nbyte = ELF_MIN_ALIGN - nbyte;
-            if (nbyte &gt; elf_brk - elf_bss)
-                nbyte = elf_brk - elf_bss;
-            if (clear_user((void __user *)elf_bss +
+        <span style=color:#66d9ef>if</span> (retval)
+            <span style=color:#66d9ef>goto</span> out_free_dentry;
+        nbyte <span style=color:#f92672>=</span> ELF_PAGEOFFSET(elf_bss);
+        <span style=color:#66d9ef>if</span> (nbyte) {
+            nbyte <span style=color:#f92672>=</span> ELF_MIN_ALIGN <span style=color:#f92672>-</span> nbyte;
+            <span style=color:#66d9ef>if</span> (nbyte <span style=color:#f92672>&gt;</span> elf_brk <span style=color:#f92672>-</span> elf_bss)
+                nbyte <span style=color:#f92672>=</span> elf_brk <span style=color:#f92672>-</span> elf_bss;
+            <span style=color:#66d9ef>if</span> (clear_user((<span style=color:#66d9ef>void</span> __user <span style=color:#f92672>*</span>)elf_bss <span style=color:#f92672>+</span>
                         load_bias, nbyte)) {
             }
-</code></pre>
-<p>It will also call <code>elf_map</code> to map the segment to [vaddr, vaddr + file size] and align and then perform some checks:</p>
-<pre><code class=language-c>error = elf_map(bprm-&gt;file, load_bias + vaddr, elf_ppnt,
+</code></pre></div><p>It will also call <code>elf_map</code> to map the segment to [vaddr, vaddr + file size] and align and then perform some checks:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>error <span style=color:#f92672>=</span> elf_map(bprm<span style=color:#f92672>-&gt;</span>file, load_bias <span style=color:#f92672>+</span> vaddr, elf_ppnt,
 				elf_prot, elf_flags, total_size);
-</code></pre>
-<p>The interpreter is then loaded:</p>
-<pre><code class=language-c>elf_entry = load_elf_interp(&amp;loc-&gt;interp_elf_ex,
+</code></pre></div><p>The interpreter is then loaded:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>elf_entry <span style=color:#f92672>=</span> load_elf_interp(<span style=color:#f92672>&amp;</span>loc<span style=color:#f92672>-&gt;</span>interp_elf_ex,
                 interpreter,
-                &amp;interp_map_addr,
+                <span style=color:#f92672>&amp;</span>interp_map_addr,
                 load_bias, interp_elf_phdata);
-</code></pre>
-<p>Finally, the elf talbe is created:</p>
-<pre><code class=language-c>retval = create_elf_tables(bprm, &amp;loc-&gt;elf_ex,
+</code></pre></div><p>Finally, the elf talbe is created:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>retval <span style=color:#f92672>=</span> create_elf_tables(bprm, <span style=color:#f92672>&amp;</span>loc<span style=color:#f92672>-&gt;</span>elf_ex,
             load_addr, interp_load_addr);
-</code></pre>
-<p>After everything is prepared, we can call the <code>start_thread</code> function, which prepares the new task&rsquo;s registers and segments for execution. We will pass the set of registers for the new task, the address of the entry point of the new task, and the address of the top of of the statck for the new task to this function.</p>
-<pre><code class=language-c>start_thread(regs, elf_entry, bprm-&gt;p);
-</code></pre>
-<p>A lot of the information here can also be found at the <a href=https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html>linux-insides</a> book. I found it very helpful clearing my confusion.</p>
+</code></pre></div><p>After everything is prepared, we can call the <code>start_thread</code> function, which prepares the new task&rsquo;s registers and segments for execution. We will pass the set of registers for the new task, the address of the entry point of the new task, and the address of the top of of the statck for the new task to this function.</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>start_thread(regs, elf_entry, bprm<span style=color:#f92672>-&gt;</span>p);
+</code></pre></div><p>A lot of the information here can also be found at the <a href=https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html>linux-insides</a> book. I found it very helpful clearing my confusion.</p>
 <p>In our own implementations, we will not call the loaded program&rsquo;s <code>main</code> function. Instead, our loader will transfer control to the entry point of the loaded program via the <code>jmp</code> instruction. It has two major differences:</p>
 <ul>
 <li>Jumping to the entry point indicates we are going to execute the glibc start up functions before main is called. This includes setting up thread local storage. <code>main</code> simply jump to the main with the loader&rsquo;s TLS, no other setups are involved.</li>
 <li><code>jmp</code> doesn&rsquo;t push return address on stack. When the loaded program finishes execution, it exits the loader program, instead of giving control back to the caller.</li>
 </ul>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

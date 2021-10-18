@@ -1,57 +1,36 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Fault Tolerance in Distributed Systems | std::bodun::blog</title>
-<meta name=description content="No systems can provide fault-free guarantees, including distributed systems. However, failures in distributed systems are *independent*. It means only a subset of processes fail at once.">
-<meta property="og:title" content="Fault Tolerance in Distributed Systems">
-<meta property="og:description" content="No systems can provide fault-free guarantees, including distributed systems. However, failures in distributed systems are *independent*. It means only a subset of processes fail at once.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/fault-tolerance-in-distributed-systems/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-10-05T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-10-17T22:33:08-05:00">
-<meta itemprop=name content="Fault Tolerance in Distributed Systems">
-<meta itemprop=description content="No systems can provide fault-free guarantees, including distributed systems. However, failures in distributed systems are *independent*. It means only a subset of processes fail at once."><meta itemprop=datePublished content="2021-10-05T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-10-17T22:33:08-05:00">
-<meta itemprop=wordCount content="908">
-<meta itemprop=keywords content="distributed-system,fault-tolerance,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Fault Tolerance in Distributed Systems">
-<meta name=twitter:description content="No systems can provide fault-free guarantees, including distributed systems. However, failures in distributed systems are *independent*. It means only a subset of processes fail at once.">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/fault-tolerance-in-distributed-systems/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Fault Tolerance in Distributed Systems","headline":"Fault Tolerance in Distributed Systems","alternativeHeadline":"","description":"No systems can provide fault-free guarantees, including distributed systems. However, failures in distributed systems are *independent*. It means only a subset of processes fail at once.","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/fault-tolerance-in-distributed-systems\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-10-05T00:00:00.00Z","datePublished":"2021-10-05T00:00:00.00Z","dateModified":"2021-10-17T22:33:08.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/fault-tolerance-in-distributed-systems\/","wordCount":"908","genre":["distributed-system","fault-tolerance"],"keywords":["distributed-system","fault-tolerance"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Fault Tolerance in Distributed Systems</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Fault Tolerance in Distributed Systems</h2>
-<p>No systems can provide fault-free guarantees, including distributed systems. However, failures in distributed systems are <em>independent</em>. It means only a subset of processes fail at once. We can exploit this feature and provide some degree of fault tolerance. The problem is, fault tolerance makes everything else much more difficult.</p>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Fault Tolerance in Distributed Systems</h1>
+<div>
+Updated <time>October 17, 2021</time>
+</div>
+</header><p>No systems can provide fault-free guarantees, including distributed systems. However, failures in distributed systems are <em>independent</em>. It means only a subset of processes fail at once. We can exploit this feature and provide some degree of fault tolerance. The problem is, fault tolerance makes everything else much more difficult.</p>
 <p>The most common fault models is the <em>fail-stop</em>. It means a process completely &ldquo;bricks&rdquo;. When a process fail-stops, no messages can emerge from this process any more. We also don&rsquo;t know if this process will ever restart. In addition, we must account for all possible states of the faulty process, including unsent messages in the process&rsquo;s queue. On the other hand, it&rsquo;s important to point out a process that takes a long time to respond is indistinguishable from a fail-stop. The intuition is such processes and the faulty ones may take an unknown amount of time before message emerge.</p>
 <p>We use an example here to illustrate how and why a system fails to provide fault-tolerance. We take a system that replicates data by broadcasting operations using logical timestamps. This system uses <a href=https://en.wikipedia.org/wiki/Lamport_timestamp>Lamport clock</a> to update local clocks (our previous <a href=/blog/posts/lamport-distributed-mutual-exclusion/>post</a> on Lamport Distributed Mutual Exclusion explains how Lamport clock works). In short, we overwrite the value stored in a replica if an incoming message has later timestamp \(ts\).</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/670f3b49245d07e57781b1800609675ddcd1d33b/posts/fault-tolerance-in-distributed-systems/replication.png#center alt=replication class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/670f3b49245d07e57781b1800609675ddcd1d33b/posts/fault-tolerance-in-distributed-systems/replication.png#center alt=replication></p>
 <center>Source: Ken McMillan</center>
 <p>This system is not fault-tolerant. Imagine when one replica receives a write (marked by red incoming &ldquo;write&rdquo;) request and then tries to write the value to other replicas. This replica then fail-stops right after it writes to one replica and never writes to the other replica. In this case, not all replicas see the writes, thus violating consistency.</p>
 <p>The solution to this problem is quite simple: reliable atomic broadcast. Under atomic broadcast, all writes are all-or-nothing. It eliminates the possibility for a process to fail-stop amid broadcasting.</p>
@@ -60,16 +39,10 @@
 <p>Thus, we want to extend the atomic broadcast so that updates become ordered. Under ordered atomic broadcast, writes are all-or-nothing and everyone agrees on the order of updates. If we assume the system to be fully asynchronous, ordered atomic broadcasts are not possible: (1) we can&rsquo;t guarantee termination under asynchrony; (2) we could lose order. Thus, we rely on the synchronous approach.</p>
 <p>Under the synchronous assumption, we can safely say a process fails after waiting for time \(t _{fail}\), where \(t _{fail} = 3 t _{msg} + 2 t _{turn}\). Here, \(t _{msg}\) is the message transfer latency, and \(t _{turn}\) is the max time to respond to a message.</p>
 <p>To see why \(t _{fail}\) is calculated this way, we use the following example to explain the process:</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/bd7266dfbbf067389a62ecded5feb6c1861b8a0f/posts/fault-tolerance-in-distributed-systems/fail-time.png#center alt=process-fail class=center loading=lazy decoding=async>
-</p><center>Source: Ken McMillan</center></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/bd7266dfbbf067389a62ecded5feb6c1861b8a0f/posts/fault-tolerance-in-distributed-systems/fail-time.png#center alt=process-fail><center>Source: Ken McMillan</center></p>
 <p>Imagine process \(p\) sends a message to \(q\) and waits for an ack from \(q\). Before \(q\) is able respond with the ack, it somehow crashes. The max time taken for \(p\) to see an aco from \(q\) would be two message transfer time plus the execution time by \(q\), which is \(2t _{msg} + t _{turn}\). We add \(t\) to indicate the elapsed time when \(p\) sends the request.</p>
 <p>Now imagine \(q\) is able to broadcast a request right before it fails. Later, another process is able to forward this request back to \(p\). Then \(p\) needs to wait for three message transfer time plus two message processing time before it can assume that it will no longer receive message from \(q\).</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/d129b7823a217934cd3a826e5c4c4ee83ff30824/posts/fault-tolerance-in-distributed-systems/time-fail.png#center alt=process-fail class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/d129b7823a217934cd3a826e5c4c4ee83ff30824/posts/fault-tolerance-in-distributed-systems/time-fail.png#center alt=process-fail></p>
 <p>Under the synchronous assumption, ordered reliable atomic broadcast works as follows:</p>
 <ul>
 <li>When a client send a request to process \(p\), the process records logical time \(r _l(p,p)\) and physical time \(r _{t}(p,p)\). Then it broadcast the request.</li>
@@ -78,11 +51,8 @@
 <li>Process \(p\) sets another process \(q\) as &ldquo;failed&rdquo; (denoted by \(f(p, q)\)) if \(t _l(p, q) \leq r _l(p, p') &lt; +\infty\) and \(t _t &lt; r _t(p, p') + t _{fail}\). In short, it means if we broadcast message and don&rsquo;t receive any response after time \(t _{fail}\), and our last recorded logical time of process \(q\) is before our broadcast, then we know process \(q\) must have failed.</li>
 <li>Then we perform updates when for all \(q \neq p\), \(r _l(p,p) &lt; r _l (p, q)\) (meaning everyone else&rsquo;s request time is later than mine) and \(t _l(p,q) > r _l(p,p) \lor f(p, q)\). Intuitively, it means we only perform updates when we receive message from other processes after our broadcast, and when we think other processes' timestamps are after us, or when they have all failed.</li>
 </ul>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

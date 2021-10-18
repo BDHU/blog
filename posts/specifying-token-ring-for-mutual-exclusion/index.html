@@ -1,51 +1,33 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>Specifying Token Ring for Mutual Exclusion | std::bodun::blog</title>
-<meta name=description content="Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it's a mechanism of concurrency control allowing exclusive access to some resource (or &#34;critical region&#34;). Token passing is an algorithm for distributed mutual exclusion and will be our focus in this post">
-<meta property="og:title" content="Specifying Token Ring for Mutual Exclusion">
-<meta property="og:description" content="Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it's a mechanism of concurrency control allowing exclusive access to some resource (or &#34;critical region&#34;). Token passing is an algorithm for distributed mutual exclusion and will be our focus in this post">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/specifying-token-ring-for-mutual-exclusion/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-09-11T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-10-17T22:33:08-05:00">
-<meta itemprop=name content="Specifying Token Ring for Mutual Exclusion">
-<meta itemprop=description content="Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it's a mechanism of concurrency control allowing exclusive access to some resource (or &#34;critical region&#34;). Token passing is an algorithm for distributed mutual exclusion and will be our focus in this post"><meta itemprop=datePublished content="2021-09-11T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-10-17T22:33:08-05:00">
-<meta itemprop=wordCount content="804">
-<meta itemprop=keywords content="distributed-system,ivy,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Specifying Token Ring for Mutual Exclusion">
-<meta name=twitter:description content="Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it's a mechanism of concurrency control allowing exclusive access to some resource (or &#34;critical region&#34;). Token passing is an algorithm for distributed mutual exclusion and will be our focus in this post">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/specifying-token-ring-for-mutual-exclusion/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"Specifying Token Ring for Mutual Exclusion","headline":"Specifying Token Ring for Mutual Exclusion","alternativeHeadline":"","description":"Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it\u0027s a mechanism of concurrency control allowing exclusive access to some resource (or \u0022critical region\u0022). Token passing is an algorithm for distributed mutual exclusion and will be our focus in this post","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/specifying-token-ring-for-mutual-exclusion\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-09-11T00:00:00.00Z","datePublished":"2021-09-11T00:00:00.00Z","dateModified":"2021-10-17T22:33:08.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/specifying-token-ring-for-mutual-exclusion\/","wordCount":"804","genre":["distributed-system","ivy"],"keywords":["distributed-system","ivy"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>Specifying Token Ring for Mutual Exclusion</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>Specifying Token Ring for Mutual Exclusion</h2>
-<p>Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it&rsquo;s a mechanism of concurrency control allowing exclusive access to some resource (or &ldquo;critical region&rdquo;). Token passing is an algorithm for distributed mutual exclusion (DME) and will be our focus in this post.</p>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Specifying Token Ring for Mutual Exclusion</h1>
+<div>
+Updated <time>October 17, 2021</time>
+</div>
+</header><p>Mutual exclusion is a common term appearing frequently in computer sciences. In essence, it&rsquo;s a mechanism of concurrency control allowing exclusive access to some resource (or &ldquo;critical region&rdquo;). Token passing is an algorithm for distributed mutual exclusion (DME) and will be our focus in this post.</p>
 <p>DME specifications usually make the following assumptions:</p>
 <ul>
 <li>Network delivers message in order, e.g. TCP (sometimes)</li>
@@ -71,10 +53,7 @@
 <li>need non-duplication for messages. Otherwise, we violate the fundamental properties of this protocol, or no mutual exclusion.</li>
 <li>clients don&rsquo;t spuriously release. This will be clear later when we demonstrate what happens if clients release multiple times.</li>
 </ul>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/token-ring-protocol/token-ring.png#center alt=token-ring class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/token-ring-protocol/token-ring.png#center alt=token-ring></p>
 <p>We want to guarantee that</p>
 <ul>
 <li>mutual exclusion holds.</li>
@@ -88,76 +67,75 @@
 <li>Throughput: the maximum throughput would be 1/(message time + CS time)</li>
 </ul>
 <p>A naive specification for mutex in <a href=https://microsoft.github.io/ivy/language.html>Ivy</a> would be:</p>
-<pre><code class=language-haskell>action grant(v:id)
-action release(v:id)
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#a6e22e>action</span> grant(v<span style=color:#66d9ef>:</span>id)
+<span style=color:#a6e22e>action</span> release(v<span style=color:#66d9ef>:</span>id)
 
-specification {
-    var lock(X:id):bool
+<span style=color:#a6e22e>specification</span> {
+    var lock(<span style=color:#66d9ef>X:</span>id)<span style=color:#66d9ef>:</span>bool
     after init {
-        lock(X) := false;
+        lock(<span style=color:#66d9ef>X</span>) <span style=color:#66d9ef>:=</span> false;
     }
     
     before grant {
-        require ~lock(X);
-        lock(v) := true
+        require <span style=color:#f92672>~</span>lock(<span style=color:#66d9ef>X</span>);
+        lock(v) <span style=color:#66d9ef>:=</span> true
     }
 
     before release {
         require lock(v);
-        lock(v) := false
+        lock(v) <span style=color:#66d9ef>:=</span> false
     }
 }
-</code></pre>
-<p>To see token ring in action, we use the demo from <a href=http://mcmil.net/wordpress/>Ken</a>&rsquo;s presentation:</p>
-<pre><code class=language-haskell>#lang ivy1.8
+</code></pre></div><p>To see token ring in action, we use the demo from <a href=http://mcmil.net/wordpress/>Ken</a>&rsquo;s presentation:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#f92672>#</span>lang ivy1<span style=color:#f92672>.</span><span style=color:#ae81ff>8</span>
 
-include network
-include numbers
+<span style=color:#a6e22e>include</span> network
+<span style=color:#a6e22e>include</span> numbers
 
-global {
-    type host_id = {0..max}
-    alias token = uint[1]
-    instance net : tcp.net(token)
+<span style=color:#a6e22e>global</span> {
+    <span style=color:#66d9ef>type</span> host_id <span style=color:#f92672>=</span> {<span style=color:#ae81ff>0</span><span style=color:#f92672>..</span>max}
+    alias token <span style=color:#f92672>=</span> uint[<span style=color:#ae81ff>1</span>]
+    <span style=color:#66d9ef>instance</span> net <span style=color:#66d9ef>:</span> tcp<span style=color:#f92672>.</span>net(token)
 }
 
-process host(self:host_id) = {
-    import action grant
+<span style=color:#a6e22e>process</span> host(self<span style=color:#66d9ef>:</span>host_id) <span style=color:#f92672>=</span> {
+    <span style=color:#66d9ef>import</span> action grant
     export action release
 
     specification {
-        var lock : bool
+        var lock <span style=color:#66d9ef>:</span> bool
 
         after init {
-            lock := false;
+            lock <span style=color:#66d9ef>:=</span> false;
         }
 
         before grant {
-            require forall X. ~host(X).lock;
-            lock := true;
+            require forall <span style=color:#66d9ef>X</span><span style=color:#f92672>.</span> <span style=color:#f92672>~</span>host(<span style=color:#66d9ef>X</span>)<span style=color:#f92672>.</span>lock;
+            lock <span style=color:#66d9ef>:=</span> true;
         }
 
         before release {
             require lock;
-            lock := false;
+            lock <span style=color:#66d9ef>:=</span> false;
         }
     }
 
     implementation {
-        instance sock : net.socket
+        <span style=color:#66d9ef>instance</span> sock <span style=color:#66d9ef>:</span> net<span style=color:#f92672>.</span>socket
 
         after init {
-            if self = 0 {
+            <span style=color:#66d9ef>if</span> self <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span> {
                 pass
             }
         }
 
-        action pass = {
-            var tok : token;
-            var next := 0 if self = max else self + 1;
-            sock.send(host(next).sock.id, tok);
+        action pass <span style=color:#f92672>=</span> {
+            var tok <span style=color:#66d9ef>:</span> token;
+            var next <span style=color:#66d9ef>:=</span> <span style=color:#ae81ff>0</span> <span style=color:#66d9ef>if</span> self <span style=color:#f92672>=</span> max <span style=color:#66d9ef>else</span> self <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>;
+            sock<span style=color:#f92672>.</span>send(host(next)<span style=color:#f92672>.</span>sock<span style=color:#f92672>.</span>id, tok);
         }
 
-        implement sock.recv(src:tcp.endpoint, val:token) {
+        implement sock<span style=color:#f92672>.</span>recv(src<span style=color:#66d9ef>:</span>tcp<span style=color:#f92672>.</span>endpoint, val<span style=color:#66d9ef>:</span>token) {
             grant;
         }
 
@@ -166,16 +144,12 @@ process host(self:host_id) = {
         }
     }
 }
-</code></pre>
-<p>We put the above code into a file called <code>token_ring.ivy</code> and compile it using <code>ivyc token_ring.ivy</code>. Then we launch the program using <code>ivy_launch max=2 token_ring.ivy</code>, which opens three terminal windows.</p>
+</code></pre></div><p>We put the above code into a file called <code>token_ring.ivy</code> and compile it using <code>ivyc token_ring.ivy</code>. Then we launch the program using <code>ivy_launch max=2 token_ring.ivy</code>, which opens three terminal windows.</p>
 <p>If we type in host(1) with <code>host.release</code>, we see in host(2) it outputs <code>host.grant</code>, which seems to show that the token work properly. However, if we type <code>host.release</code> again in host(1), <code>host.grant</code> will show up again in host(2), resulting in multiple tokens getting created, which violates the requirement that there is at most one token in the ring at any given time.</p>
 <p>If we execute <code>ivyc target=test token_ring.ivy && ivy_launch max=2 token_ring.ivy</code>, then we see the token ring work properly. The reason is we have specified the requirement for <code>grant</code> and <code>release</code> (<code>require forall X. ~host(X).lock</code> for <code>grant</code> and <code>require lock</code> for <code>release</code>).</p>
 <p><code>grant</code> is an action <em>imported</em> from the environment, thus we know when grant happens, all clients in the network do not hold a lock. On the other hand, <code>release</code> is an action <em>exported</em> from the system, which means the tester must perform grant given the host has the lock. So the tester won&rsquo;t perform <em>release</em> multiple times like we did above because the tester can not violate the <code>require lock</code> requirement.</p>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>

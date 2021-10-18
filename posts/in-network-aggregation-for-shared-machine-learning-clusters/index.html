@@ -1,84 +1,51 @@
-<!doctype html><html lang=en>
-<head>
+<!doctype html><html><head>
 <meta charset=utf-8>
-<meta http-equiv=x-ua-compatible content="IE=edge">
 <meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=author content="Liste - https://www.bodunhu.com/blog/">
-<title>In-Network Aggregation for Shared Machine Learning Clusters | std::bodun::blog</title>
-<meta name=description content="This [paper](https://proceedings.mlsys.org/paper/2021/file/eae27d77ca20db309e056e3d2dcd7d69-Paper.pdf) by Nadeen appeared in MLSys 2021. It presents an in-network aggregation framework called *PANAMA* for distributed ML training tasks.">
-<meta property="og:title" content="In-Network Aggregation for Shared Machine Learning Clusters">
-<meta property="og:description" content="This [paper](https://proceedings.mlsys.org/paper/2021/file/eae27d77ca20db309e056e3d2dcd7d69-Paper.pdf) by Nadeen appeared in MLSys 2021. It presents an in-network aggregation framework called *PANAMA* for distributed ML training tasks.">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://www.bodunhu.com/blog/posts/in-network-aggregation-for-shared-machine-learning-clusters/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-08-31T00:00:00+00:00">
-<meta property="article:modified_time" content="2021-10-17T22:33:08-05:00">
-<meta itemprop=name content="In-Network Aggregation for Shared Machine Learning Clusters">
-<meta itemprop=description content="This [paper](https://proceedings.mlsys.org/paper/2021/file/eae27d77ca20db309e056e3d2dcd7d69-Paper.pdf) by Nadeen appeared in MLSys 2021. It presents an in-network aggregation framework called *PANAMA* for distributed ML training tasks."><meta itemprop=datePublished content="2021-08-31T00:00:00+00:00">
-<meta itemprop=dateModified content="2021-10-17T22:33:08-05:00">
-<meta itemprop=wordCount content="341">
-<meta itemprop=keywords content="network,mlsys,paper-review,">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="In-Network Aggregation for Shared Machine Learning Clusters">
-<meta name=twitter:description content="This [paper](https://proceedings.mlsys.org/paper/2021/file/eae27d77ca20db309e056e3d2dcd7d69-Paper.pdf) by Nadeen appeared in MLSys 2021. It presents an in-network aggregation framework called *PANAMA* for distributed ML training tasks.">
-<meta name=twitter:site content="@https://twitter.com/BodunHu">
-<link rel=canonical href=https://www.bodunhu.com/blog/posts/in-network-aggregation-for-shared-machine-learning-clusters/>
-<meta name=monetization content="$twitter.xrptipbot.com/ronaldsvilcins">
-<link rel=dns-prefetch href=https://www.google-analytics.com>
-<link href=https://www.google-analytics.com rel=preconnect crossorigin>
-<link rel=alternate type=application/atom+xml title=std::bodun::blog href=https://www.bodunhu.com/blog/atom.xml>
-<link rel=alternate type=application/json title=std::bodun::blog href=https://www.bodunhu.com/blog/feed.json>
-<link rel="shortcut icon" href=/blog/images/favicon.ico type=image/x-icon>
-<style>*,:after,:before{box-sizing:border-box;padding:0}body{font:1rem/1.5 '-apple-system',BlinkMacSystemFont,avenir next,avenir,helvetica,helvetica neue,ubuntu,roboto,noto,segoe ui,arial,sans-serif;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;padding:1.5rem;color:#000}.skip-link{position:absolute;top:-40px;left:0;background:#eee;z-index:100}.skip-link:focus{top:0}h1,h2,h3,h4,h5,strong,b{font-size:inherit;font-weight:600}header{line-height:2;padding-bottom:1.5rem}.link{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:none}.time{font-variant-numeric:tabular-nums;white-space:nowrap}blockquote{border-left:5px solid #eee;padding-left:1rem;margin:0}a,a:visited{color:inherit}a:hover,a.heading-link{text-decoration:none}pre{padding:.5rem;overflow:auto;overflow-x:scroll;overflow-wrap:normal}code,pre{font-family:San Francisco Mono,Monaco,consolas,lucida console,dejavu sans mono,bitstream vera sans mono,monospace;font-size:normal;font-size:small;background:#eee}code{padding:.1rem;border:none}ul{list-style-type:square}ul,ol{padding-left:1.2rem}.list{line-height:2;list-style-type:none;padding-left:0}.list li{padding-bottom:.1rem}.meta{color:#777}.content{max-width:70ch;margin:0 auto}header{line-height:2;display:flex;justify-content:space-between;padding-bottom:1rem}header a{text-decoration:none}header ul{list-style-type:none;padding:0}header li,header a{display:inline}h2.post{padding-top:.5rem}header ul a:first-child{padding-left:1rem}.nav{height:1px;background:#000;content:'';max-width:10%}.list li{display:flex;align-items:baseline}.list li time{flex:initial}.hr-list{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px dotted #ccc;flex:1 0 1rem}.hr-list-none{margin-top:0;margin-bottom:0;margin-right:.5rem;margin-left:.5rem;height:1px;border:0;border-bottom:1px #ccc;flex:1 0 1rem}.m,hr{border:0;margin:3rem 0}img{max-width:100%;height:auto}</style>
-<script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","articleSection":"posts","name":"In-Network Aggregation for Shared Machine Learning Clusters","headline":"In-Network Aggregation for Shared Machine Learning Clusters","alternativeHeadline":"","description":"This [paper](https:\/\/proceedings.mlsys.org\/paper\/2021\/file\/eae27d77ca20db309e056e3d2dcd7d69-Paper.pdf) by Nadeen appeared in MLSys 2021. It presents an in-network aggregation framework called *PANAMA* for distributed ML training tasks.","inLanguage":"en-us","isFamilyFriendly":"true","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/www.bodunhu.com\/blog\/posts\/in-network-aggregation-for-shared-machine-learning-clusters\/"},"author":{"@type":"Person","name":""},"creator":{"@type":"Person","name":""},"accountablePerson":{"@type":"Person","name":""},"copyrightHolder":"std::bodun::blog","copyrightYear":"2021","dateCreated":"2021-08-31T00:00:00.00Z","datePublished":"2021-08-31T00:00:00.00Z","dateModified":"2021-10-17T22:33:08.00Z","publisher":{"@type":"Organization","name":"std::bodun::blog","url":"https://www.bodunhu.com/blog/","logo":{"@type":"ImageObject","url":"https:\/\/www.bodunhu.com\/blog\/","width":"32","height":"32"}},"image":"https://www.bodunhu.com/blog/","url":"https:\/\/www.bodunhu.com\/blog\/posts\/in-network-aggregation-for-shared-machine-learning-clusters\/","wordCount":"341","genre":["network","mlsys","paper-review"],"keywords":["network","mlsys","paper-review"]}</script>
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<title>In-Network Aggregation for Shared Machine Learning Clusters</title>
 </head>
-<body>
-<a class=skip-link href=#main>Skip to main</a>
-<main id=main>
-<div class=content>
-<header>
-<p style=padding:0;margin:0><a href=/blog/><b>std::bodun::blog</b></a></p>
-<ul style=padding:0;margin:0>
-<li><a href=https://www.bodunhu.com/>About</a></li>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
 </ul>
+</nav>
 </header>
-<hr class=hr-list style=padding:0;margin:0>
-<h2 class=post>In-Network Aggregation for Shared Machine Learning Clusters</h2>
-<p>This <a href=https://proceedings.mlsys.org/paper/2021/file/eae27d77ca20db309e056e3d2dcd7d69-Paper.pdf>paper</a> by Nadeen appeared in MLSys 2021. It presents an in-network aggregation framework called <em>PANAMA</em> for distributed ML training tasks. <em>PANAMA</em> has two components: (1) an in-network hardware accelerator with support for floating-point gradient aggregation; (2) a domain-specific load-balancing and congestion control protocol.</p>
-<h2 id=motivation>Motivation <a href=#motivation class="hash g">#</a></h2>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>In-Network Aggregation for Shared Machine Learning Clusters</h1>
+<div>
+Updated <time>October 17, 2021</time>
+</div>
+</header><p>This <a href=https://proceedings.mlsys.org/paper/2021/file/eae27d77ca20db309e056e3d2dcd7d69-Paper.pdf>paper</a> by Nadeen appeared in MLSys 2021. It presents an in-network aggregation framework called <em>PANAMA</em> for distributed ML training tasks. <em>PANAMA</em> has two components: (1) an in-network hardware accelerator with support for floating-point gradient aggregation; (2) a domain-specific load-balancing and congestion control protocol.</p>
+<h2 id=motivation>Motivation</h2>
 <p>The primary motivation behind <em>PANAMA</em> is the <em>data-parallel</em> training (in which the neural network is replicated across \(N\) worker where each worker processes a subset of the training data) demands constant local gradient exchanging at every iteration, thus creating a huge amount of traffic.</p>
 <p>For example, for a training job with \(1000\) workers and 1 GB DNN model size requring \(1000\) iterations, the total traffic will be about 2 PB.</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/network-flow-size.png#center alt=in-network-aggregation-traffic class=center loading=lazy decoding=async>
-</p></p>
-<h2 id=network-design>Network Design <a href=#network-design class="hash g">#</a></h2>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/network-flow-size.png#center alt=in-network-aggregation-traffic></p>
+<h2 id=network-design>Network Design</h2>
 <p>The paper assumes a traditional data center multi-tier folded <a href=https://en.wikipedia.org/wiki/Clos_network>Clos topology</a>:</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/clos.png#center alt=clos-topology class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/clos.png#center alt=clos-topology></p>
 <p><em>PANAMA</em> uses multiple aggregation trees per training job to spread the traffic across multiple paths and avoid congestion hotspots. This is different to equal-cost multi-path (ECMP) protocol because the aggregation flows are typically large. Bounding such flows to a single aggregation tree will create network imbalance.</p>
-<h2 id=congestion-control>Congestion Control <a href=#congestion-control class="hash g">#</a></h2>
+<h2 id=congestion-control>Congestion Control</h2>
 <p><em>PANAMA</em> uses <strong>implicit acknowledgments</strong> instead of traditional point-to-point approaches. Because each aggregated packets are constructed on the fly, one-to-one mapping between packets and the acknowledgements is unnecessary, if a worker receives aggregation results, that automatically serves as an <em>implicit</em> acknowledgement. This eliminated the need to keep a per-flow congestion state at PSwitches.</p>
 <p>Similar to <a href>DCTCP</a>, <em>PANAMA</em> relies on ECN marks in the IP header to react to the network congestion. Since aggregation packets are created on the switch, each hardware accelerator need to perform a bitwise \(OR\) on the ECN field of received packets to mirror the traditional ECN bit.</p>
-<h2 id=hardware-design>Hardware Design <a href=#hardware-design class="hash g">#</a></h2>
+<h2 id=hardware-design>Hardware Design</h2>
 <p>The design of the aggregation accelerator in <em>PANAMA</em> is straightforward: it utilized the SIMD architecture in which the gradients are partitioned across adder trees. Adder tree can operate in parallel and pack the results and sent them to the output ports. The VID fields are merely used to correct aggregation.</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/aggregater-arch.png#center alt=aggregator-arch class=center loading=lazy decoding=async>
-</p></p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/aggregater-arch.png#center alt=aggregator-arch></p>
 <p>Overall, the workflow is really simple and illustrated below:</p>
-<p>
-<p class=markdown-image style=text-align:center>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/network-aggregation-workflow.png alt=network-aggregation-workflow class=center loading=lazy decoding=async>
-</p></p>
-<hr class=hr-list>
-<footer>
-<p>© 2016-2021 <a href=https://www.bodunhu.com/>Bodun Hu</a>. All rights reserved. <a href=/blog/index.xml>Subscribe</a></p>
-</footer>
-</div>
-</main>
-</body>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/network-aggregation-workflow.png alt=network-aggregation-workflow></p>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
 </html>
