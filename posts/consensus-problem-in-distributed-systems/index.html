@@ -47,6 +47,7 @@ all commute, \(p\)-free will, in fact, leads the system to a &lsquo;&lsquo;decid
 <p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consensus-problem/not-uni-valent.png#center alt=not-uni-valent></p>
 <p>So, given the proof that we can&rsquo;t reach consensus under asynchronous assumptions, what is the best we can do in practice?</p>
 <h3 id=paxos-algorithm>Paxos Algorithm</h3>
+<p>We will back up a little bit from the asynchronous case, and make compromises by having: (1) consistency/agreement under the case of asynchrony; (2) settle for the lack of termination.</p>
 <p>In Paxos algorithm, we assume the majority of process are non-faulty. That means \(N > 2F\). Processes have three roles: proposer, acceptor, and learner. Proposers broadcast its proposals to all acceptors; acceptors accept a proposal (e.g. based on arrival times of proposals) and broadcasts accept messages to all learners; learners decide which values to accept (e.g. the majority of a accepted value).</p>
 <p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/52b5ca780736123db6b786a7e68276ec108bf240/posts/consensus-problem/paxos-basics.png#center alt=Paxos-basics></p>
 <p>The problem is: even if one acceptor fails, the total number non-faulty processes will be \(N-1\) and we can&rsquo;t say \(N-1 > 2F\) must hold.</p>
@@ -57,6 +58,7 @@ all commute, \(p\)-free will, in fact, leads the system to a &lsquo;&lsquo;decid
 <p>To see why this is the case, suppose an old leader dies at some point, then a new leader comes in. This new leader broadcasts a \(prepare\) message to acceptors. Some acceptors reply back. We argue that if the old leader&rsquo;s proposal is accepted by the <em>majority</em> of acceptors, then this new leader will preserve the old proposal by evaluating the replies from acceptors and re-proposing the latest accepted value in the prepare phase.</p>
 <p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/282bee06e56cc07dd145f024426032620984ad92/posts/consensus-problem/paxos.png#center alt=paxos></p>
 <p>The reason is: <em>if there exists a majority of acceptors in the previous round, then there must exist at least one acceptor in both the old and the current round</em>, because add the sum of majorities exceeds the total number of processes. Therefore, there must be at least one acceptor that can send its accepted value back to the new leader. Since there is only one leader at any time, we can safely say the old value will be sent to the new leader.</p>
+<p>In summary, if the new leader sees a prepare message with a value, then that value must come from the previous round and the new leader can re-propose that value; otherwise, the new leader can safely propose a new value.</p>
 <section class=footnotes role=doc-endnotes>
 <hr>
 <ol>
