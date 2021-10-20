@@ -2876,8 +2876,7 @@ wireless local area networks. Degraded transmitting rate is caused by CSMA/CA ch
 &lt;p>This paper has made improvements over previous work in that it studies the performance of 802.11 WLANs, with one host having lower bit rate, whereas many other assume that all hosts communicate using the same bit rate. This is a step forward to capture more realistic situations. Overall, the paper does a good job in terms of proving its point. It captures the most critical information and it&amp;rsquo;s easy to follow the concept. However, the neat structure can make readers without sufficient background to spend more time catching up since the background section may not be enough for starters.&lt;/p>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>Overall, this paper brings novel approach to analyze the performance of 802.11 WLANs with varying bit rate. It brings new insights into studying the 802.11 standard. The paper focuses on TCP and UDP protocols. Applying the method discussed in paper to a lesser known protocol such as DCTCP can yield more insights into the different protocols can affect the throughput. Another direction is to generalize this model to multiple bit rate degrading and study their behaviors.&lt;/p>
-&lt;p>The bit rate used in the paper also seems to be pretty low compared to modern standards. With the introduction of 5G network, the bit rate becomes a lot higher, it will be interesting to see how extremely high bit rate can affect the performance of 802.11.&lt;/p></description></item><item><title>Exokernel</title><link>https://www.bodunhu.com/blog/posts/exokernel/</link><pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/exokernel/</guid><description>&lt;p>Exokernel is a term every system researcher has heard of at some point in life. However, according to the &lt;a href="https://pdos.csail.mit.edu/">PDOS&lt;/a> group at MIT, there aren&amp;rsquo;t any exokernel-based operating systems in active use today. It&amp;rsquo;s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice.&lt;/p>
-&lt;!--description-->
+&lt;p>The bit rate used in the paper also seems to be pretty low compared to modern standards. With the introduction of 5G network, the bit rate becomes a lot higher, it will be interesting to see how extremely high bit rate can affect the performance of 802.11.&lt;/p></description></item><item><title>Exokernel</title><link>https://www.bodunhu.com/blog/posts/exokernel/</link><pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/exokernel/</guid><description>&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Exokernel">Exokernel&lt;/a> is a term every system researcher has heard of at some point in life. However, according to the &lt;a href="https://pdos.csail.mit.edu/">PDOS&lt;/a> group at MIT, there aren&amp;rsquo;t any exokernel-based operating systems in active use today. It&amp;rsquo;s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice.&lt;/p>
 &lt;p>Perhaps the most important thing to keep in mind is that exokernel operating system architecture pushes management of physical resources to the application level, contrary to what most monolithic kernel would do: providing hardware resource management through some form of abstraction, usually hiding hardware-related details.&lt;/p>
 &lt;h2 id="limitations-of-traditional-approaches">Limitations of Traditional Approaches&lt;/h2>
 &lt;p>Monolithic kernels usually enforce centralized resource management via a set of abstractions. In microkernel-based system, they are usually provided through some form of trusted user-level servers. There are several drawbacks:&lt;/p>
@@ -2895,34 +2894,18 @@ wireless local area networks. Degraded transmitting rate is caused by CSMA/CA ch
 &lt;p>However, generalization may not be a bad thing. As discussed in the &lt;em>UNIX the Timesharing System&lt;/em> paper, having a generalized and unified yet limited file system API can simplify programming efforts. Accessing both ordinary files and I/O devices is achieved by utilizing a unified interface. Nobody today wants to implement a different set of policies just for character device or block device.&lt;/p>
 &lt;h2 id="design">Design&lt;/h2>
 &lt;p>Essentially, exokernel consists of thin veneet that multiplexes and exports physical resources through a set of primitives. The libraries, running in the application space, use them to implement with special-purpose functionalities in a higher abstraction level. The architecture is shown in the Paper:&lt;/p>
-&lt;p align="center">
-&lt;a href="https://pdos.csail.mit.edu/6.828/2008/readings/engler95exokernel.pdf">
-&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/exokernel_arch.png" width="90%">
-&lt;/a>
-&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/exokernel_arch.png#center" alt="exokernel">&lt;/p>
 &lt;p>There are three majors tasks to separate protection from management:&lt;/p>
 &lt;ul>
-&lt;li>
-&lt;p>Tracking ownership of resources.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Ensure protection by guarding resource usage.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>Revoke access.&lt;/p>
-&lt;/li>
+&lt;li>Tracking ownership of resources.&lt;/li>
+&lt;li>Ensure protection by guarding resource usage.&lt;/li>
+&lt;li>Revoke access.&lt;/li>
 &lt;/ul>
 &lt;p>The paper presents three techniques to achieve these goals:&lt;/p>
 &lt;ul>
-&lt;li>
-&lt;p>&lt;em>secure binding&lt;/em>: lib OS can securely bind to machine resources.&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;em>visible revocation&lt;/em>: lib OS can participate in a resource revocation protocol. (Keep in mind why the revocation needs to be visible)&lt;/p>
-&lt;/li>
-&lt;li>
-&lt;p>&lt;em>abort protocol&lt;/em>: exokernel itself can break secure binding of uncooperative lib OS.&lt;/p>
-&lt;/li>
+&lt;li>&lt;em>secure binding&lt;/em>: lib OS can securely bind to machine resources.&lt;/li>
+&lt;li>&lt;em>visible revocation&lt;/em>: lib OS can participate in a resource revocation protocol. (Keep in mind why the revocation needs to be visible)&lt;/li>
+&lt;li>&lt;em>abort protocol&lt;/em>: exokernel itself can break secure binding of uncooperative lib OS.&lt;/li>
 &lt;/ul>
 &lt;p>In general, exokernel should expose hardware resources such as disk memory, CPU, interrupts, through low-level primitives with as few abstractions as possible. The resource management policy should be enforced by the library OS instead. &lt;strong>The policy control boils down to whether the exokernel permits resource allocation&lt;/strong>.&lt;/p>
 &lt;h2 id="secure-binding">Secure Binding&lt;/h2>

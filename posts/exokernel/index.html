@@ -28,9 +28,9 @@
 <header id=post-header>
 <h1>Exokernel</h1>
 <div>
-Updated <time>May 19, 2021</time>
+Updated <time>October 19, 2021</time>
 </div>
-</header><p>Exokernel is a term every system researcher has heard of at some point in life. However, according to the <a href=https://pdos.csail.mit.edu/>PDOS</a> group at MIT, there aren&rsquo;t any exokernel-based operating systems in active use today. It&rsquo;s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice.</p>
+</header><p><a href=https://en.wikipedia.org/wiki/Exokernel>Exokernel</a> is a term every system researcher has heard of at some point in life. However, according to the <a href=https://pdos.csail.mit.edu/>PDOS</a> group at MIT, there aren&rsquo;t any exokernel-based operating systems in active use today. It&rsquo;s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice.</p>
 <p>Perhaps the most important thing to keep in mind is that exokernel operating system architecture pushes management of physical resources to the application level, contrary to what most monolithic kernel would do: providing hardware resource management through some form of abstraction, usually hiding hardware-related details.</p>
 <h2 id=limitations-of-traditional-approaches>Limitations of Traditional Approaches</h2>
 <p>Monolithic kernels usually enforce centralized resource management via a set of abstractions. In microkernel-based system, they are usually provided through some form of trusted user-level servers. There are several drawbacks:</p>
@@ -48,34 +48,18 @@ Updated <time>May 19, 2021</time>
 <p>However, generalization may not be a bad thing. As discussed in the <em>UNIX the Timesharing System</em> paper, having a generalized and unified yet limited file system API can simplify programming efforts. Accessing both ordinary files and I/O devices is achieved by utilizing a unified interface. Nobody today wants to implement a different set of policies just for character device or block device.</p>
 <h2 id=design>Design</h2>
 <p>Essentially, exokernel consists of thin veneet that multiplexes and exports physical resources through a set of primitives. The libraries, running in the application space, use them to implement with special-purpose functionalities in a higher abstraction level. The architecture is shown in the Paper:</p>
-<p align=center>
-<a href=https://pdos.csail.mit.edu/6.828/2008/readings/engler95exokernel.pdf>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/exokernel_arch.png width=90%>
-</a>
-</p>
+<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/exokernel_arch.png#center alt=exokernel></p>
 <p>There are three majors tasks to separate protection from management:</p>
 <ul>
-<li>
-<p>Tracking ownership of resources.</p>
-</li>
-<li>
-<p>Ensure protection by guarding resource usage.</p>
-</li>
-<li>
-<p>Revoke access.</p>
-</li>
+<li>Tracking ownership of resources.</li>
+<li>Ensure protection by guarding resource usage.</li>
+<li>Revoke access.</li>
 </ul>
 <p>The paper presents three techniques to achieve these goals:</p>
 <ul>
-<li>
-<p><em>secure binding</em>: lib OS can securely bind to machine resources.</p>
-</li>
-<li>
-<p><em>visible revocation</em>: lib OS can participate in a resource revocation protocol. (Keep in mind why the revocation needs to be visible)</p>
-</li>
-<li>
-<p><em>abort protocol</em>: exokernel itself can break secure binding of uncooperative lib OS.</p>
-</li>
+<li><em>secure binding</em>: lib OS can securely bind to machine resources.</li>
+<li><em>visible revocation</em>: lib OS can participate in a resource revocation protocol. (Keep in mind why the revocation needs to be visible)</li>
+<li><em>abort protocol</em>: exokernel itself can break secure binding of uncooperative lib OS.</li>
 </ul>
 <p>In general, exokernel should expose hardware resources such as disk memory, CPU, interrupts, through low-level primitives with as few abstractions as possible. The resource management policy should be enforced by the library OS instead. <strong>The policy control boils down to whether the exokernel permits resource allocation</strong>.</p>
 <h2 id=secure-binding>Secure Binding</h2>
