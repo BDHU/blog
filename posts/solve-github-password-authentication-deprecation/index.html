@@ -1,17 +1,15 @@
 <!doctype html><html><head>
-<meta name=generator content="Hugo 0.88.1">
 <meta charset=utf-8>
 <meta name=viewport content="width=device-width,initial-scale=1">
 <meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
 <link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
-<link rel=alternate type=application/rss+xml href=https://www.bodunhu.com/blog/index.xml title=std::bodun::blog>
 <link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
-<title>std::bodun::blog</title>
+<title>Solve GitHub Password Authentication Deprecation</title>
 </head>
 <body><header id=banner>
 <h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
@@ -26,47 +24,17 @@
 </nav>
 </header>
 <main id=content>
-<p>PhD student at <a href=https://www.utexas.edu/>UT Austin</a> 🤘. Currently working on systems for ML at <a href=https://utns.cs.utexas.edu/>UTNS</a> group. Find out more <a href=https://www.bodunhu.com/>about me</a> here. You can get updates by following me on <a href=https://twitter.com/BodunHu>Twitter</a>, or subscribing via <a href=/blog/index.xml>RSS</a>.</p>
-<h3>Recent Posts</h3>
-<ul id=posts>
-<li>
-<a href=https://www.bodunhu.com/blog/posts/solve-github-password-authentication-deprecation/>
-Solve GitHub Password Authentication Deprecation
-<small><time>Oct 19, 2021</time></small>
-</a>
-</li>
-<li>
-<a href=https://www.bodunhu.com/blog/posts/consensus-problem-in-distributed-systems/>
-Consensus Problem in Distributed Systems
-<small><time>Oct 18, 2021</time></small>
-</a>
-</li>
-<li>
-<a href=https://www.bodunhu.com/blog/posts/fault-tolerance-in-distributed-systems/>
-Fault Tolerance in Distributed Systems
-<small><time>Oct 5, 2021</time></small>
-</a>
-</li>
-<li>
-<a href=https://www.bodunhu.com/blog/posts/consistency-models-explained/>
-Consistency Models Explained
-<small><time>Sep 23, 2021</time></small>
-</a>
-</li>
-<li>
-<a href=https://www.bodunhu.com/blog/posts/lamport-distributed-mutual-exclusion/>
-Lamport Distributed Mutual Exclusion
-<small><time>Sep 21, 2021</time></small>
-</a>
-</li>
-<li>
-<a href=https://www.bodunhu.com/blog/posts/specifying-token-ring-for-mutual-exclusion/>
-Specifying Token Ring for Mutual Exclusion
-<small><time>Sep 11, 2021</time></small>
-</a>
-</li>
-</ul>
-See all posts <a href=/blog/posts/>here</a>.
+<article>
+<header id=post-header>
+<h1>Solve GitHub Password Authentication Deprecation</h1>
+<div>
+Updated <time>October 19, 2021</time>
+</div>
+</header><p>Recently, GitHub <a href=https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/>deprecated</a> the use of password for repos. You will have to <a href=https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token>generate GitHub tokens</a> to access repos. It&rsquo;s difficult for me to memorize the token without serious efforts. Fortunately, it&rsquo;s easy to mitigate the problem.</p>
+<p>After a repo is cloned, simply execute <code>git remote remove origin</code> to remote the old remote. Then, execute the following command:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>git remote add origin https://&lt;TOKEN&gt;@github.com/&lt;GITHUB_USERNAME&gt;/&lt;REPO&gt;.git
+</code></pre></div><p>After this, no password is needed for git operations inside this repo. Beware you need to perform this operation for every new repo.</p>
+</article>
 </main><footer id=footer>
 <p>Copyright © 2016-2021 Bodun Hu. All rights reserved.</p>
 </footer></body>
