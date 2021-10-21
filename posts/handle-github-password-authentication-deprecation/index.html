@@ -28,11 +28,13 @@
 <header id=post-header>
 <h1>Handle GitHub Password Authentication Deprecation</h1>
 <div>
-Updated <time>October 19, 2021</time>
+Updated <time>October 20, 2021</time>
 </div>
 </header><p>Recently, GitHub <a href=https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/>deprecated</a> the use of password for repos. You will have to <a href=https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token>generate GitHub tokens</a> to access repos. It&rsquo;s difficult for me to memorize the token without serious efforts. Fortunately, it&rsquo;s easy to mitigate the problem.</p>
 <p>After a repo is cloned, simply execute <code>git remote remove origin</code> to remote the old remote. Then, execute the following command:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>git remote add origin https://&lt;TOKEN&gt;@github.com/&lt;GITHUB_USERNAME&gt;/&lt;REPO&gt;.git
+</code></pre></div><p>Finally, execute the following command to setup upstream:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>git push --set-upstream origin main
 </code></pre></div><p>After this, no password is needed for git operations inside this repo. Beware you need to perform this operation for every new repo.</p>
 </article>
 </main><footer id=footer>
