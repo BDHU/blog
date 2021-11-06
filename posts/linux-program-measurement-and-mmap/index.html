@@ -69,10 +69,8 @@ Updated <time>July 21, 2021</time>
 </tr>
 </tbody>
 </table>
-<p><br></p>
-<blockquote>
-<p>8-way set associative means the CPU cache is made up of sets that can fit 8 blocks each.</p>
-</blockquote>
+<br>
+> 8-way set associative means the CPU cache is made up of sets that can fit 8 blocks each.
 <p>Here are the details for the CPU cache, which we will need later:</p>
 <table>
 <thead>
@@ -115,7 +113,7 @@ Updated <time>July 21, 2021</time>
 </tr>
 </tbody>
 </table>
-<p><br></p>
+<br>
 <h2 id=memory-map>Memory Map</h2>
 <p>To print the <code>/proc/self/maps</code> file for a process, we use the <code>sprintf</code> to construct the file name and then use the <code>system</code> from stdlib to cat the contents of the running process&rsquo;s address space. If we execute the program, it shows (also available on <a href=https://gist.github.com/BDHU/9ad2f0b6353b789cfb7c29c804a6088a#file-proc_mem_map>gist</a>)</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>address                   perms offset  dev   inode                      pathname
@@ -394,7 +392,7 @@ CPU_SET(<span style=color:#ae81ff>7</span>, <span style=color:#f92672>&amp;</spa
 </tr>
 </tbody>
 </table>
-<p><br></p>
+<br>
 <h2 id=mmap>mmap</h2>
 <p>Next we are going to explore the behavior of mmap. Previously, we used <code>malloc</code> for data allocation. Next, we are going to instead use <code>mmap</code> and see what happens. Here we will only use read access for benchmark metrics since it&rsquo;s available in both L1 and TLB metrics.</p>
 <p>First, we use the <code>MAP_ANONYMOUS</code> as a flag passed to <code>mmap</code>. This flag means the mapping is not backed by any file; its contents are initialized to zero. The complete call is</p>
@@ -435,7 +433,7 @@ CPU_SET(<span style=color:#ae81ff>7</span>, <span style=color:#f92672>&amp;</spa
 </tr>
 </tbody>
 </table>
-<p><br></p>
+<br>
 <p>If we take a look at TLB data cache, the result is</p>
 <table>
 <thead>
@@ -464,7 +462,7 @@ CPU_SET(<span style=color:#ae81ff>7</span>, <span style=color:#f92672>&amp;</spa
 </tr>
 </tbody>
 </table>
-<p><br></p>
+<br>
 <p>Still, there doesn&rsquo;t seem have any significant fluctuation in the number of misses in data TLB. This pattern also applies to sequential access, except the TLB data cache misses is alot lower in sequentual access.</p>
 <p>Now If we instead use <code>getrusage()</code>, we will get something like this</p>
 <table>
@@ -515,7 +513,7 @@ CPU_SET(<span style=color:#ae81ff>7</span>, <span style=color:#f92672>&amp;</spa
 </tr>
 </tbody>
 </table>
-<p><br></p>
+<br>
 <p>The most interesting part here is when <code>MAP_SHARED</code> is enabled, the <code>oublock</code> immediately changes. As we mentioned previously, <code>oublock</code> specifies the number of times the file system had to write to the disk on behalf of processes. Because the address is now backed by a file, all write operations will cause the file system to write the contents back to the file.</p>
 <p><code>mmap()</code> creates a new mapping in the virtual address space of the
 calling process. However, it doesn&rsquo;t allocate RAM. If we call <code>memset()</code> then followed by <code>msync()</code> with <code>MS_SYNC</code> flag, we can get some interesting results in <code>getrusage</code>, these observations are summarized here:</p>

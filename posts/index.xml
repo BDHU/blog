@@ -1,4 +1,7 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/posts/</link><description>Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Handle GitHub Password Authentication Deprecation</title><link>https://www.bodunhu.com/blog/posts/handle-github-password-authentication-deprecation/</link><pubDate>Tue, 19 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/handle-github-password-authentication-deprecation/</guid><description>&lt;p>Recently, GitHub &lt;a href="https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/">deprecated&lt;/a> the use of password for repos. You will have to &lt;a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token">generate GitHub tokens&lt;/a> to access repos. It&amp;rsquo;s difficult for me to memorize the token without serious efforts. Fortunately, it&amp;rsquo;s easy to mitigate the problem.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/posts/</link><description>Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Starting Out PhD</title><link>https://www.bodunhu.com/blog/posts/starting-out-phd/</link><pubDate>Fri, 05 Nov 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/starting-out-phd/</guid><description>&lt;p>Today marks the third month of my PhD life. Things finally start to become a little bit clearer. I finally have some potentially concrete ideas to work on.&lt;/p>
+&lt;p>Finding a research topic was the most difficult part. For several months, I was wondering around like a headless chicken, reading papers after papers: serverless, ML inference, compiler, pathlet routing, RDMA, you name it. The feeling of not having a topic was suffocating.&lt;/p>
+&lt;p>Talking to other people, especially people not from my own research areas, is extremely beneficial. In fact, I was able to narrow down what I want to work on after discussions with a friend of mine who was working on NLP, an area complete outside of networking. Chatting with lab mates and collaborators are also extremely helpful. They usually would ask questions I would never have thought of, and save me from spending countless hours exploring cluelessly.&lt;/p>
+&lt;p>To me, current system research feels like application-driven. Many research projects are designed to address a very specific challenge faced in the application level. Thus, it is very likely to find an interesting system problem in a non-system conference like KDD or even ICLR.&lt;/p></description></item><item><title>Handle GitHub Password Authentication Deprecation</title><link>https://www.bodunhu.com/blog/posts/handle-github-password-authentication-deprecation/</link><pubDate>Tue, 19 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/handle-github-password-authentication-deprecation/</guid><description>&lt;p>Recently, GitHub &lt;a href="https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/">deprecated&lt;/a> the use of password for repos. You will have to &lt;a href="https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token">generate GitHub tokens&lt;/a> to access repos. It&amp;rsquo;s difficult for me to memorize the token without serious efforts. Fortunately, it&amp;rsquo;s easy to mitigate the problem.&lt;/p>
 &lt;p>After a repo is cloned, simply execute &lt;code>git remote remove origin&lt;/code> to remote the old remote. Then, execute the following command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">git remote add origin https://&amp;lt;TOKEN&amp;gt;@github.com/&amp;lt;GITHUB_USERNAME&amp;gt;/&amp;lt;REPO&amp;gt;.git
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Finally, execute the following command to setup upstream:&lt;/p>
@@ -2015,10 +2018,8 @@ src=&amp;#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js&amp;#34;&am
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>&lt;br />&lt;/p>
-&lt;blockquote>
-&lt;p>8-way set associative means the CPU cache is made up of sets that can fit 8 blocks each.&lt;/p>
-&lt;/blockquote>
+&lt;br />
+> 8-way set associative means the CPU cache is made up of sets that can fit 8 blocks each.
 &lt;!--description-->
 &lt;p>Here are the details for the CPU cache, which we will need later:&lt;/p>
 &lt;table>
@@ -2062,7 +2063,7 @@ src=&amp;#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js&amp;#34;&am
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>&lt;br />&lt;/p>
+&lt;br />
 &lt;h2 id="memory-map">Memory Map&lt;/h2>
 &lt;p>To print the &lt;code>/proc/self/maps&lt;/code> file for a process, we use the &lt;code>sprintf&lt;/code> to construct the file name and then use the &lt;code>system&lt;/code> from stdlib to cat the contents of the running process&amp;rsquo;s address space. If we execute the program, it shows (also available on &lt;a href="https://gist.github.com/BDHU/9ad2f0b6353b789cfb7c29c804a6088a#file-proc_mem_map">gist&lt;/a>)&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-text" data-lang="text">address perms offset dev inode pathname
@@ -2346,7 +2347,7 @@ CPU_SET(&lt;span style="color:#ae81ff">7&lt;/span>, &lt;span style="color:#f9267
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>&lt;br />&lt;/p>
+&lt;br />
 &lt;h2 id="mmap">mmap&lt;/h2>
 &lt;p>Next we are going to explore the behavior of mmap. Previously, we used &lt;code>malloc&lt;/code> for data allocation. Next, we are going to instead use &lt;code>mmap&lt;/code> and see what happens. Here we will only use read access for benchmark metrics since it&amp;rsquo;s available in both L1 and TLB metrics.&lt;/p>
 &lt;p>First, we use the &lt;code>MAP_ANONYMOUS&lt;/code> as a flag passed to &lt;code>mmap&lt;/code>. This flag means the mapping is not backed by any file; its contents are initialized to zero. The complete call is&lt;/p>
@@ -2387,7 +2388,7 @@ MAP_PRIVATE &lt;span style="color:#f92672">|&lt;/span> MAP_ANONYMOUS, fd_ignore,
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>&lt;br />&lt;/p>
+&lt;br />
 &lt;p>If we take a look at TLB data cache, the result is&lt;/p>
 &lt;table>
 &lt;thead>
@@ -2416,7 +2417,7 @@ MAP_PRIVATE &lt;span style="color:#f92672">|&lt;/span> MAP_ANONYMOUS, fd_ignore,
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>&lt;br />&lt;/p>
+&lt;br />
 &lt;p>Still, there doesn&amp;rsquo;t seem have any significant fluctuation in the number of misses in data TLB. This pattern also applies to sequential access, except the TLB data cache misses is alot lower in sequentual access.&lt;/p>
 &lt;p>Now If we instead use &lt;code>getrusage()&lt;/code>, we will get something like this&lt;/p>
 &lt;table>
@@ -2467,7 +2468,7 @@ MAP_PRIVATE &lt;span style="color:#f92672">|&lt;/span> MAP_ANONYMOUS, fd_ignore,
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
-&lt;p>&lt;br />&lt;/p>
+&lt;br />
 &lt;p>The most interesting part here is when &lt;code>MAP_SHARED&lt;/code> is enabled, the &lt;code>oublock&lt;/code> immediately changes. As we mentioned previously, &lt;code>oublock&lt;/code> specifies the number of times the file system had to write to the disk on behalf of processes. Because the address is now backed by a file, all write operations will cause the file system to write the contents back to the file.&lt;/p>
 &lt;p>&lt;code>mmap()&lt;/code> creates a new mapping in the virtual address space of the
 calling process. However, it doesn&amp;rsquo;t allocate RAM. If we call &lt;code>memset()&lt;/code> then followed by &lt;code>msync()&lt;/code> with &lt;code>MS_SYNC&lt;/code> flag, we can get some interesting results in &lt;code>getrusage&lt;/code>, these observations are summarized here:&lt;/p>
