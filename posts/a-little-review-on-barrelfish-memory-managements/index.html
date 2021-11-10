@@ -79,6 +79,9 @@ against forgery. Capabilities can be implemented in various ways such as tagged 
 <p>After that, the memory manager insert the node into the free list. If the memory manager finds out that there are capabilities adjacent to the just-added node, then we simply need to update the attributes of the corresponding mmnode to indicate that merging succeeds. The old mmnode is simply thrown away.</p>
 <p>The advantage of this implementation is that root or parent capabilities are kept around and the next retype will be fairly simple. The implementation is also very straightforward.</p>
 <p>There is of course more efficient solution than a linked list. For example, Linux uses both linked list and red-black tree to store thread information. The redundant data structures can be used in different scenarios when appropriate. However, we only use this simplified version to prove our concepts. Optimizations vary but the general concept still works pretty well.</p>
+<div style=width:100% id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
+</div>
 </article>
 </main><footer id=footer>
 <p>Copyright © 2021 Bodun Hu. All rights reserved.</p>

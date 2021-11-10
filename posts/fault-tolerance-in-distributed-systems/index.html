@@ -55,6 +55,9 @@ Updated <time>October 17, 2021</time>
 <li>Process \(p\) sets another process \(q\) as &ldquo;failed&rdquo; (denoted by \(f(p, q)\)) if \(t _l(p, q) \leq r _l(p, p') &lt; +\infty\) and \(t _t &lt; r _t(p, p') + t _{fail}\). In short, it means if we broadcast message and don&rsquo;t receive any response after time \(t _{fail}\), and our last recorded logical time of process \(q\) is before our broadcast, then we know process \(q\) must have failed.</li>
 <li>Then we perform updates when for all \(q \neq p\), \(r _l(p,p) &lt; r _l (p, q)\) (meaning everyone else&rsquo;s request time is later than mine) and \(t _l(p,q) > r _l(p,p) \lor f(p, q)\). Intuitively, it means we only perform updates when we receive message from other processes after our broadcast, and when we think other processes' timestamps are after us, or when they have all failed.</li>
 </ul>
+<div style=width:100% id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
+</div>
 </article>
 </main><footer id=footer>
 <p>Copyright © 2021 Bodun Hu. All rights reserved.</p>

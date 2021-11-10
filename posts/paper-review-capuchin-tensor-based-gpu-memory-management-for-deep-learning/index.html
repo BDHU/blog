@@ -49,6 +49,9 @@ Updated <time>November 9, 2021</time>
 <p>Capuchin relies on the principle that swap can be largely overlapped with computation, while recomputation will certainly incur performance penalty. Thus, it chooses swapping as the first choice until we cannot choose an in-trigger to perfectly hide prefetching overhead.</p>
 <p>One thing to note here is when we select a tensor \(T\) to be recomputed, but such tensor relies on another tensor that is evicted, then we need to recompute the parent of the evicted tensor instead. This could potentially happen multiple times if more recomputation targets tensor \(T\). In short, recomputation and swapping cannot occur at the same time.</p>
 <p>For more information, please refer to the original <a href=https://dl.acm.org/doi/pdf/10.1145/3373376.3378505>paper</a>.</p>
+<div style=width:100% id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
+</div>
 </article>
 </main><footer id=footer>
 <p>Copyright © 2021 Bodun Hu. All rights reserved.</p>

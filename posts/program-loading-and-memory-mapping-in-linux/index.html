@@ -167,6 +167,9 @@ retval <span style=color:#f92672>=</span> setup_arg_pages(bprm, randomize_stack_
 <li>Jumping to the entry point indicates we are going to execute the glibc start up functions before main is called. This includes setting up thread local storage. <code>main</code> simply jump to the main with the loader&rsquo;s TLS, no other setups are involved.</li>
 <li><code>jmp</code> doesn&rsquo;t push return address on stack. When the loaded program finishes execution, it exits the loader program, instead of giving control back to the caller.</li>
 </ul>
+<div style=width:100% id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
+</div>
 </article>
 </main><footer id=footer>
 <p>Copyright © 2021 Bodun Hu. All rights reserved.</p>

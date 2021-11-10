@@ -52,6 +52,9 @@ ensures in == reverse(reverse(in));
 <p>Finally, and most importantly, what property must the output of <code>reverse</code> have? It&rsquo;s the order of the output must be the reverse of the input. How do we express such property? We should say something like: every element in the output sequence must match the element in the original input sequence at the reversed location. It will look like: <code>ensures forall i :: 0 &lt;= i &lt; |in| ==> reverse(in)[i] == in[i_reversed]</code>.</p>
 <p>After spending some good hours writing Dafny, my feeling towards Dafny is mixed. The plus side is writing down how a program behaves exactly and precisely forces programmers to be more careful when writing code. This would remove a lot of problems after deployment. Reuse verified API also removes concerns over much of the safety issue.</p>
 <p>The tricky part is coming up with annotations that meets specification requirements. On one side, this forces people to break down big tasks into smaller functions so that it&rsquo;s much easier to come up with correct annotations. On the other side, debugging complex functions would require some magic. The debugging messages aren&rsquo;t really helpful in terms of narrowing down possible problems. It would require some guesses and luck to find what annotations are wrong or lacking. The example <code>reverse</code> function only has few post and pre conditions. However, more sophisticated functions involving multiple conditions as well as invariants are much harder to get right. Often, it requires the programmer to explore in the dark without much guidance before uncovering the solution.</p>
+<div style=width:100% id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
+</div>
 </article>
 </main><footer id=footer>
 <p>Copyright © 2021 Bodun Hu. All rights reserved.</p>

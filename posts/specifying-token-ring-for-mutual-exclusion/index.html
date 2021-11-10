@@ -152,6 +152,9 @@ Updated <time>October 17, 2021</time>
 <p>If we type in host(1) with <code>host.release</code>, we see in host(2) it outputs <code>host.grant</code>, which seems to show that the token work properly. However, if we type <code>host.release</code> again in host(1), <code>host.grant</code> will show up again in host(2), resulting in multiple tokens getting created, which violates the requirement that there is at most one token in the ring at any given time.</p>
 <p>If we execute <code>ivyc target=test token_ring.ivy && ivy_launch max=2 token_ring.ivy</code>, then we see the token ring work properly. The reason is we have specified the requirement for <code>grant</code> and <code>release</code> (<code>require forall X. ~host(X).lock</code> for <code>grant</code> and <code>require lock</code> for <code>release</code>).</p>
 <p><code>grant</code> is an action <em>imported</em> from the environment, thus we know when grant happens, all clients in the network do not hold a lock. On the other hand, <code>release</code> is an action <em>exported</em> from the system, which means the tester must perform grant given the host has the lock. So the tester won&rsquo;t perform <em>release</em> multiple times like we did above because the tester can not violate the <code>require lock</code> requirement.</p>
+<div style=width:100% id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
+</div>
 </article>
 </main><footer id=footer>
 <p>Copyright © 2021 Bodun Hu. All rights reserved.</p>
