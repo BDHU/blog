@@ -9,6 +9,7 @@
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
+<link href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css rel=stylesheet>
 <title>Paper Review - Dynamic Tensor Rematerialization</title>
 </head>
 <body><header id=banner>
@@ -44,7 +45,7 @@ h _{DTR}(s, m, c) (t) := \frac{c(t)}{m(t) \cdot s(t)'}
 <p>\[
 h_ {DTR-improved}(s, m, c) (t) := \frac{c(t) + \sum _{u \in e ^{*} (t)} c(u)}{m(t) \cdot s(t)'}
 \]</p>
-<p>This heuristic captures the recomputation costs for all tensors \(t\) recursively depend on.</p>
+<p>This heuristic captures the recomputation costs for all tensors that \(t\) recursively depend on.</p>
 </article>
 </main><footer id=footer>
 <p>Copyright © 2021 Bodun Hu. All rights reserved.</p>
