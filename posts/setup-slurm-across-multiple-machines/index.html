@@ -29,7 +29,7 @@
 <header id=post-header>
 <h1>Setup Slurm across Multiple Machines</h1>
 <div>
-Updated <time>November 17, 2021</time>
+Updated <time>November 18, 2021</time>
 </div>
 </header><p>To install <a href=https://slurm.schedmd.com/documentation.html>Slurm</a>, we need to have admin access to the machine. This post explains how I got Slurm running in multiple Linux servers. All servers are running on Ubuntu 18.04.5 LTS.</p>
 <h2 id=setup-munge>Setup Munge</h2>
@@ -68,6 +68,14 @@ munge -n | ssh somehost unmunge
 <p>After filling up the required fields in the form, we copy the generated file into <code>/etc/slurm-llnl/slurm.conf</code> all all nodes. Then, you can execute <code>sinfo</code> to check all nodes status. You can also launch jobs to see if it actually works, for example:</p>
 <div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>srun -N2 -l /bin/hostname
 </code></pre></div><p>This should print out the hostname for all the nodes in the cluster.</p>
+<h2 id=add-gpu-support>Add GPU support</h2>
+<p>To add GPU support, we first create a file <code>gres.conf</code> in <code>/etc/slurm-llnl/</code>. Here is an example on one node:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>Name=gpu File=/dev/nvidia0
+Name=gpu File=/dev/nvidia1
+Name=gpu File=/dev/nvidia2
+</code></pre></div><p>Then, we add <code>GresTypes=gpu</code> into <code>/etc/slurm-llnl/slurm.conf</code>. Next, we add the GPU information to <code>slurm.conf</code>:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>NodeName=node1 Gres=gpu:3 State=UNKNOWN
+</code></pre></div>
 <div style=width:100% id=comment>
 <script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
 </div>
