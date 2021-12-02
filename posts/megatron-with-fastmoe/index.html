@@ -1,0 +1,91 @@
+<!doctype html><html><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<link href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css rel=stylesheet>
+<title>Megatron with FastMoE</title>
+</head>
+<body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
+<nav>
+<ul>
+<li>
+<a href=/blog/posts/ title=posts>archive</a>
+</li><li>
+<a href=https://www.bodunhu.com/ title=about>about</a>
+</li>
+</ul>
+</nav>
+</header>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Megatron with FastMoE</h1>
+<div>
+Updated <time>December 2, 2021</time>
+</div>
+</header><p>This is a guide on setting up <a href=https://github.com/NVIDIA/Megatron-LM>Megatron-LM</a> with <a href=https://github.com/laekov/fastmoe>FastMoE</a>. Megatron is a transformer developed by the Applied Deep Learning Research team at NVIDIA. FastMoE enables PyTorch support for the Mixture of Experts (MoE) models. We use the FastMoE layer to replace the MLP layers in the transformer language model.</p>
+<h2 id=prerequisites>Prerequisites</h2>
+<h3 id=docker>Docker</h3>
+<p>We recommend using one of <a href=https://ngc.nvidia.com/catalog/containers/nvidia:pytorch>NGC&rsquo;s recent PyTorch containers</a>. The Megatron-LM repo uses <code>pytorch:20.12-py3</code>. We pull the image with:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker pull nvcr.io/nvidia/pytorch:20.12-py3
+</code></pre></div><p>Note: it&rsquo;s possible to use the <a href=https://hub.docker.com/r/pytorch/pytorch>official PyTorch image</a>. However, there are a few dependencies missing, which requires manual installation. Also, PyTorch with versions greater than 1.8 seems to have problem during forward passing so we don&rsquo;t use the official PyTorch image here.</p>
+<p>After the image is pulled successfully, we want to start a container. The <a href=https://catalog.ngc.nvidia.com/orgs/nvidia/containers/pytorch>NGC site</a> contains instructions on how to start a docker image. We use the following script:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>docker run --gpus all -it --rm --ipc<span style=color:#f92672>=</span>host -v /home/edwardhu/:/home/edwardhu/ --name pytorch-moe &lt;image_id&gt;
+</code></pre></div><p>Note: we might encounter problems before starting up the docker container. Make sure we set the GPG and remote repo for the <code>nvidia-docker2</code> package on the host and install required packages:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>distribution<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>. /etc/os-release;echo $ID$VERSION_ID<span style=color:#66d9ef>)</span> <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>   <span style=color:#f92672>&amp;&amp;</span> curl -s -L https://nvidia.github.io/nvidia-docker/gpgkey | sudo apt-key add - <span style=color:#ae81ff>\
+</span><span style=color:#ae81ff></span>   <span style=color:#f92672>&amp;&amp;</span> curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.list | sudo tee /etc/apt/sources.list.d/nvidia-docker.list
+sudo apt-get update
+sudo apt-get install -y nvidia-docker2
+sudo systemctl restart docker
+</code></pre></div><h3 id=set-up-fastmoe>Set up FastMoE</h3>
+<p>After we spin up the container, we clone the <a href=https://github.com/laekov/fastmoe>fastmoe repo</a> and enter project. There is a <code>setup.py</code> file in the root of the project. Then we execute:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>USE_NCCL<span style=color:#f92672>=</span><span style=color:#ae81ff>1</span> python setup.py install
+</code></pre></div><p>to install FastMoE. For some reason, there is a compilation error saying that <code>broadcastUniqueNCCLID(&ncclID)</code>&rsquo;s definition can not be found. We see there is a condition check right above the error function:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#75715e>#if defined(TORCH_VERSION_MAJOR) &amp;&amp; (TORCH_VERSION_MAJOR &gt; 1 || \
+</span><span style=color:#75715e>        (TORCH_VERSION_MAJOR == 1 &amp;&amp; TORCH_VERSION_MINOR &gt;= 8))
+</span></code></pre></div><p>For some reason, the check failed despite the container has PyTorch version <code>1.8.0a0+1606899</code>. <a href=https://github.com/laekov/fastmoe/issues/93>According to the author</a>, the <code>if</code> macro was to deal with PyTorch&rsquo;s API variance between v1.7.x and v1.8.x. For now, we simply comment out the <code>if</code> check and force the <code>broadcastUniqueNCCLID(&ncclID, c10d::OpType::SEND, "fastmoe_nccl_comm", rank);</code> to be used instead of the <code>broadcastUniqueNCCLID(&ncclID)</code> function:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-cpp data-lang=cpp><span style=color:#75715e>//#if defined(TORCH_VERSION_MAJOR) &amp;&amp; (TORCH_VERSION_MAJOR &gt; 1 || \
+</span><span style=color:#75715e>//        (TORCH_VERSION_MAJOR == 1 &amp;&amp; TORCH_VERSION_MINOR &gt;= 8))
+</span><span style=color:#75715e></span>        broadcastUniqueNCCLID(<span style=color:#f92672>&amp;</span>ncclID,
+                c10d<span style=color:#f92672>::</span>OpType<span style=color:#f92672>::</span>SEND,
+                <span style=color:#e6db74>&#34;fastmoe_nccl_comm&#34;</span>,
+                rank);
+<span style=color:#75715e>//#else
+</span><span style=color:#75715e></span>        <span style=color:#75715e>//broadcastUniqueNCCLID(&amp;ncclID);
+</span><span style=color:#75715e>//#endif
+</span><span style=color:#75715e></span>        ncclComm_t comm;
+        NCCL_SAFE_CALL(ncclCommInitRank(<span style=color:#f92672>&amp;</span>comm, getSize(), ncclID, rank));
+        <span style=color:#66d9ef>return</span> comm;
+    }
+};
+
+</code></pre></div><p>Finally, we need to download vocab file for later use since the Megatron repo doesn&rsquo;t have one. Here, we use the vocab file from the <a href=https://github.com/microsoft/SDNet/tree/master/bert_vocab_files>SDNet repo</a>. Feel free to use something else.</p>
+<h3 id=megatron-lm-setup>Megatron-LM Setup</h3>
+<p>After we set up FastMoE, we clone the <a href=https://github.com/NVIDIA/Megatron-LM>Megatron-LM</a> repo into the container. The <a href=https://github.com/laekov/fastmoe/tree/master/examples/megatron>FastMoE&rsquo;s example guide on Megatron</a> uses Megatron <code>v2.2</code> release, so we need to choose the <code>v2.2</code> tag in the Megatron repo.</p>
+<p>Next, we follow the <a href=https://github.com/laekov/fastmoe/tree/master/examples/megatron>FastMoE&rsquo;s guide on Megatron</a> and apply the <code>clip-grad-v2.2.path</code> and <code>fmoefy-v2.2.patch</code> accordingly. Instructions on how to apply patches in Linux is easy to find, for example, here is <a href=https://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/>one</a>.</p>
+<h3 id=race-dataset>RACE Dataset</h3>
+<p>After setting up Megatron-LM, we download the <a href=https://www.cs.cmu.edu/~glai1/data/race/>RACE dataset</a> for fine-tuning downstream tasks (RACE is used with BERT evaluation, the Megatron&rsquo;s repo also has several other examples using GPT, here we stick to BERT). The <a href=https://github.com/NVIDIA/Megatron-LM>Megatron repo</a> also provides instructions on how to acquire these datasets for evaluation. For now, we just want to get the fine-tuning process up and running, without caring so much about the accuracy. Therefore, we don&rsquo;t need to pre-train the BERT model just yet. After the dataset finished downloading, we simply need to decompress it.</p>
+<h3 id=additional-setup>Additional Setup</h3>
+<p>There are a few steps we need to do, if we want to perform the evaluation directly without pre-train the model from scratch.</p>
+<h2 id=todo>TODO</h2>
+<ul>
+<li>Distributed fastmoe</li>
+<li>pretrained checkpoint loading with fastmoe</li>
+</ul>
+<div style=width:100% id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
+</div>
+</article>
+</main><footer id=footer>
+<p>Copyright © 2021 Bodun Hu. All rights reserved.</p>
+</footer></body>
+</html>
