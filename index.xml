@@ -40,13 +40,14 @@ NCCL_SAFE_CALL(ncclCommInitRank(&lt;span style="color:#f92672">&amp;amp;&lt;/spa
 &lt;p>Next, we follow the &lt;a href="https://github.com/laekov/fastmoe/tree/master/examples/megatron">FastMoE&amp;rsquo;s guide on Megatron&lt;/a> and apply the &lt;code>clip-grad-v2.2.path&lt;/code> and &lt;code>fmoefy-v2.2.patch&lt;/code> accordingly. Instructions on how to apply patches in Linux is easy to find, for example, here is &lt;a href="https://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/">one&lt;/a>.&lt;/p>
 &lt;h3 id="race-dataset">RACE Dataset&lt;/h3>
 &lt;p>After setting up Megatron-LM, we download the &lt;a href="https://www.cs.cmu.edu/~glai1/data/race/">RACE dataset&lt;/a> for fine-tuning downstream tasks (RACE is used with BERT evaluation, the Megatron&amp;rsquo;s repo also has several other examples using GPT, here we stick to BERT). The &lt;a href="https://github.com/NVIDIA/Megatron-LM">Megatron repo&lt;/a> also provides instructions on how to acquire these datasets for evaluation. For now, we just want to get the fine-tuning process up and running, without caring so much about the accuracy. Therefore, we don&amp;rsquo;t need to pre-train the BERT model just yet. After the dataset finished downloading, we simply need to decompress it.&lt;/p>
-&lt;h3 id="additional-setup">Additional Setup&lt;/h3>
-&lt;p>There are a few steps we need to do, if we want to perform the evaluation directly without pre-train the model from scratch.&lt;/p>
-&lt;h2 id="todo">TODO&lt;/h2>
-&lt;ul>
-&lt;li>Distributed fastmoe&lt;/li>
-&lt;li>pretrained checkpoint loading with fastmoe&lt;/li>
-&lt;/ul></description></item><item><title>Setup Slurm across Multiple Machines</title><link>https://www.bodunhu.com/blog/posts/setup-slurm-across-multiple-machines/</link><pubDate>Tue, 16 Nov 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/setup-slurm-across-multiple-machines/</guid><description>&lt;p>To install &lt;a href="https://slurm.schedmd.com/documentation.html">Slurm&lt;/a>, we need to have admin access to the machine. This post explains how I got Slurm running in multiple Linux servers. All servers are running on Ubuntu 18.04.5 LTS.&lt;/p>
+&lt;h3 id="summury">Summury&lt;/h3>
+&lt;p>The most important line to change a model to FastMoE style is through:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-python" data-lang="python">&lt;span style="color:#75715e"># Initialize FastMoE&lt;/span>
+&lt;span style="color:#66d9ef">if&lt;/span> args&lt;span style="color:#f92672">.&lt;/span>fmoefy:
+&lt;span style="color:#f92672">from&lt;/span> fmoe.megatron &lt;span style="color:#f92672">import&lt;/span> patch_forward_step, patch_model_provider
+forward_step_func &lt;span style="color:#f92672">=&lt;/span> patch_forward_step(forward_step_func)
+model_provider &lt;span style="color:#f92672">=&lt;/span> patch_model_provider(model_provider)
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>More information can be found in the fmoefy patch &lt;a href="https://github.com/laekov/fastmoe/blob/master/examples/megatron/fmoefy-v2.2.patch">file&lt;/a>.&lt;/p></description></item><item><title>Setup Slurm across Multiple Machines</title><link>https://www.bodunhu.com/blog/posts/setup-slurm-across-multiple-machines/</link><pubDate>Tue, 16 Nov 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/setup-slurm-across-multiple-machines/</guid><description>&lt;p>To install &lt;a href="https://slurm.schedmd.com/documentation.html">Slurm&lt;/a>, we need to have admin access to the machine. This post explains how I got Slurm running in multiple Linux servers. All servers are running on Ubuntu 18.04.5 LTS.&lt;/p>
 &lt;h2 id="setup-munge">Setup Munge&lt;/h2>
 &lt;p>First, we need to make sure the clocks, users and groups (UIDs and GIDs) are synchronized across the cluster. We need to create two users: &lt;code>slurm&lt;/code> and &lt;code>munge&lt;/code> across all servers.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ export MUNGEUSER&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3456&lt;/span>

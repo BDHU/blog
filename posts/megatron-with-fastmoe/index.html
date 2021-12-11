@@ -29,7 +29,7 @@
 <header id=post-header>
 <h1>Megatron with FastMoE</h1>
 <div>
-Updated <time>December 2, 2021</time>
+Updated <time>December 10, 2021</time>
 </div>
 </header><p>This is a guide on setting up <a href=https://github.com/NVIDIA/Megatron-LM>Megatron-LM</a> with <a href=https://github.com/laekov/fastmoe>FastMoE</a>. Megatron is a transformer developed by the Applied Deep Learning Research team at NVIDIA. FastMoE enables PyTorch support for the Mixture of Experts (MoE) models. We use the FastMoE layer to replace the MLP layers in the transformer language model.</p>
 <h2 id=prerequisites>Prerequisites</h2>
@@ -74,13 +74,15 @@ sudo systemctl restart docker
 <p>Next, we follow the <a href=https://github.com/laekov/fastmoe/tree/master/examples/megatron>FastMoE&rsquo;s guide on Megatron</a> and apply the <code>clip-grad-v2.2.path</code> and <code>fmoefy-v2.2.patch</code> accordingly. Instructions on how to apply patches in Linux is easy to find, for example, here is <a href=https://www.cyberciti.biz/faq/appy-patch-file-using-patch-command/>one</a>.</p>
 <h3 id=race-dataset>RACE Dataset</h3>
 <p>After setting up Megatron-LM, we download the <a href=https://www.cs.cmu.edu/~glai1/data/race/>RACE dataset</a> for fine-tuning downstream tasks (RACE is used with BERT evaluation, the Megatron&rsquo;s repo also has several other examples using GPT, here we stick to BERT). The <a href=https://github.com/NVIDIA/Megatron-LM>Megatron repo</a> also provides instructions on how to acquire these datasets for evaluation. For now, we just want to get the fine-tuning process up and running, without caring so much about the accuracy. Therefore, we don&rsquo;t need to pre-train the BERT model just yet. After the dataset finished downloading, we simply need to decompress it.</p>
-<h3 id=additional-setup>Additional Setup</h3>
-<p>There are a few steps we need to do, if we want to perform the evaluation directly without pre-train the model from scratch.</p>
-<h2 id=todo>TODO</h2>
-<ul>
-<li>Distributed fastmoe</li>
-<li>pretrained checkpoint loading with fastmoe</li>
-</ul>
+<h3 id=summury>Summury</h3>
+<p>The most important line to change a model to FastMoE style is through:</p>
+<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=color:#75715e># Initialize FastMoE</span>
+    <span style=color:#66d9ef>if</span> args<span style=color:#f92672>.</span>fmoefy:
+        <span style=color:#f92672>from</span> fmoe.megatron <span style=color:#f92672>import</span> patch_forward_step, patch_model_provider
+
+        forward_step_func <span style=color:#f92672>=</span> patch_forward_step(forward_step_func)
+        model_provider <span style=color:#f92672>=</span> patch_model_provider(model_provider)
+</code></pre></div><p>More information can be found in the fmoefy patch <a href=https://github.com/laekov/fastmoe/blob/master/examples/megatron/fmoefy-v2.2.patch>file</a>.</p>
 <div style=width:100% id=comment>
 <script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
 </div>
