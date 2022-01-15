@@ -110,13 +110,13 @@ munge -n | ssh somehost unmunge
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Next, we need to configure slurm. Since we used package manager to install slurm, the version is lower than the latest release. Thus, it&amp;rsquo;s preferably to not use the official &lt;a href="https://slurm.schedmd.com/configurator.html">Slurm Configuration Tool&lt;/a>. Instead, we can find the corresponding version&amp;rsquo;s configuration tool at &lt;code>/usr/share/doc/slurmctld/slurm-wlm-configurator.html&lt;/code> (we just To install Slurm, we need to have admin access to the machine. This post explains how I got Slurm running in multiple Linux servers. All servers are running on Ubuntu 18.04.5 LTS.
 Setup Munge&lt;/p>
 &lt;p>First, we need to make sure the clocks, users and groups (UIDs and GIDs) are synchronized across the cluster. We need to create two users: slurm and munge across all servers.&lt;/p>
-&lt;p>$ export MUNGEUSER=3456
+&lt;div class="highlight">&lt;pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4">&lt;code class="language-bash" data-lang="bash">$ export MUNGEUSER&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3456&lt;/span>
 $ groupadd -g $MUNGEUSER munge
-$ useradd -m -c &amp;ldquo;MUNGE Uid &amp;lsquo;N&amp;rsquo; Gid Emporium&amp;rdquo; -d /var/lib/munge -u $MUNGEUSER -g munge -s /sbin/nologin munge
-$ export SLURMUSER=3457
+$ useradd -m -c &lt;span style="color:#e6db74">&amp;#34;MUNGE Uid &amp;#39;N&amp;#39; Gid Emporium&amp;#34;&lt;/span> -d /var/lib/munge -u $MUNGEUSER -g munge -s /sbin/nologin munge
+$ export SLURMUSER&lt;span style="color:#f92672">=&lt;/span>&lt;span style="color:#ae81ff">3457&lt;/span>
 $ groupadd -g $SLURMUSER slurm
-$ useradd -m -c &amp;ldquo;SLURM workload manager&amp;rdquo; -d /var/lib/slurm -u $SLURMUSER -g slurm -s /bin/bash slurm&lt;/p>
-&lt;p>Then, we install Munge for authentication:&lt;/p>
+$ useradd -m -c &lt;span style="color:#e6db74">&amp;#34;SLURM workload manager&amp;#34;&lt;/span> -d /var/lib/slurm -u $SLURMUSER -g slurm -s /bin/bash slurm
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Then, we install Munge for authentication:&lt;/p>
 &lt;p>$ apt install munge libmunge2 libmunge-dev&lt;/p>
 &lt;p>To test if munge is installed successfully:&lt;/p>
 &lt;p>$ munge -n | unmunge | grep STATUS
