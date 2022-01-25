@@ -1,4 +1,26 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/posts/</link><description>Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Machine Learning System Resources</title><link>https://www.bodunhu.com/blog/posts/machine-learning-system-resources/</link><pubDate>Sat, 08 Jan 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/machine-learning-system-resources/</guid><description>&lt;p>This is my personal list of resources related to machine learning systems. Feel free to drop me an email if you think there&amp;rsquo;s something worth mentioning. I will try to update this page frequently to include the most recent stuffs in mlsys.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/posts/</link><description>Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Maximum Likelihood for Classification</title><link>https://www.bodunhu.com/blog/posts/maximum-likelihood-for-classification/</link><pubDate>Mon, 24 Jan 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/maximum-likelihood-for-classification/</guid><description>&lt;p>Let&amp;rsquo;s say we want to classify an input text \(y\) and give it a label \(x\). Formally, we want to find:&lt;/p>
+&lt;p>\[
+\texttt{argmax}P(x | y)
+\]&lt;/p>
+&lt;p>By Bayes' rule this is the same as&lt;/p>
+&lt;p>\[
+\texttt{argmax}\frac{P(y|x)P(y)}{P(x)}
+\]&lt;/p>
+&lt;p>Suppose we have five documents as training data and one document as the input as testing data. Our objective is to give a label to the test sentence.&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/MLE/text-example.png" alt="text-example">&lt;/p>
+&lt;center>Credit: Eunsol Choi&lt;/center>
+&lt;p>Let&amp;rsquo;s define the probability of class as (\(N\) is the total number of classes)&lt;/p>
+&lt;p>\[
+p(x) = \frac{count(x)}{N}
+\]&lt;/p>
+&lt;p>and the probability of a word appearing given a class label (total number of vocabs)&lt;/p>
+&lt;p>\[
+p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
+\]&lt;/p>
+&lt;p>The conditional probabilities for \(p(w_i|y)\) is&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/MLE/conditional_prob.png" alt="conditional-probabilities">&lt;/p>
+&lt;p>Now, we want to find out which language label should we assign the sentence &amp;ldquo;Chinese Chinese Chinese Tokyo Japan&amp;rdquo;. This is the same as asking which labels (\(x\))) should we pick so that \(P(W|x)P(x)\) yields the greatest value. Mathematically, we want to find out where the gradient of the function \(P(W|x)P(x)\) is flat.&lt;/p>
+&lt;p>If we label the sentence as j (Japanese), we have \(P(j | d_5) \propto \frac{1}{4}\cdot (\frac{2}{9}^3)\cdot \frac{2}{9}\cdot \frac{2}{9} \approx 0.0001\). If we calculate \(P(c|d_5)\), we get 0.0003, which generates the largest value for \(P(x | y)\).&lt;/p></description></item><item><title>Machine Learning System Resources</title><link>https://www.bodunhu.com/blog/posts/machine-learning-system-resources/</link><pubDate>Sat, 08 Jan 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/machine-learning-system-resources/</guid><description>&lt;p>This is my personal list of resources related to machine learning systems. Feel free to drop me an email if you think there&amp;rsquo;s something worth mentioning. I will try to update this page frequently to include the most recent stuffs in mlsys.&lt;/p>
 &lt;h2 id="courses">Courses&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://catalyst.cs.cmu.edu/15-884-mlsys-sp21/">15-884: Machine Learning Systems&lt;/a>: offered by &lt;a href="https://tqchen.com/">Tianqi Chen&lt;/a> at CMU.&lt;/li>
