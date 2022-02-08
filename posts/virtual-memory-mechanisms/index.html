@@ -29,7 +29,7 @@
 <header id=post-header>
 <h1>Virtual Memory Mechanisms</h1>
 <div>
-Updated <time>July 24, 2021</time>
+<time>Updated Oct 19, 2017</time>
 </div>
 </header><p>As we can see in the <a href=/blog/posts/virtual-memory-overview/>previous post</a>,
 all allocation algorithms we discussed lead to external fragmentation. As time goes by, external fragmentation is going to get worse and we need solutions for the problem. We can use swap areas to swap out memory onto the disk, or move allocated memory together(a process named memory compaction), leaving empty spaces together. Even these approaches can reduce external fragmentation and allow a higher degree of multiprogramming, they are not perfect. In addition, it is possible to have a single process that is just too big to fit into memory. We are going to discuss methods used to completely eliminate external fragmentation. More than that, we will discuss how to make memory sharing possible and how to allow more processes to execute at once.</p>

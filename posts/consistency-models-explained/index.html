@@ -29,7 +29,7 @@
 <header id=post-header>
 <h1>Consistency Models Explained</h1>
 <div>
-Updated <time>October 18, 2021</time>
+<time>Updated Sep 23, 2021</time>
 </div>
 </header><p>In a distributed system, eventual consistency provides a weak guarantee that data updates will be reflected in all nodes eventually. However, the downside of eventual consistency is that clients could potentially observe awkward intermediate states. For example, appending numbers to a client may result in states like [10], [10,13], [10,12,13].</p>
 <p>Therefore, we need stronger consistency guarantees, which is easier to reason about. These consistency models provide various degree of consistency guarantees. However, it&rsquo;s not always feasible to provide the strongest consistency guarantee. Usually, one needs to trade off consistency for availability and partition resilience (<a href=https://en.wikipedia.org/wiki/CAP_theorem>CAP theorem</a>). Many contents here are attributed to Prof. <a href=https://mcmil.net/wordpress/>Ken McMillan</a>.</p>

@@ -29,7 +29,7 @@
 <header id=post-header>
 <h1>Whiz: Data-Driven Analytics Execution</h1>
 <div>
-Updated <time>September 7, 2021</time>
+<time>Updated Sep 5, 2021</time>
 </div>
 </header><p>This paper by <a href=https://utns.cs.utexas.edu/>UTNS</a> lab appeared in <a href=https://www.usenix.org/conference/nsdi21>NSDI 2021</a>. It presents a data-analytics framework that decouples intermediate data from computations.</p>
 <p>Whiz addresses several challenged posed by current analytics frameworks. The first one is data opacity. Most modern data analytics frameworks relies on MapReduce execution engine. The developer specifies the map and reduce function, which then get submitted to the analytics framework. The workflow can be expressed as a logical graph; the physical graph (which includes the cluster configuration, disk quota, etc.) is generated transparently. The workflow is shown below:</p>

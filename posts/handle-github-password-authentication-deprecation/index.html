@@ -29,7 +29,7 @@
 <header id=post-header>
 <h1>Handle GitHub Password Authentication Deprecation</h1>
 <div>
-Updated <time>October 20, 2021</time>
+<time>Updated Oct 19, 2021</time>
 </div>
 </header><p>Recently, GitHub <a href=https://github.blog/2020-12-15-token-authentication-requirements-for-git-operations/>deprecated</a> the use of password for repos. You will have to <a href=https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token>generate GitHub tokens</a> to access repos. It&rsquo;s difficult for me to memorize the token without serious efforts. Fortunately, it&rsquo;s easy to mitigate the problem.</p>
 <p>After a repo is cloned, simply execute <code>git remote remove origin</code> to remote the old remote. Then, execute the following command:</p>
