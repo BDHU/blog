@@ -1644,7 +1644,7 @@ If we decide to sell more books, each one will generate an additional block (vau
 &lt;/ul>
 &lt;p>In essence, a blockchain is a series of immutable blocks, each storing the information of an event(s) whose validity is approved by a majority of other participants. Simple as that.&lt;/p>
 &lt;p>I like using the term &amp;lsquo;&amp;lsquo;distributed ledger&amp;rsquo;&amp;rsquo; to characterize blockchain. In Prof. Anand&amp;rsquo;s slides, this graph summarizes how a distributed ledger differs from traditional centralized ledger:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/blockchain/ledger.png" alt="hyperledger">&lt;/p>
+&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/blockchain/ledger.png" alt="hyper-ledger">&lt;/p>
 &lt;p>The main difference is how consensus is achieved. In centralized ledger, we have a single that decides the &amp;lsquo;&amp;lsquo;golden record&amp;rsquo;&amp;rsquo;. In a distributed ledger, consensus is achieved is everybody agrees with it. To give an example, we would pay a 45-dollar electricity bill each month to Texas electricity company because the price standard is set by the company alone. In a distributed ledger world, we might pay 32 dollars instead, if every single residents living in the building agrees this is the best price. Essentially, we eliminate the centralized entity and distribute the ability of making decisions to each individual evenly.&lt;/p>
 &lt;p>In super-simple terms, a blockchain is just a computer file for storing data. The reason why it&amp;rsquo;s so secure is because there doesn&amp;rsquo;t exist a single central point of attack for hackers to target.&lt;/p>
 &lt;h2 id="sketch-on-blockchain">Sketch on Blockchain&lt;/h2>
