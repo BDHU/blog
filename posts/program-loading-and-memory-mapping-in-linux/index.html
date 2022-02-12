@@ -34,133 +34,133 @@
 </header><p>This is a summary over program loading, dynamical paging, signal handling, and memory mapping in Linux.</p>
 <h2 id=execve-syscall>execve Syscall</h2>
 <p>One of operating systems' basic services is to load programs into memory to execute. Programs rely on <code>execve</code> syscall to get the OS to load the program into memory and start it executing as a process. The kernel version we used to testing is 5.4.0. Doing a quick search inside <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/exec.c#L1956>Elixir</a> gives us:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>SYSCALL_DEFINE3(execve,
-        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span> __user <span style=color:#f92672>*</span>, filename,
-        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span> __user <span style=color:#f92672>*</span><span style=color:#66d9ef>const</span> __user <span style=color:#f92672>*</span>, argv,
-        <span style=color:#66d9ef>const</span> <span style=color:#66d9ef>char</span> __user <span style=color:#f92672>*</span><span style=color:#66d9ef>const</span> __user <span style=color:#f92672>*</span>, envp)
-{
-    <span style=color:#66d9ef>return</span> do_execve(getname(filename), argv, envp);
-}
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>SYSCALL_DEFINE3</span><span class=p>(</span><span class=n>execve</span><span class=p>,</span>
+        <span class=k>const</span> <span class=kt>char</span> <span class=n>__user</span> <span class=o>*</span><span class=p>,</span> <span class=n>filename</span><span class=p>,</span>
+        <span class=k>const</span> <span class=kt>char</span> <span class=n>__user</span> <span class=o>*</span><span class=k>const</span> <span class=n>__user</span> <span class=o>*</span><span class=p>,</span> <span class=n>argv</span><span class=p>,</span>
+        <span class=k>const</span> <span class=kt>char</span> <span class=n>__user</span> <span class=o>*</span><span class=k>const</span> <span class=n>__user</span> <span class=o>*</span><span class=p>,</span> <span class=n>envp</span><span class=p>)</span>
+<span class=p>{</span>
+    <span class=k>return</span> <span class=n>do_execve</span><span class=p>(</span><span class=n>getname</span><span class=p>(</span><span class=n>filename</span><span class=p>),</span> <span class=n>argv</span><span class=p>,</span> <span class=n>envp</span><span class=p>);</span>
+<span class=p>}</span>
 </code></pre></div><p>Follow the function call, we will eventually reach the call to <code>__do_execve_file</code>, the comment of this function says &ldquo;sys_execve() executes a new program&rdquo;, which is pretty straightforward. This function first checks the <code>filename</code> pointer. Then it checks the flags of the current process that limit of running processes is not exceeded:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#66d9ef>if</span> (IS_ERR(filename))
-    <span style=color:#66d9ef>return</span> PTR_ERR(filename);
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>if</span> <span class=p>(</span><span class=n>IS_ERR</span><span class=p>(</span><span class=n>filename</span><span class=p>))</span>
+    <span class=k>return</span> <span class=n>PTR_ERR</span><span class=p>(</span><span class=n>filename</span><span class=p>);</span>
 
-<span style=color:#75715e>/*
-</span><span style=color:#75715e> * We move the actual failure in case of RLIMIT_NPROC excess from
-</span><span style=color:#75715e> * set*uid() to execve() because too many poorly written programs
-</span><span style=color:#75715e> * don&#39;t check setuid() return code.  Here we additionally recheck
-</span><span style=color:#75715e> * whether NPROC limit is still exceeded.
-</span><span style=color:#75715e> */</span>
-<span style=color:#66d9ef>if</span> ((current<span style=color:#f92672>-&gt;</span>flags <span style=color:#f92672>&amp;</span> PF_NPROC_EXCEEDED) <span style=color:#f92672>&amp;&amp;</span>
-    atomic_read(<span style=color:#f92672>&amp;</span>current_user()<span style=color:#f92672>-&gt;</span>processes) <span style=color:#f92672>&gt;</span> rlimit(RLIMIT_NPROC)) {
-    retval <span style=color:#f92672>=</span> <span style=color:#f92672>-</span>EAGAIN;
-    <span style=color:#66d9ef>goto</span> out_ret;
-}
+<span class=cm>/*
+</span><span class=cm> * We move the actual failure in case of RLIMIT_NPROC excess from
+</span><span class=cm> * set*uid() to execve() because too many poorly written programs
+</span><span class=cm> * don&#39;t check setuid() return code.  Here we additionally recheck
+</span><span class=cm> * whether NPROC limit is still exceeded.
+</span><span class=cm> */</span>
+<span class=k>if</span> <span class=p>((</span><span class=n>current</span><span class=o>-&gt;</span><span class=n>flags</span> <span class=o>&amp;</span> <span class=n>PF_NPROC_EXCEEDED</span><span class=p>)</span> <span class=o>&amp;&amp;</span>
+    <span class=n>atomic_read</span><span class=p>(</span><span class=o>&amp;</span><span class=n>current_user</span><span class=p>()</span><span class=o>-&gt;</span><span class=n>processes</span><span class=p>)</span> <span class=o>&gt;</span> <span class=n>rlimit</span><span class=p>(</span><span class=n>RLIMIT_NPROC</span><span class=p>))</span> <span class=p>{</span>
+    <span class=n>retval</span> <span class=o>=</span> <span class=o>-</span><span class=n>EAGAIN</span><span class=p>;</span>
+    <span class=k>goto</span> <span class=n>out_ret</span><span class=p>;</span>
+<span class=p>}</span>
 
-<span style=color:#75715e>/* We&#39;re below the limit (still or again), so we don&#39;t want to make
-</span><span style=color:#75715e>    * further execve() calls fail. */</span>
-current<span style=color:#f92672>-&gt;</span>flags <span style=color:#f92672>&amp;=</span> <span style=color:#f92672>~</span>PF_NPROC_EXCEEDED;
+<span class=cm>/* We&#39;re below the limit (still or again), so we don&#39;t want to make
+</span><span class=cm>    * further execve() calls fail. */</span>
+<span class=n>current</span><span class=o>-&gt;</span><span class=n>flags</span> <span class=o>&amp;=</span> <span class=o>~</span><span class=n>PF_NPROC_EXCEEDED</span><span class=p>;</span>
 </code></pre></div><p>The next important task is to allocate the <code>struct linux_binprm</code> structure defined <a href=https://elixir.bootlin.com/linux/v5.4/source/include/linux/binfmts.h#L17>here</a>. This structure is used to hold the arguments that are used when loading binaries.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>bprm <span style=color:#f92672>=</span> kzalloc(<span style=color:#66d9ef>sizeof</span>(<span style=color:#f92672>*</span>bprm), GFP_KERNEL);
-    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>bprm)
-        <span style=color:#66d9ef>goto</span> out_files;
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>bprm</span> <span class=o>=</span> <span class=n>kzalloc</span><span class=p>(</span><span class=k>sizeof</span><span class=p>(</span><span class=o>*</span><span class=n>bprm</span><span class=p>),</span> <span class=n>GFP_KERNEL</span><span class=p>);</span>
+    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>bprm</span><span class=p>)</span>
+        <span class=k>goto</span> <span class=n>out_files</span><span class=p>;</span>
 </code></pre></div><p>Next, the function performs a seireis of tasks to prepare the <code>bprm</code> struct. Refer to the <a href=https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html>linux-insides</a> book to find more information on how exactly the <code>bprm</code> structure is filled up.</p>
 <p>The most important function called by <code>__do_execve_file</code> is <code>search_binary_handler</code>. Based on the <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/exec.c>comment</a>, this function cycles the list of binary formats handler, until one recognizes the image. We can find one section of the code surrounded by <code>binfmt_lock</code>:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>list_for_each_entry(fmt, <span style=color:#f92672>&amp;</span>formats, lh) {
-    <span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>try_module_get(fmt<span style=color:#f92672>-&gt;</span>module))
-        <span style=color:#66d9ef>continue</span>;
-    read_unlock(<span style=color:#f92672>&amp;</span>binfmt_lock);
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>list_for_each_entry</span><span class=p>(</span><span class=n>fmt</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>formats</span><span class=p>,</span> <span class=n>lh</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>try_module_get</span><span class=p>(</span><span class=n>fmt</span><span class=o>-&gt;</span><span class=n>module</span><span class=p>))</span>
+        <span class=k>continue</span><span class=p>;</span>
+    <span class=n>read_unlock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>binfmt_lock</span><span class=p>);</span>
 
-    bprm<span style=color:#f92672>-&gt;</span>recursion_depth<span style=color:#f92672>++</span>;
-    retval <span style=color:#f92672>=</span> fmt<span style=color:#f92672>-&gt;</span>load_binary(bprm);
-    bprm<span style=color:#f92672>-&gt;</span>recursion_depth<span style=color:#f92672>--</span>;
+    <span class=n>bprm</span><span class=o>-&gt;</span><span class=n>recursion_depth</span><span class=o>++</span><span class=p>;</span>
+    <span class=n>retval</span> <span class=o>=</span> <span class=n>fmt</span><span class=o>-&gt;</span><span class=n>load_binary</span><span class=p>(</span><span class=n>bprm</span><span class=p>);</span>
+    <span class=n>bprm</span><span class=o>-&gt;</span><span class=n>recursion_depth</span><span class=o>--</span><span class=p>;</span>
 
-    read_lock(<span style=color:#f92672>&amp;</span>binfmt_lock);
-    put_binfmt(fmt);
-    <span style=color:#66d9ef>if</span> (retval <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#f92672>!</span>bprm<span style=color:#f92672>-&gt;</span>mm) {
-        <span style=color:#75715e>/* we got to flush_old_exec() and failed after it */</span>
-        read_unlock(<span style=color:#f92672>&amp;</span>binfmt_lock);
-        force_sigsegv(SIGSEGV);
-        <span style=color:#66d9ef>return</span> retval;
-    }
-    <span style=color:#66d9ef>if</span> (retval <span style=color:#f92672>!=</span> <span style=color:#f92672>-</span>ENOEXEC <span style=color:#f92672>||</span> <span style=color:#f92672>!</span>bprm<span style=color:#f92672>-&gt;</span>file) {
-        read_unlock(<span style=color:#f92672>&amp;</span>binfmt_lock);
-        <span style=color:#66d9ef>return</span> retval;
-    }
-}
+    <span class=n>read_lock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>binfmt_lock</span><span class=p>);</span>
+    <span class=n>put_binfmt</span><span class=p>(</span><span class=n>fmt</span><span class=p>);</span>
+    <span class=k>if</span> <span class=p>(</span><span class=n>retval</span> <span class=o>&lt;</span> <span class=mi>0</span> <span class=o>&amp;&amp;</span> <span class=o>!</span><span class=n>bprm</span><span class=o>-&gt;</span><span class=n>mm</span><span class=p>)</span> <span class=p>{</span>
+        <span class=cm>/* we got to flush_old_exec() and failed after it */</span>
+        <span class=n>read_unlock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>binfmt_lock</span><span class=p>);</span>
+        <span class=n>force_sigsegv</span><span class=p>(</span><span class=n>SIGSEGV</span><span class=p>);</span>
+        <span class=k>return</span> <span class=n>retval</span><span class=p>;</span>
+    <span class=p>}</span>
+    <span class=k>if</span> <span class=p>(</span><span class=n>retval</span> <span class=o>!=</span> <span class=o>-</span><span class=n>ENOEXEC</span> <span class=o>||</span> <span class=o>!</span><span class=n>bprm</span><span class=o>-&gt;</span><span class=n>file</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>read_unlock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>binfmt_lock</span><span class=p>);</span>
+        <span class=k>return</span> <span class=n>retval</span><span class=p>;</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 </code></pre></div><p>We can see it calls into <code>load_binary</code>:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>retval <span style=color:#f92672>=</span> fmt<span style=color:#f92672>-&gt;</span>load_binary(bprm);
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>retval</span> <span class=o>=</span> <span class=n>fmt</span><span class=o>-&gt;</span><span class=n>load_binary</span><span class=p>(</span><span class=n>bprm</span><span class=p>);</span>
 </code></pre></div><p>Here, the <code>load_binary</code> is a pointer in a <code>linux_binfmt</code> struct. For elf format, it can be found <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/binfmt_elf.c#L94>here</a>:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#66d9ef>static</span> <span style=color:#66d9ef>struct</span> linux_binfmt elf_format <span style=color:#f92672>=</span> {
-	.module		<span style=color:#f92672>=</span> THIS_MODULE,
-	.load_binary	<span style=color:#f92672>=</span> load_elf_binary,
-	.load_shlib	<span style=color:#f92672>=</span> load_elf_library,
-	.core_dump	<span style=color:#f92672>=</span> elf_core_dump,
-	.min_coredump	<span style=color:#f92672>=</span> ELF_EXEC_PAGESIZE,
-};
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>static</span> <span class=k>struct</span> <span class=n>linux_binfmt</span> <span class=n>elf_format</span> <span class=o>=</span> <span class=p>{</span>
+	<span class=p>.</span><span class=n>module</span>		<span class=o>=</span> <span class=n>THIS_MODULE</span><span class=p>,</span>
+	<span class=p>.</span><span class=n>load_binary</span>	<span class=o>=</span> <span class=n>load_elf_binary</span><span class=p>,</span>
+	<span class=p>.</span><span class=n>load_shlib</span>	<span class=o>=</span> <span class=n>load_elf_library</span><span class=p>,</span>
+	<span class=p>.</span><span class=n>core_dump</span>	<span class=o>=</span> <span class=n>elf_core_dump</span><span class=p>,</span>
+	<span class=p>.</span><span class=n>min_coredump</span>	<span class=o>=</span> <span class=n>ELF_EXEC_PAGESIZE</span><span class=p>,</span>
+<span class=p>};</span>
 </code></pre></div><p>We can find the <code>load_elf_binary</code> function defined in the <a href=https://elixir.bootlin.com/linux/v5.4/source/fs/binfmt_elf.c#L673><code>fs/binfmt_elf.c</code></a> file. Then the function will check the magic number in the ELF file header. You can find the ELF format from <a href=https://en.wikipedia.org/wiki/Executable_and_Linkable_Format>wiki</a>.
 We can see for both 32-bit and 64-bit systems, the e-ident field should contain the magic number for ELF format files.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* Get the exec-header */</span>
-loc<span style=color:#f92672>-&gt;</span>elf_ex <span style=color:#f92672>=</span> <span style=color:#f92672>*</span>((<span style=color:#66d9ef>struct</span> elfhdr <span style=color:#f92672>*</span>)bprm<span style=color:#f92672>-&gt;</span>buf);
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cm>/* Get the exec-header */</span>
+<span class=n>loc</span><span class=o>-&gt;</span><span class=n>elf_ex</span> <span class=o>=</span> <span class=o>*</span><span class=p>((</span><span class=k>struct</span> <span class=n>elfhdr</span> <span class=o>*</span><span class=p>)</span><span class=n>bprm</span><span class=o>-&gt;</span><span class=n>buf</span><span class=p>);</span>
 
-retval <span style=color:#f92672>=</span> <span style=color:#f92672>-</span>ENOEXEC;
-<span style=color:#75715e>/* First of all, some simple consistency checks */</span>
-<span style=color:#66d9ef>if</span> (memcmp(loc<span style=color:#f92672>-&gt;</span>elf_ex.e_ident, ELFMAG, SELFMAG) <span style=color:#f92672>!=</span> <span style=color:#ae81ff>0</span>)
-    <span style=color:#66d9ef>goto</span> out;
+<span class=n>retval</span> <span class=o>=</span> <span class=o>-</span><span class=n>ENOEXEC</span><span class=p>;</span>
+<span class=cm>/* First of all, some simple consistency checks */</span>
+<span class=k>if</span> <span class=p>(</span><span class=n>memcmp</span><span class=p>(</span><span class=n>loc</span><span class=o>-&gt;</span><span class=n>elf_ex</span><span class=p>.</span><span class=n>e_ident</span><span class=p>,</span> <span class=n>ELFMAG</span><span class=p>,</span> <span class=n>SELFMAG</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span>
+    <span class=k>goto</span> <span class=n>out</span><span class=p>;</span>
 </code></pre></div><p>Then, <code>load_elf_binary</code> will do some tasks to prepare for the executable file. After that, it will try to load the program header table:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>elf_phdata <span style=color:#f92672>=</span> load_elf_phdrs(<span style=color:#f92672>&amp;</span>loc<span style=color:#f92672>-&gt;</span>elf_ex, bprm<span style=color:#f92672>-&gt;</span>file);
-<span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>elf_phdata)
-    <span style=color:#66d9ef>goto</span> out;
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>elf_phdata</span> <span class=o>=</span> <span class=n>load_elf_phdrs</span><span class=p>(</span><span class=o>&amp;</span><span class=n>loc</span><span class=o>-&gt;</span><span class=n>elf_ex</span><span class=p>,</span> <span class=n>bprm</span><span class=o>-&gt;</span><span class=n>file</span><span class=p>);</span>
+<span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>elf_phdata</span><span class=p>)</span>
+    <span class=k>goto</span> <span class=n>out</span><span class=p>;</span>
 </code></pre></div><p>Then it will traverse the program header table and find the interpreter which is responsible of setting up the stack and map elf binary into the correct location in memory. After the interpreter is obtained, the function will perform simple consistency checks on the interpreter. It will load the interpreter program headers:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* Load the interpreter program headers */</span>
-interp_elf_phdata <span style=color:#f92672>=</span> load_elf_phdrs(<span style=color:#f92672>&amp;</span>loc<span style=color:#f92672>-&gt;</span>interp_elf_ex,
-                    interpreter);
-<span style=color:#66d9ef>if</span> (<span style=color:#f92672>!</span>interp_elf_phdata)
-    <span style=color:#66d9ef>goto</span> out_free_dentry;
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cm>/* Load the interpreter program headers */</span>
+<span class=n>interp_elf_phdata</span> <span class=o>=</span> <span class=n>load_elf_phdrs</span><span class=p>(</span><span class=o>&amp;</span><span class=n>loc</span><span class=o>-&gt;</span><span class=n>interp_elf_ex</span><span class=p>,</span>
+                    <span class=n>interpreter</span><span class=p>);</span>
+<span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=n>interp_elf_phdata</span><span class=p>)</span>
+    <span class=k>goto</span> <span class=n>out_free_dentry</span><span class=p>;</span>
 </code></pre></div><p>This function will call <code>setup_arg_pages</code> to finalize the stack vm_area_struct:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* Do this so that we can load the interpreter, if need be.  We will
-</span><span style=color:#75715e>    change some of these later */</span>
-retval <span style=color:#f92672>=</span> setup_arg_pages(bprm, randomize_stack_top(STACK_TOP),
-                executable_stack);
-<span style=color:#66d9ef>if</span> (retval <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span>)
-    <span style=color:#66d9ef>goto</span> out_free_dentry;
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cm>/* Do this so that we can load the interpreter, if need be.  We will
+</span><span class=cm>    change some of these later */</span>
+<span class=n>retval</span> <span class=o>=</span> <span class=n>setup_arg_pages</span><span class=p>(</span><span class=n>bprm</span><span class=p>,</span> <span class=n>randomize_stack_top</span><span class=p>(</span><span class=n>STACK_TOP</span><span class=p>),</span>
+                <span class=n>executable_stack</span><span class=p>);</span>
+<span class=k>if</span> <span class=p>(</span><span class=n>retval</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
+    <span class=k>goto</span> <span class=n>out_free_dentry</span><span class=p>;</span>
 </code></pre></div><p>It will also mmap the elf image into the correct location in memory. The bss and brk sections are prepared for the executable file:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=color:#75715e>/* Now we do a little grungy work by mmapping the ELF image into
-</span><span style=color:#75715e>    the correct location in memory. */</span>
-<span style=color:#66d9ef>for</span>(i <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>, elf_ppnt <span style=color:#f92672>=</span> elf_phdata;
-    i <span style=color:#f92672>&lt;</span> loc<span style=color:#f92672>-&gt;</span>elf_ex.e_phnum; i<span style=color:#f92672>++</span>, elf_ppnt<span style=color:#f92672>++</span>) {
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cm>/* Now we do a little grungy work by mmapping the ELF image into
+</span><span class=cm>    the correct location in memory. */</span>
+<span class=k>for</span><span class=p>(</span><span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>elf_ppnt</span> <span class=o>=</span> <span class=n>elf_phdata</span><span class=p>;</span>
+    <span class=n>i</span> <span class=o>&lt;</span> <span class=n>loc</span><span class=o>-&gt;</span><span class=n>elf_ex</span><span class=p>.</span><span class=n>e_phnum</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>,</span> <span class=n>elf_ppnt</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
         
-        ...
+        <span class=p>...</span>
 
-        <span style=color:#75715e>/* There was a PT_LOAD segment with p_memsz &gt; p_filesz
-</span><span style=color:#75715e>           before this one. Map anonymous pages, if needed,
-</span><span style=color:#75715e>           and clear the area.  */</span>
-        retval <span style=color:#f92672>=</span> set_brk(elf_bss <span style=color:#f92672>+</span> load_bias,
-                    elf_brk <span style=color:#f92672>+</span> load_bias,
-                    bss_prot);
-        <span style=color:#66d9ef>if</span> (retval)
-            <span style=color:#66d9ef>goto</span> out_free_dentry;
-        nbyte <span style=color:#f92672>=</span> ELF_PAGEOFFSET(elf_bss);
-        <span style=color:#66d9ef>if</span> (nbyte) {
-            nbyte <span style=color:#f92672>=</span> ELF_MIN_ALIGN <span style=color:#f92672>-</span> nbyte;
-            <span style=color:#66d9ef>if</span> (nbyte <span style=color:#f92672>&gt;</span> elf_brk <span style=color:#f92672>-</span> elf_bss)
-                nbyte <span style=color:#f92672>=</span> elf_brk <span style=color:#f92672>-</span> elf_bss;
-            <span style=color:#66d9ef>if</span> (clear_user((<span style=color:#66d9ef>void</span> __user <span style=color:#f92672>*</span>)elf_bss <span style=color:#f92672>+</span>
-                        load_bias, nbyte)) {
-            }
+        <span class=cm>/* There was a PT_LOAD segment with p_memsz &gt; p_filesz
+</span><span class=cm>           before this one. Map anonymous pages, if needed,
+</span><span class=cm>           and clear the area.  */</span>
+        <span class=n>retval</span> <span class=o>=</span> <span class=n>set_brk</span><span class=p>(</span><span class=n>elf_bss</span> <span class=o>+</span> <span class=n>load_bias</span><span class=p>,</span>
+                    <span class=n>elf_brk</span> <span class=o>+</span> <span class=n>load_bias</span><span class=p>,</span>
+                    <span class=n>bss_prot</span><span class=p>);</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>retval</span><span class=p>)</span>
+            <span class=k>goto</span> <span class=n>out_free_dentry</span><span class=p>;</span>
+        <span class=n>nbyte</span> <span class=o>=</span> <span class=n>ELF_PAGEOFFSET</span><span class=p>(</span><span class=n>elf_bss</span><span class=p>);</span>
+        <span class=k>if</span> <span class=p>(</span><span class=n>nbyte</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>nbyte</span> <span class=o>=</span> <span class=n>ELF_MIN_ALIGN</span> <span class=o>-</span> <span class=n>nbyte</span><span class=p>;</span>
+            <span class=k>if</span> <span class=p>(</span><span class=n>nbyte</span> <span class=o>&gt;</span> <span class=n>elf_brk</span> <span class=o>-</span> <span class=n>elf_bss</span><span class=p>)</span>
+                <span class=n>nbyte</span> <span class=o>=</span> <span class=n>elf_brk</span> <span class=o>-</span> <span class=n>elf_bss</span><span class=p>;</span>
+            <span class=k>if</span> <span class=p>(</span><span class=n>clear_user</span><span class=p>((</span><span class=kt>void</span> <span class=n>__user</span> <span class=o>*</span><span class=p>)</span><span class=n>elf_bss</span> <span class=o>+</span>
+                        <span class=n>load_bias</span><span class=p>,</span> <span class=n>nbyte</span><span class=p>))</span> <span class=p>{</span>
+            <span class=p>}</span>
 </code></pre></div><p>It will also call <code>elf_map</code> to map the segment to [vaddr, vaddr + file size] and align and then perform some checks:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>error <span style=color:#f92672>=</span> elf_map(bprm<span style=color:#f92672>-&gt;</span>file, load_bias <span style=color:#f92672>+</span> vaddr, elf_ppnt,
-				elf_prot, elf_flags, total_size);
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>error</span> <span class=o>=</span> <span class=n>elf_map</span><span class=p>(</span><span class=n>bprm</span><span class=o>-&gt;</span><span class=n>file</span><span class=p>,</span> <span class=n>load_bias</span> <span class=o>+</span> <span class=n>vaddr</span><span class=p>,</span> <span class=n>elf_ppnt</span><span class=p>,</span>
+				<span class=n>elf_prot</span><span class=p>,</span> <span class=n>elf_flags</span><span class=p>,</span> <span class=n>total_size</span><span class=p>);</span>
 </code></pre></div><p>The interpreter is then loaded:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>elf_entry <span style=color:#f92672>=</span> load_elf_interp(<span style=color:#f92672>&amp;</span>loc<span style=color:#f92672>-&gt;</span>interp_elf_ex,
-                interpreter,
-                <span style=color:#f92672>&amp;</span>interp_map_addr,
-                load_bias, interp_elf_phdata);
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>elf_entry</span> <span class=o>=</span> <span class=n>load_elf_interp</span><span class=p>(</span><span class=o>&amp;</span><span class=n>loc</span><span class=o>-&gt;</span><span class=n>interp_elf_ex</span><span class=p>,</span>
+                <span class=n>interpreter</span><span class=p>,</span>
+                <span class=o>&amp;</span><span class=n>interp_map_addr</span><span class=p>,</span>
+                <span class=n>load_bias</span><span class=p>,</span> <span class=n>interp_elf_phdata</span><span class=p>);</span>
 </code></pre></div><p>Finally, the elf talbe is created:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>retval <span style=color:#f92672>=</span> create_elf_tables(bprm, <span style=color:#f92672>&amp;</span>loc<span style=color:#f92672>-&gt;</span>elf_ex,
-            load_addr, interp_load_addr);
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>retval</span> <span class=o>=</span> <span class=n>create_elf_tables</span><span class=p>(</span><span class=n>bprm</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>loc</span><span class=o>-&gt;</span><span class=n>elf_ex</span><span class=p>,</span>
+            <span class=n>load_addr</span><span class=p>,</span> <span class=n>interp_load_addr</span><span class=p>);</span>
 </code></pre></div><p>After everything is prepared, we can call the <code>start_thread</code> function, which prepares the new task&rsquo;s registers and segments for execution. We will pass the set of registers for the new task, the address of the entry point of the new task, and the address of the top of of the statck for the new task to this function.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c>start_thread(regs, elf_entry, bprm<span style=color:#f92672>-&gt;</span>p);
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>start_thread</span><span class=p>(</span><span class=n>regs</span><span class=p>,</span> <span class=n>elf_entry</span><span class=p>,</span> <span class=n>bprm</span><span class=o>-&gt;</span><span class=n>p</span><span class=p>);</span>
 </code></pre></div><p>A lot of the information here can also be found at the <a href=https://0xax.gitbooks.io/linux-insides/content/SysCall/linux-syscall-4.html>linux-insides</a> book. I found it very helpful clearing my confusion.</p>
 <p>In our own implementations, we will not call the loaded program&rsquo;s <code>main</code> function. Instead, our loader will transfer control to the entry point of the loaded program via the <code>jmp</code> instruction. It has two major differences:</p>
 <ul>

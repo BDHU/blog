@@ -65,60 +65,60 @@
 <blockquote>
 <p>To install Ivy, simply execute <code>virtualenv ivyenv && source ivyenv/bin/activate && pip install ms-ivy</code>. This is tested on Ubuntu 18.04 LTS and may vary slight on other distros.</p>
 </blockquote>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#f92672>#</span>lang ivy1<span style=color:#f92672>.</span><span style=color:#ae81ff>8</span>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=o>#</span><span class=n>lang</span> <span class=n>ivy1</span><span class=o>.</span><span class=mi>8</span>
 
-<span style=color:#a6e22e>include</span> numbers
-<span style=color:#a6e22e>include</span> collections
-<span style=color:#a6e22e>include</span> network
+<span class=nf>include</span> <span class=n>numbers</span>
+<span class=nf>include</span> <span class=n>collections</span>
+<span class=nf>include</span> <span class=n>network</span>
 
-<span style=color:#a6e22e>global</span> {
-    alias byte <span style=color:#f92672>=</span> uint[<span style=color:#ae81ff>8</span>]
-    <span style=color:#66d9ef>instance</span> file <span style=color:#66d9ef>:</span> vector(byte)
-    <span style=color:#66d9ef>type</span> pid <span style=color:#f92672>=</span> {<span style=color:#ae81ff>0</span><span style=color:#f92672>..</span><span style=color:#ae81ff>1</span>}
-    <span style=color:#66d9ef>instance</span> net <span style=color:#66d9ef>:</span> tcp<span style=color:#f92672>.</span>net(byte)
-}
+<span class=nf>global</span> <span class=p>{</span>
+    <span class=n>alias</span> <span class=n>byte</span> <span class=ow>=</span> <span class=n>uint</span><span class=p>[</span><span class=mi>8</span><span class=p>]</span>
+    <span class=kr>instance</span> <span class=n>file</span> <span class=kt>:</span> <span class=n>vector</span><span class=p>(</span><span class=n>byte</span><span class=p>)</span>
+    <span class=kr>type</span> <span class=n>pid</span> <span class=ow>=</span> <span class=p>{</span><span class=mi>0</span><span class=o>..</span><span class=mi>1</span><span class=p>}</span>
+    <span class=kr>instance</span> <span class=n>net</span> <span class=kt>:</span> <span class=n>tcp</span><span class=o>.</span><span class=n>net</span><span class=p>(</span><span class=n>byte</span><span class=p>)</span>
+<span class=p>}</span>
 
-<span style=color:#a6e22e>process</span> host(self<span style=color:#66d9ef>:</span>pid) <span style=color:#f92672>=</span> {
-    export action append(val<span style=color:#66d9ef>:</span>byte)
-    <span style=color:#66d9ef>import</span> action show(content<span style=color:#66d9ef>:</span>file)
-    <span style=color:#66d9ef>instance</span> sock <span style=color:#66d9ef>:</span> net<span style=color:#f92672>.</span>socket
-    var contents <span style=color:#66d9ef>:</span> file
+<span class=nf>process</span> <span class=n>host</span><span class=p>(</span><span class=n>self</span><span class=kt>:</span><span class=n>pid</span><span class=p>)</span> <span class=ow>=</span> <span class=p>{</span>
+    <span class=n>export</span> <span class=n>action</span> <span class=n>append</span><span class=p>(</span><span class=n>val</span><span class=kt>:</span><span class=n>byte</span><span class=p>)</span>
+    <span class=kr>import</span> <span class=nn>action</span> <span class=n>show</span><span class=p>(</span><span class=n>content</span><span class=kt>:</span><span class=n>file</span><span class=p>)</span>
+    <span class=kr>instance</span> <span class=n>sock</span> <span class=kt>:</span> <span class=n>net</span><span class=o>.</span><span class=n>socket</span>
+    <span class=n>var</span> <span class=n>contents</span> <span class=kt>:</span> <span class=n>file</span>
 
-    after init{
-        contents <span style=color:#66d9ef>:=</span> file<span style=color:#f92672>.</span>empty;
-    }
+    <span class=n>after</span> <span class=n>init</span><span class=p>{</span>
+        <span class=n>contents</span> <span class=kt>:=</span> <span class=n>file</span><span class=o>.</span><span class=n>empty</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    implement append {
-        contents <span style=color:#66d9ef>:=</span> contents<span style=color:#f92672>.</span>append(val);
-        sock<span style=color:#f92672>.</span>send(host(<span style=color:#ae81ff>1</span><span style=color:#f92672>-</span>self)<span style=color:#f92672>.</span>sock<span style=color:#f92672>.</span>id, val);
-        show(contents);
-    }
+    <span class=n>implement</span> <span class=n>append</span> <span class=p>{</span>
+        <span class=n>contents</span> <span class=kt>:=</span> <span class=n>contents</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>val</span><span class=p>);</span>
+        <span class=n>sock</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=n>host</span><span class=p>(</span><span class=mi>1</span><span class=o>-</span><span class=n>self</span><span class=p>)</span><span class=o>.</span><span class=n>sock</span><span class=o>.</span><span class=n>id</span><span class=p>,</span> <span class=n>val</span><span class=p>);</span>
+        <span class=n>show</span><span class=p>(</span><span class=n>contents</span><span class=p>);</span>
+    <span class=p>}</span>
 
-    implement sock<span style=color:#f92672>.</span>recv(src<span style=color:#66d9ef>:</span>tcp<span style=color:#f92672>.</span>endpoint, val<span style=color:#66d9ef>:</span>byte) {
-        contents <span style=color:#66d9ef>:=</span> contents<span style=color:#f92672>.</span>append(val);
-        show(contents);
-    }
-}
+    <span class=n>implement</span> <span class=n>sock</span><span class=o>.</span><span class=n>recv</span><span class=p>(</span><span class=n>src</span><span class=kt>:</span><span class=n>tcp</span><span class=o>.</span><span class=n>endpoint</span><span class=p>,</span> <span class=n>val</span><span class=kt>:</span><span class=n>byte</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>contents</span> <span class=kt>:=</span> <span class=n>contents</span><span class=o>.</span><span class=n>append</span><span class=p>(</span><span class=n>val</span><span class=p>);</span>
+        <span class=n>show</span><span class=p>(</span><span class=n>contents</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 </code></pre></div><p>Then we form our specification based on the guarantee that if all sent messages are delivered, the two replicas are identical. The specification is equivalent to the <em>guarded command</em> we&rsquo;ve talked about earlier.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#a6e22e>specification</span> {
-    var msg_count <span style=color:#66d9ef>:</span> nat
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=nf>specification</span> <span class=p>{</span>
+    <span class=n>var</span> <span class=n>msg_count</span> <span class=kt>:</span> <span class=n>nat</span>
 
-    after init {
-        msg_count <span style=color:#66d9ef>:=</span> <span style=color:#ae81ff>0</span>;
-    }
+    <span class=n>after</span> <span class=n>init</span> <span class=p>{</span>
+        <span class=n>msg_count</span> <span class=kt>:=</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    after host<span style=color:#f92672>.</span>sock<span style=color:#f92672>.</span>send(self<span style=color:#66d9ef>:</span>pid, dst<span style=color:#66d9ef>:</span>tcp<span style=color:#f92672>.</span>endpoint, val<span style=color:#66d9ef>:</span>byte) {
-        msg_count <span style=color:#66d9ef>:=</span> msg_count <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>;
-    }
+    <span class=n>after</span> <span class=n>host</span><span class=o>.</span><span class=n>sock</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=n>self</span><span class=kt>:</span><span class=n>pid</span><span class=p>,</span> <span class=n>dst</span><span class=kt>:</span><span class=n>tcp</span><span class=o>.</span><span class=n>endpoint</span><span class=p>,</span> <span class=n>val</span><span class=kt>:</span><span class=n>byte</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>msg_count</span> <span class=kt>:=</span> <span class=n>msg_count</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+    <span class=p>}</span>
 
-    after host<span style=color:#f92672>.</span>sock<span style=color:#f92672>.</span>recv(self<span style=color:#66d9ef>:</span>pid, src<span style=color:#66d9ef>:</span>tcp<span style=color:#f92672>.</span>endpoint, val<span style=color:#66d9ef>:</span>byte) {
-        msg_count <span style=color:#66d9ef>:=</span> msg_count <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>;
-        ensure msg_count <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span> <span style=color:#f92672>-&gt;</span> host(<span style=color:#ae81ff>0</span>)<span style=color:#f92672>.</span>contents<span style=color:#f92672>.</span>eq(host(<span style=color:#ae81ff>1</span>)<span style=color:#f92672>.</span>contents);
-    }
-}
+    <span class=n>after</span> <span class=n>host</span><span class=o>.</span><span class=n>sock</span><span class=o>.</span><span class=n>recv</span><span class=p>(</span><span class=n>self</span><span class=kt>:</span><span class=n>pid</span><span class=p>,</span> <span class=n>src</span><span class=kt>:</span><span class=n>tcp</span><span class=o>.</span><span class=n>endpoint</span><span class=p>,</span> <span class=n>val</span><span class=kt>:</span><span class=n>byte</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>msg_count</span> <span class=kt>:=</span> <span class=n>msg_count</span> <span class=o>-</span> <span class=mi>1</span><span class=p>;</span>
+        <span class=n>ensure</span> <span class=n>msg_count</span> <span class=ow>=</span> <span class=mi>0</span> <span class=ow>-&gt;</span> <span class=n>host</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span><span class=o>.</span><span class=n>contents</span><span class=o>.</span><span class=n>eq</span><span class=p>(</span><span class=n>host</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span><span class=o>.</span><span class=n>contents</span><span class=p>);</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 </code></pre></div><p>We wrote the above code into a file named <code>append.ivy</code> and we generate the testing code using <code>ivyc target=test append.ivy</code>. Then we run the code using <code>ivy_launch append.ivy</code>.</p>
 <p>Interestingly, the program yields an error message:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>`ivy_shell`; ./append &#34;[[0,{addr:0x7f000001,port:49124}],[1,{addr:0x7f000001,port:49125}]]&#34;
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>`ivy_shell`; ./append &#34;[[0,{addr:0x7f000001,port:49124}],[1,{addr:0x7f000001,port:49125}]]&#34;
 &gt; host.append(1,251)
 &lt; host.show(1,[251])
 &lt; host.show(0,[251])
@@ -136,11 +136,11 @@ append.ivy: line 49: error: assertion failed
 <p>BMC construct a boolean formula that is satisfiable if and only if the underlying state transition system can realize a finite sequence of state transitions that reaches certain states of interest.</p>
 </blockquote>
 <p>To tell Ivy using bounded model checking, we add the following lines to <code>append.ivy</code>:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#a6e22e>axiom</span> host(<span style=color:#ae81ff>0</span>)<span style=color:#f92672>.</span>sock<span style=color:#f92672>.</span>id <span style=color:#f92672>~=</span> host(<span style=color:#ae81ff>1</span>)<span style=color:#f92672>.</span>sock<span style=color:#f92672>.</span>id
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=nf>axiom</span> <span class=n>host</span><span class=p>(</span><span class=mi>0</span><span class=p>)</span><span class=o>.</span><span class=n>sock</span><span class=o>.</span><span class=n>id</span> <span class=o>~=</span> <span class=n>host</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span><span class=o>.</span><span class=n>sock</span><span class=o>.</span><span class=n>id</span>
 
-<span style=color:#a6e22e>attribute</span> method<span style=color:#f92672>=</span>bmc[<span style=color:#ae81ff>10</span>]
+<span class=nf>attribute</span> <span class=n>method</span><span class=ow>=</span><span class=n>bmc</span><span class=p>[</span><span class=mi>10</span><span class=p>]</span>
 </code></pre></div><p>Executing <code>ivy_check detailed=false append.ivy</code>, we see an error message:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>&gt; host.append(1,80)
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>&gt; host.append(1,80)
 &lt; host.show(1,[80])
 &gt; host.append(0,64)
 &lt; host.show(0,[64])

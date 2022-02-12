@@ -35,11 +35,11 @@
 <ul>
 <li>In the <code>_config.yml</code> located in your root directory, add this line:</li>
 </ul>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>markdown: kramdown
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>markdown: kramdown
 </code></pre></div><ul>
 <li>Create a file called <code>mathjax.html</code> insides <code>_includes/</code>, add these lines (these settings come from the Mathjax <a href=https://docs.mathjax.org/en/latest/web/configuration.html>documentation</a>):</li>
 </ul>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>&lt;script&gt;
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>&lt;script&gt;
 MathJax = {
   tex: {
     inlineMath: [ [&#39;$&#39;, &#39;$&#39;], [&#39;\\(&#39;, &#39;\\)&#39;] ]
@@ -55,13 +55,13 @@ MathJax = {
 &lt;/script&gt;
 </code></pre></div><p>For Hugo website, the script will be exactly the same. The only difference is instead of putting <code>mathjax.html</code> into <code>_includes/</code>, you would want to put it inside <code>layouts/partials</code>. For example, I put my <code>mathjax.html</code> into the theme directory <code>themes/mini/layouts/partials</code>.</p>
 <p>For Jekyll, add this line in your <code>_includes/head.html</code> before <code>&lt;/head></code>:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>{% include mathjax.html &gt;}}
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>{% include mathjax.html &gt;}}
 </code></pre></div><p>For Hugo, we would add the following line to <code>layouts/partials/header.html</code> before <code>&lt;/head></code> in your theme&rsquo;s <code>layouts/partials/header.html</code>.</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>{{ partial &#34;mathjax.html&#34; . }}
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>{{ partial &#34;mathjax.html&#34; . }}
 </code></pre></div><p>Now you can write in-line math equations in your markdown file like:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>\\(f(x) = x^2\\)
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>\\(f(x) = x^2\\)
 </code></pre></div><p>or</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text>$f(x) = x^2$
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>$f(x) = x^2$
 </code></pre></div><p>The above text will be render to:
 \(f(x) = x^2\)</p>
 <p>If you are already using Mathjax v2 and wish to just convert it to v3, you may also try this configuration <a href=https://mathjax.github.io/MathJax-demos-web/convert-configuration/convert-configuration.html>converter</a>. There is a much more detailed <a href=https://docs.mathjax.org/en/latest/upgrading/v2.html>guide</a> but it may contain information unnecessary to average Hugo or Jekyll users.html) how to migrate from mathjax v2 to v3. The most useful resource is the official Mathjax <a href=https://docs.mathjax.org/en/latest/>documentation</a>.</p>

@@ -71,83 +71,83 @@
 <li>Throughput: the maximum throughput would be 1/(message time + CS time)</li>
 </ul>
 <p>A naive specification for mutex in <a href=https://microsoft.github.io/ivy/language.html>Ivy</a> would be:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#a6e22e>action</span> grant(v<span style=color:#66d9ef>:</span>id)
-<span style=color:#a6e22e>action</span> release(v<span style=color:#66d9ef>:</span>id)
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=nf>action</span> <span class=n>grant</span><span class=p>(</span><span class=n>v</span><span class=kt>:</span><span class=n>id</span><span class=p>)</span>
+<span class=nf>action</span> <span class=n>release</span><span class=p>(</span><span class=n>v</span><span class=kt>:</span><span class=n>id</span><span class=p>)</span>
 
-<span style=color:#a6e22e>specification</span> {
-    var lock(<span style=color:#66d9ef>X:</span>id)<span style=color:#66d9ef>:</span>bool
-    after init {
-        lock(<span style=color:#66d9ef>X</span>) <span style=color:#66d9ef>:=</span> false;
-    }
+<span class=nf>specification</span> <span class=p>{</span>
+    <span class=n>var</span> <span class=n>lock</span><span class=p>(</span><span class=kt>X:</span><span class=n>id</span><span class=p>)</span><span class=kt>:</span><span class=n>bool</span>
+    <span class=n>after</span> <span class=n>init</span> <span class=p>{</span>
+        <span class=n>lock</span><span class=p>(</span><span class=kt>X</span><span class=p>)</span> <span class=kt>:=</span> <span class=n>false</span><span class=p>;</span>
+    <span class=p>}</span>
     
-    before grant {
-        require <span style=color:#f92672>~</span>lock(<span style=color:#66d9ef>X</span>);
-        lock(v) <span style=color:#66d9ef>:=</span> true
-    }
+    <span class=n>before</span> <span class=n>grant</span> <span class=p>{</span>
+        <span class=n>require</span> <span class=o>~</span><span class=n>lock</span><span class=p>(</span><span class=kt>X</span><span class=p>);</span>
+        <span class=n>lock</span><span class=p>(</span><span class=n>v</span><span class=p>)</span> <span class=kt>:=</span> <span class=n>true</span>
+    <span class=p>}</span>
 
-    before release {
-        require lock(v);
-        lock(v) <span style=color:#66d9ef>:=</span> false
-    }
-}
+    <span class=n>before</span> <span class=n>release</span> <span class=p>{</span>
+        <span class=n>require</span> <span class=n>lock</span><span class=p>(</span><span class=n>v</span><span class=p>);</span>
+        <span class=n>lock</span><span class=p>(</span><span class=n>v</span><span class=p>)</span> <span class=kt>:=</span> <span class=n>false</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 </code></pre></div><p>To see token ring in action, we use the demo from <a href=http://mcmil.net/wordpress/>Ken</a>&rsquo;s presentation:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=color:#f92672>#</span>lang ivy1<span style=color:#f92672>.</span><span style=color:#ae81ff>8</span>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=o>#</span><span class=n>lang</span> <span class=n>ivy1</span><span class=o>.</span><span class=mi>8</span>
 
-<span style=color:#a6e22e>include</span> network
-<span style=color:#a6e22e>include</span> numbers
+<span class=nf>include</span> <span class=n>network</span>
+<span class=nf>include</span> <span class=n>numbers</span>
 
-<span style=color:#a6e22e>global</span> {
-    <span style=color:#66d9ef>type</span> host_id <span style=color:#f92672>=</span> {<span style=color:#ae81ff>0</span><span style=color:#f92672>..</span>max}
-    alias token <span style=color:#f92672>=</span> uint[<span style=color:#ae81ff>1</span>]
-    <span style=color:#66d9ef>instance</span> net <span style=color:#66d9ef>:</span> tcp<span style=color:#f92672>.</span>net(token)
-}
+<span class=nf>global</span> <span class=p>{</span>
+    <span class=kr>type</span> <span class=n>host_id</span> <span class=ow>=</span> <span class=p>{</span><span class=mi>0</span><span class=o>..</span><span class=n>max</span><span class=p>}</span>
+    <span class=n>alias</span> <span class=n>token</span> <span class=ow>=</span> <span class=n>uint</span><span class=p>[</span><span class=mi>1</span><span class=p>]</span>
+    <span class=kr>instance</span> <span class=n>net</span> <span class=kt>:</span> <span class=n>tcp</span><span class=o>.</span><span class=n>net</span><span class=p>(</span><span class=n>token</span><span class=p>)</span>
+<span class=p>}</span>
 
-<span style=color:#a6e22e>process</span> host(self<span style=color:#66d9ef>:</span>host_id) <span style=color:#f92672>=</span> {
-    <span style=color:#66d9ef>import</span> action grant
-    export action release
+<span class=nf>process</span> <span class=n>host</span><span class=p>(</span><span class=n>self</span><span class=kt>:</span><span class=n>host_id</span><span class=p>)</span> <span class=ow>=</span> <span class=p>{</span>
+    <span class=kr>import</span> <span class=nn>action</span> <span class=n>grant</span>
+    <span class=n>export</span> <span class=n>action</span> <span class=n>release</span>
 
-    specification {
-        var lock <span style=color:#66d9ef>:</span> bool
+    <span class=n>specification</span> <span class=p>{</span>
+        <span class=n>var</span> <span class=n>lock</span> <span class=kt>:</span> <span class=n>bool</span>
 
-        after init {
-            lock <span style=color:#66d9ef>:=</span> false;
-        }
+        <span class=n>after</span> <span class=n>init</span> <span class=p>{</span>
+            <span class=n>lock</span> <span class=kt>:=</span> <span class=n>false</span><span class=p>;</span>
+        <span class=p>}</span>
 
-        before grant {
-            require forall <span style=color:#66d9ef>X</span><span style=color:#f92672>.</span> <span style=color:#f92672>~</span>host(<span style=color:#66d9ef>X</span>)<span style=color:#f92672>.</span>lock;
-            lock <span style=color:#66d9ef>:=</span> true;
-        }
+        <span class=n>before</span> <span class=n>grant</span> <span class=p>{</span>
+            <span class=n>require</span> <span class=n>forall</span> <span class=kt>X</span><span class=o>.</span> <span class=o>~</span><span class=n>host</span><span class=p>(</span><span class=kt>X</span><span class=p>)</span><span class=o>.</span><span class=n>lock</span><span class=p>;</span>
+            <span class=n>lock</span> <span class=kt>:=</span> <span class=n>true</span><span class=p>;</span>
+        <span class=p>}</span>
 
-        before release {
-            require lock;
-            lock <span style=color:#66d9ef>:=</span> false;
-        }
-    }
+        <span class=n>before</span> <span class=n>release</span> <span class=p>{</span>
+            <span class=n>require</span> <span class=n>lock</span><span class=p>;</span>
+            <span class=n>lock</span> <span class=kt>:=</span> <span class=n>false</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
 
-    implementation {
-        <span style=color:#66d9ef>instance</span> sock <span style=color:#66d9ef>:</span> net<span style=color:#f92672>.</span>socket
+    <span class=n>implementation</span> <span class=p>{</span>
+        <span class=kr>instance</span> <span class=n>sock</span> <span class=kt>:</span> <span class=n>net</span><span class=o>.</span><span class=n>socket</span>
 
-        after init {
-            <span style=color:#66d9ef>if</span> self <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span> {
-                pass
-            }
-        }
+        <span class=n>after</span> <span class=n>init</span> <span class=p>{</span>
+            <span class=kr>if</span> <span class=n>self</span> <span class=ow>=</span> <span class=mi>0</span> <span class=p>{</span>
+                <span class=n>pass</span>
+            <span class=p>}</span>
+        <span class=p>}</span>
 
-        action pass <span style=color:#f92672>=</span> {
-            var tok <span style=color:#66d9ef>:</span> token;
-            var next <span style=color:#66d9ef>:=</span> <span style=color:#ae81ff>0</span> <span style=color:#66d9ef>if</span> self <span style=color:#f92672>=</span> max <span style=color:#66d9ef>else</span> self <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span>;
-            sock<span style=color:#f92672>.</span>send(host(next)<span style=color:#f92672>.</span>sock<span style=color:#f92672>.</span>id, tok);
-        }
+        <span class=n>action</span> <span class=n>pass</span> <span class=ow>=</span> <span class=p>{</span>
+            <span class=n>var</span> <span class=n>tok</span> <span class=kt>:</span> <span class=n>token</span><span class=p>;</span>
+            <span class=n>var</span> <span class=n>next</span> <span class=kt>:=</span> <span class=mi>0</span> <span class=kr>if</span> <span class=n>self</span> <span class=ow>=</span> <span class=n>max</span> <span class=kr>else</span> <span class=n>self</span> <span class=o>+</span> <span class=mi>1</span><span class=p>;</span>
+            <span class=n>sock</span><span class=o>.</span><span class=n>send</span><span class=p>(</span><span class=n>host</span><span class=p>(</span><span class=n>next</span><span class=p>)</span><span class=o>.</span><span class=n>sock</span><span class=o>.</span><span class=n>id</span><span class=p>,</span> <span class=n>tok</span><span class=p>);</span>
+        <span class=p>}</span>
 
-        implement sock<span style=color:#f92672>.</span>recv(src<span style=color:#66d9ef>:</span>tcp<span style=color:#f92672>.</span>endpoint, val<span style=color:#66d9ef>:</span>token) {
-            grant;
-        }
+        <span class=n>implement</span> <span class=n>sock</span><span class=o>.</span><span class=n>recv</span><span class=p>(</span><span class=n>src</span><span class=kt>:</span><span class=n>tcp</span><span class=o>.</span><span class=n>endpoint</span><span class=p>,</span> <span class=n>val</span><span class=kt>:</span><span class=n>token</span><span class=p>)</span> <span class=p>{</span>
+            <span class=n>grant</span><span class=p>;</span>
+        <span class=p>}</span>
 
-        implement release {
-            pass;
-        }
-    }
-}
+        <span class=n>implement</span> <span class=n>release</span> <span class=p>{</span>
+            <span class=n>pass</span><span class=p>;</span>
+        <span class=p>}</span>
+    <span class=p>}</span>
+<span class=p>}</span>
 </code></pre></div><p>We put the above code into a file called <code>token_ring.ivy</code> and compile it using <code>ivyc token_ring.ivy</code>. Then we launch the program using <code>ivy_launch max=2 token_ring.ivy</code>, which opens three terminal windows.</p>
 <p>If we type in host(1) with <code>host.release</code>, we see in host(2) it outputs <code>host.grant</code>, which seems to show that the token work properly. However, if we type <code>host.release</code> again in host(1), <code>host.grant</code> will show up again in host(2), resulting in multiple tokens getting created, which violates the requirement that there is at most one token in the ring at any given time.</p>
 <p>If we execute <code>ivyc target=test token_ring.ivy && ivy_launch max=2 token_ring.ivy</code>, then we see the token ring work properly. The reason is we have specified the requirement for <code>grant</code> and <code>release</code> (<code>require forall X. ~host(X).lock</code> for <code>grant</code> and <code>require lock</code> for <code>release</code>).</p>

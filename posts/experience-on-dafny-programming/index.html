@@ -34,13 +34,13 @@
 </header><p>Because of Professor <a href=https://www.cs.utexas.edu/~isil/>Dillig</a>&rsquo;s <a href=https://www.cs.utexas.edu/~isil/cs389L/>class</a>, I finally got the chance to try out <a href=https://en.wikipedia.org/wiki/Dafny>Dafny</a>, a language made by <a href=https://www.microsoft.com/en-us/research/>Microsoft Research</a>, with built-in support for formal specification through <a href=https://en.wikipedia.org/wiki/Precondition>preconditions</a>, <a href=https://en.wikipedia.org/wiki/Postcondition>postconditions</a>, <a href=https://en.wikipedia.org/wiki/Loop_invariant>loop invariants</a> and <a href=https://en.wikipedia.org/wiki/Loop_variant>loop variants</a>. I often think, what if we write programs in a verification language, would there be much less bugs and will it make our lives much easier than sitting in front a screen for hours grinding at bugs. Here are some thoughts I want to put down before they are gone in my head.</p>
 <p><img src=https://raw.githubusercontent.com/dafny-lang/dafny/master/dafny-banner.png#center alt=Dafny-programming-language></p>
 <p>Here is a simple example illustrating some basic concepts in Dafny. Suppose we are given a function that reverses a sequence. For example, we want to return <code>[c, b, a]</code> when given <code>[a, b, c]</code>, the recursive implementation would look like:</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback>function reverse&lt;T&gt;(in : seq&lt;T&gt;) : seq&lt;T&gt;
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>function reverse&lt;T&gt;(in : seq&lt;T&gt;) : seq&lt;T&gt;
 {
     if (|s| == 0) then s
     else reverse(s[1..]) + [s[0]]
 }
 </code></pre></div><p>This looks correct, right? We have termination condition set for recursion, the implementation is fairly straightforward. Nothing seems wrong. If the function is correct, it would suggest that the lemma</p>
-<div class=highlight><pre tabindex=0 style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-fallback data-lang=fallback>lemma reverseLemma&lt;T&gt;(in : seq&lt;T&gt;)
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>lemma reverseLemma&lt;T&gt;(in : seq&lt;T&gt;)
 ensures in == reverse(reverse(in));
 {}
 </code></pre></div><p>must hold. If we simply reverse a sequence twice, it would be the same compared to the original input. However, compiling the program would complain that a postcondition might not hold. This is really strange. If we simply eye-ball through the implementation of <code>reverse</code>, it&rsquo;s hard to imagine what could possibly go wrong.</p>
