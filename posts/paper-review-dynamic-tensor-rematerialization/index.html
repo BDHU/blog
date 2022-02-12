@@ -29,7 +29,7 @@
 <header id=post-header>
 <h1>Paper Review - Dynamic Tensor Rematerialization</h1>
 <div>
-<time>Updated Nov 9, 2021</time>
+<time>Nov 9, 2021</time>
 </div>
 </header><p>Dynamic Tensor Rematerialization (<a href=https://arxiv.org/pdf/2006.09616.pdf>DTR</a>) treats GPU memory as a large cache, where tensors can be evicted to save memory, and recomputed if needed later.</p>
 <p>DTR&rsquo;s eviction policy relies on the heuristic \(h\). The heuristic assigns a value \(h(t)\) to each resident tensor \(t\), approximating the cost of evicting the tensor. DTR evicts the tensor with the lowest cost based on the value of \(h\). \(h\) can factor in arbitrary metadata.</p>

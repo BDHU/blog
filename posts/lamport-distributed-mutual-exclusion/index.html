@@ -29,7 +29,7 @@
 <header id=post-header>
 <h1>Lamport Distributed Mutual Exclusion</h1>
 <div>
-<time>Updated Sep 21, 2021</time>
+<time>Sep 21, 2021</time>
 </div>
 </header><p>Normally, having consistent event ordering in a distributed system is hard because we have no common clock. Since we don&rsquo;t have a common clock to measure with, we rely on logical properties of time in the absence of clock. Here we use <em>causality</em> replation between events.</p>
 <p>In essence, <em>Causality</em> indicates a clock \(C\) is map from events to time satisfying: \(e\rightarrow e'\) implies \(C(e) &lt; C(e')\)</p>
