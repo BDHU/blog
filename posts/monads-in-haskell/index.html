@@ -9,20 +9,13 @@
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
-<link href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css rel=stylesheet>
+<link href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css rel=stylesheet>
 <title>Monads in Haskell</title>
 </head>
-<body><header id=banner>
-<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
-<nav>
-<ul>
-<li>
-<a href=/blog/posts/ title=posts>archive</a>
-</li><li>
-<a href=https://www.bodunhu.com/ title=about>about</a>
-</li>
-</ul>
-</nav>
+<body>
+<header id=return>
+<h2></h2><a href=https://www.bodunhu.com/blog/><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" style="vertical-align:-.125em" width="20" height="20" viewBox="0 0 16 16"><g fill="currentcolor"><path fill-rule="evenodd" d="M15 2a1 1 0 00-1-1H2A1 1 0 001 2v12a1 1 0 001 1h12a1 1 0 001-1V2zM0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H2a2 2 0 01-2-2V2zm11.5 5.5a.5.5.0 010 1H5.707l2.147 2.146a.5.5.0 01-.708.708l-3-3a.5.5.0 010-.708l3-3a.5.5.0 11.708.708L5.707 7.5H11.5z"/></g></svg>
+</a>
 </header>
 <main id=content>
 <article>
@@ -56,12 +49,12 @@
 </code></pre></div><p>However, the function \(func1\) could potentially return a Nothing if the given input doesn&rsquo;t meet certain standards (exp. divide by 0). Therefore, \(func1\) can modified to:</p>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=nf>func1</span> <span class=ow>::</span> <span class=kt>Int</span> <span class=ow>-&gt;</span> <span class=p>(</span><span class=kt>Int</span><span class=p>,</span> <span class=kt>Int</span><span class=p>)</span> <span class=ow>-&gt;</span> <span class=kt>Maybe</span> <span class=p>(</span><span class=kt>Int</span><span class=p>,</span> <span class=kt>Int</span><span class=p>)</span>
 </code></pre></div><p>The previous definition of \(func1\) says \(func1\) takes a (Int, Int) tuple as one input, but now if we feed the output of \(func1\) directly to the next \(func1\) in the chain, error would occur because \(func1\) takes a raw (Int, Int) tuple as the input, but now we have (Int, Int) wrapped in a Maybe context. The & operator is not able to pass the argument with a context to the next func1. Fortunately, we have the bind operator defined.</p>
-<p>If we look at the definition of the <strong>&#187;=</strong> in Monad definition, we see:</p>
+<p>If we look at the definition of the <code>>>=</code> in Monad definition, we see:</p>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=p>(</span><span class=o>&gt;&gt;=</span><span class=p>)</span> <span class=ow>::</span> <span class=n>m</span> <span class=n>t</span> <span class=ow>-&gt;</span> <span class=p>(</span><span class=n>t</span> <span class=ow>-&gt;</span> <span class=n>m</span> <span class=n>s</span><span class=p>)</span> <span class=ow>-&gt;</span> <span class=n>m</span> <span class=n>s</span>
-</code></pre></div><p>This means <strong>&#187;=</strong> is able to take a value within certain context and map a function that takes the raw value as input to the it. We can simply switch the <strong>&</strong> operator to <strong>&#187;=</strong> such that the chaining would still work:</p>
+</code></pre></div><p>This means <code>>>=</code> is able to take a value within certain context and map a function that takes the raw value as input to the it. We can simply switch the <code>&</code> operator to <code>>>=</code> such that the chaining would still work:</p>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=nf>return</span> <span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>)</span> <span class=o>&gt;&gt;=</span> <span class=n>func1</span> <span class=mi>1</span> <span class=o>&gt;&gt;=</span> <span class=n>func1</span> <span class=mi>2</span> <span class=o>&gt;&gt;=</span> <span class=n>func1</span> <span class=mi>3</span> <span class=o>...</span>
 </code></pre></div><p>If an error occurred in one part of the chain (let&rsquo;s assume one computation yields Nothing). Then the Nothing value will be propagated to the next function, which will automatically generate an error, or Nothing. Otherwise we would have written error checking code at the end of each single computation to check their output.</p>
-<p>In short, <strong>&#187;=</strong> is just a way to chain functions with parametric polymorphism together.</p>
+<p>In short, <code>>>=</code> is just a way to chain functions with parametric polymorphism together.</p>
 <h2 id=haskell-do-notation>Haskell <em>do</em> Notation</h2>
 <p>Using the do notation can simply the use of bind operator. The basic pattern of do notation is:</p>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=kr>do</span>
@@ -69,7 +62,7 @@
   <span class=n>e2</span>
 </code></pre></div><p>which is equivalent to:</p>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-haskell data-lang=haskell><span class=nf>e1</span> <span class=o>&gt;&gt;=</span> <span class=p>(</span><span class=nf>\</span><span class=n>lambda</span> <span class=n>x</span><span class=o>.</span><span class=n>e2</span><span class=p>)</span>
-</code></pre></div><p>The <strong>&lt;-</strong> notation simply indicates \(x\) is bind to the value the computation generates. In other words, \(x\) doesn&rsquo;t lie in a context. if \(e1\) returns Nothing, \(x\) is not bind to anything. It&rsquo;s important to remember that do expressions are just different syntax for chaining monadic values.</p>
+</code></pre></div><p>The <code>&lt;-</code> notation simply indicates \(x\) is bind to the value the computation generates. In other words, \(x\) doesn&rsquo;t lie in a context. if \(e1\) returns Nothing, \(x\) is not bind to anything. It&rsquo;s important to remember that do expressions are just different syntax for chaining monadic values.</p>
 <p>For a more detailed explanation of Monads, I found <a href=http://learnyouahaskell.com/a-fistful-of-monads>A Fistful of Monads</a> to be extremely helpful in terms of clarifying the concept.</p>
 <div style=width:100% id=comment>
 <script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
