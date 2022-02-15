@@ -8,6 +8,8 @@
 <link rel=stylesheet href=/blog/css/style.min.css>
 <script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
 <script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<script src=https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js></script>
+<script>let isDark=window.matchMedia('(prefers-color-scheme: dark)').matches,mermaidTheme=isDark?'dark':'default',mermaidConfig={startOnLoad:!0,securityLevel:'strict',flowchart:{useMaxWidth:!0,htmlLabels:!0},theme:mermaidTheme};mermaid.initialize(mermaidConfig)</script>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
 <script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
@@ -31,6 +33,12 @@
 <p>PhD student at <a href=https://www.utexas.edu/>UT Austin</a> 🤘. Currently working on systems for ML at <a href=https://utns.cs.utexas.edu/>UTNS</a> lab. Find out more about me <a href=https://www.bodunhu.com/>here</a>. You can get updates by following me on <a href=https://twitter.com/BodunHu>Twitter</a>, or subscribing via <a href=/blog/index.xml>RSS</a>.</p>
 <h3>Recent Posts</h3>
 <ul id=posts>
+<li>
+<a href=https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/>
+Add Mermaid to Hugo with Dark Mode
+<small><time>Feb 15, 2022</time></small>
+</a>
+</li>
 <li>
 <a href=https://www.bodunhu.com/blog/posts/cross-entropy-loss/>
 Cross Entropy Loss
@@ -59,12 +67,6 @@ Megatron with FastMoE
 <a href=https://www.bodunhu.com/blog/posts/set-up-slurm-across-multiple-machines/>
 Set up Slurm across Multiple Machines
 <small><time>Nov 16, 2021</time></small>
-</a>
-</li>
-<li>
-<a href=https://www.bodunhu.com/blog/posts/paper-review-dynamic-tensor-rematerialization/>
-Paper Review - Dynamic Tensor Rematerialization
-<small><time>Nov 9, 2021</time></small>
 </a>
 </li>
 </ul>

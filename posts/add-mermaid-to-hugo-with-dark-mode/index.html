@@ -1,0 +1,137 @@
+<!doctype html><html><head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=description content="std::bodun::blog. Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
+<link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
+<link rel=stylesheet href=/blog/css/style.min.css>
+<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script type=text/javascript id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js></script>
+<script src=https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js></script>
+<script>let isDark=window.matchMedia('(prefers-color-scheme: dark)').matches,mermaidTheme=isDark?'dark':'default',mermaidConfig={startOnLoad:!0,securityLevel:'strict',flowchart:{useMaxWidth:!0,htmlLabels:!0},theme:mermaidTheme};mermaid.initialize(mermaidConfig)</script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
+<script async src=https://www.google-analytics.com/analytics.js></script>
+<link href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css rel=stylesheet>
+<title>Add Mermaid to Hugo with Dark Mode</title>
+</head>
+<body>
+<header id=return>
+<h2></h2><a href=https://www.bodunhu.com/blog/><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" style="vertical-align:-.125em" width="18" height="18" viewBox="0 0 16 16"><g fill="currentcolor"><path fill-rule="evenodd" d="M15 2a1 1 0 00-1-1H2A1 1 0 001 2v12a1 1 0 001 1h12a1 1 0 001-1V2zM0 2a2 2 0 012-2h12a2 2 0 012 2v12a2 2 0 01-2 2H2a2 2 0 01-2-2V2zm11.5 5.5a.5.5.0 010 1H5.707l2.147 2.146a.5.5.0 01-.708.708l-3-3a.5.5.0 010-.708l3-3a.5.5.0 11.708.708L5.707 7.5H11.5z"/></g></svg>
+</a>
+</header>
+<main id=content>
+<article>
+<header id=post-header>
+<h1>Add Mermaid to Hugo with Dark Mode</h1>
+<div>
+<time>Feb 15, 2022</time>
+</div>
+</header><p>Recently, I was revisiting materials in Deep Learning. I need tools that generate diagrams easily. Drawing the graphs from scratch and upload them individually to the image hosting platform is a daunting process. This is when <a href=https://github.com/mermaid-js/mermaid>Mermaid</a> comes into rescue. Now I can generate diagrams directly using Markdown. Here&rsquo;s how to do it inside a <a href=https://gohugo.io/>Hugo</a> site.</p>
+<p>I use the <a href=https://github.com/LukasJoswiak/etch>etch</a> theme, but this process should apply to all sites using Hugo. First, we create a new file <code>/layouts/partials/mermaid.html</code>. We fill up <code>mermaid.html</code> with:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>script</span> <span class=na>src</span><span class=o>=</span><span class=s>&#34;https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js&#34;</span><span class=p>&gt;&lt;/</span><span class=nt>script</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>script</span><span class=p>&gt;</span>
+    <span class=kd>let</span> <span class=nx>isDark</span> <span class=o>=</span> <span class=nb>window</span><span class=p>.</span><span class=nx>matchMedia</span><span class=p>(</span><span class=s1>&#39;(prefers-color-scheme: dark)&#39;</span><span class=p>).</span><span class=nx>matches</span><span class=p>;</span>
+    <span class=kd>let</span> <span class=nx>mermaidTheme</span> <span class=o>=</span> <span class=p>(</span><span class=nx>isDark</span><span class=p>)</span> <span class=o>?</span> <span class=s1>&#39;dark&#39;</span> <span class=o>:</span> <span class=s1>&#39;default&#39;</span><span class=p>;</span>
+    <span class=kd>let</span> <span class=nx>mermaidConfig</span> <span class=o>=</span> <span class=p>{</span>
+        <span class=nx>theme</span><span class=o>:</span> <span class=nx>mermaidTheme</span><span class=p>,</span>
+        <span class=nx>logLevel</span><span class=o>:</span> <span class=s1>&#39;fatal&#39;</span><span class=p>,</span>
+        <span class=nx>securityLevel</span><span class=o>:</span> <span class=s1>&#39;strict&#39;</span><span class=p>,</span>
+        <span class=nx>startOnLoad</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
+        <span class=nx>arrowMarkerAbsolute</span><span class=o>:</span> <span class=kc>false</span><span class=p>,</span>
+
+        <span class=nx>er</span><span class=o>:</span> <span class=p>{</span>
+            <span class=nx>diagramPadding</span><span class=o>:</span> <span class=mi>20</span><span class=p>,</span>
+            <span class=nx>layoutDirection</span><span class=o>:</span> <span class=s1>&#39;TB&#39;</span><span class=p>,</span>
+            <span class=nx>minEntityWidth</span><span class=o>:</span> <span class=mi>100</span><span class=p>,</span>
+            <span class=nx>minEntityHeight</span><span class=o>:</span> <span class=mi>75</span><span class=p>,</span>
+            <span class=nx>entityPadding</span><span class=o>:</span> <span class=mi>15</span><span class=p>,</span>
+            <span class=nx>stroke</span><span class=o>:</span> <span class=s1>&#39;gray&#39;</span><span class=p>,</span>
+            <span class=nx>fill</span><span class=o>:</span> <span class=s1>&#39;honeydew&#39;</span><span class=p>,</span>
+            <span class=nx>fontSize</span><span class=o>:</span> <span class=mi>12</span><span class=p>,</span>
+            <span class=nx>useMaxWidth</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
+        <span class=p>},</span>
+        <span class=nx>flowchart</span><span class=o>:</span> <span class=p>{</span>
+            <span class=nx>diagramPadding</span><span class=o>:</span> <span class=mi>8</span><span class=p>,</span>
+            <span class=nx>htmlLabels</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
+            <span class=nx>curve</span><span class=o>:</span> <span class=s1>&#39;basis&#39;</span><span class=p>,</span>
+        <span class=p>},</span>
+        <span class=nx>sequence</span><span class=o>:</span> <span class=p>{</span>
+            <span class=nx>diagramMarginX</span><span class=o>:</span> <span class=mi>50</span><span class=p>,</span>
+            <span class=nx>diagramMarginY</span><span class=o>:</span> <span class=mi>10</span><span class=p>,</span>
+            <span class=nx>actorMargin</span><span class=o>:</span> <span class=mi>50</span><span class=p>,</span>
+            <span class=nx>width</span><span class=o>:</span> <span class=mi>150</span><span class=p>,</span>
+            <span class=nx>height</span><span class=o>:</span> <span class=mi>65</span><span class=p>,</span>
+            <span class=nx>boxMargin</span><span class=o>:</span> <span class=mi>10</span><span class=p>,</span>
+            <span class=nx>boxTextMargin</span><span class=o>:</span> <span class=mi>5</span><span class=p>,</span>
+            <span class=nx>noteMargin</span><span class=o>:</span> <span class=mi>10</span><span class=p>,</span>
+            <span class=nx>messageMargin</span><span class=o>:</span> <span class=mi>35</span><span class=p>,</span>
+            <span class=nx>messageAlign</span><span class=o>:</span> <span class=s1>&#39;center&#39;</span><span class=p>,</span>
+            <span class=nx>mirrorActors</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
+            <span class=nx>bottomMarginAdj</span><span class=o>:</span> <span class=mi>1</span><span class=p>,</span>
+            <span class=nx>useMaxWidth</span><span class=o>:</span> <span class=kc>true</span><span class=p>,</span>
+            <span class=nx>rightAngles</span><span class=o>:</span> <span class=kc>false</span><span class=p>,</span>
+            <span class=nx>showSequenceNumbers</span><span class=o>:</span> <span class=kc>false</span><span class=p>,</span>
+        <span class=p>},</span>
+        <span class=nx>gantt</span><span class=o>:</span> <span class=p>{</span>
+            <span class=nx>titleTopMargin</span><span class=o>:</span> <span class=mi>25</span><span class=p>,</span>
+            <span class=nx>barHeight</span><span class=o>:</span> <span class=mi>20</span><span class=p>,</span>
+            <span class=nx>barGap</span><span class=o>:</span> <span class=mi>4</span><span class=p>,</span>
+            <span class=nx>topPadding</span><span class=o>:</span> <span class=mi>50</span><span class=p>,</span>
+            <span class=nx>leftPadding</span><span class=o>:</span> <span class=mi>75</span><span class=p>,</span>
+            <span class=nx>gridLineStartPadding</span><span class=o>:</span> <span class=mi>35</span><span class=p>,</span>
+            <span class=nx>fontSize</span><span class=o>:</span> <span class=mi>11</span><span class=p>,</span>
+            <span class=nx>fontFamily</span><span class=o>:</span> <span class=s1>&#39;&#34;Open-Sans&#34;, &#34;sans-serif&#34;&#39;</span><span class=p>,</span>
+            <span class=nx>numberSectionStyles</span><span class=o>:</span> <span class=mi>4</span><span class=p>,</span>
+            <span class=nx>axisFormat</span><span class=o>:</span> <span class=s1>&#39;%Y-%m-%d&#39;</span><span class=p>,</span>
+            <span class=nx>topAxis</span><span class=o>:</span> <span class=kc>false</span><span class=p>,</span>
+        <span class=p>},</span>
+    <span class=p>};</span>
+    <span class=nx>mermaid</span><span class=p>.</span><span class=nx>initialize</span><span class=p>(</span><span class=nx>mermaidConfig</span><span class=p>);</span>
+<span class=p>&lt;/</span><span class=nt>script</span><span class=p>&gt;</span>
+</code></pre></div><p>This setup allows us to change Mermaid-generated diagrams' theme based on the website&rsquo;s current (light/dark) theme. This configuration is borrowed from the <a href=https://github.com/mermaid-js/mermaid/blob/develop/docs/Setup.md>Setup.md</a> from mermaid-js (except the <code>theme</code> part). You can find more information there about configuring mermaid.</p>
+<p>Next, we create a new file <code>/layouts/shortcodes/mermaid.html</code> and fill it up with:</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-html data-lang=html><span class=p>&lt;</span><span class=nt>center</span><span class=p>&gt;</span>
+<span class=p>&lt;</span><span class=nt>div</span> <span class=na>class</span><span class=o>=</span><span class=s>&#34;mermaid&#34;</span><span class=p>&gt;</span>
+    {{.Inner}}
+<span class=p>&lt;/</span><span class=nt>div</span><span class=p>&gt;</span>
+<span class=p>&lt;/</span><span class=nt>center</span><span class=p>&gt;</span>
+</code></pre></div><p>Feel free to remove the <code>&lt;center></code> tag if you want to customize the diagram&rsquo;s layout. And&mldr; we are done!</p>
+<p>Here is an example sequenceDiagram. You should see that this diagram will adjust its theme accordingly based on light/dark mode. We use the example code from <a href=https://mermaid-js.github.io/mermaid/#/>mermaid doc</a> (just uncomment the shortcode <code>mermaid</code>):</p>
+<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>{{/*&lt; mermaid &gt;*/}}
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Alice-&gt;&gt;John: Hello John, how are you?
+    loop Healthcheck
+        John-&gt;&gt;John: Fight against hypochondria
+    end
+    Note right of John: Rational thoughts &lt;br/&gt;prevail!
+    John--&gt;&gt;Alice: Great!
+    John-&gt;&gt;Bob: How about you?
+    Bob--&gt;&gt;John: Jolly good!
+{{/*&lt; /mermaid &gt;*/}}
+</code></pre></div><center>
+<div class=mermaid>
+sequenceDiagram
+participant Alice
+participant Bob
+Alice->>John: Hello John, how are you?
+loop Healthcheck
+John->>John: Fight against hypochondria
+end
+Note right of John: Rational thoughts <br>prevail!
+John-->>Alice: Great!
+John->>Bob: How about you?
+Bob-->>John: Jolly good!
+</div>
+</center>
+<p>That&rsquo;s it. Time to explore more Mermaid&rsquo;s features.</p>
+<div style=width:100% id=comment>
+<script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
+</div>
+</article>
+</main><footer id=footer>
+<p>© 2022 Bodun Hu. All rights reserved.</p>
+</footer>
+</body>
+</html>

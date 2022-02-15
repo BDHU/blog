@@ -1,4 +1,102 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/</link><description>std::bodun::blog. Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Cross Entropy Loss</title><link>https://www.bodunhu.com/blog/posts/cross-entropy-loss/</link><pubDate>Sun, 13 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/cross-entropy-loss/</guid><description>&lt;p>Many deep learning tasks involve classification, where a model outputs a series of probabilities for their corresponding labels. The goal is to correctly predict a given input&amp;rsquo;s label. Mathematically, it means generating max probabilities for the correct label. The probabilities are generated through a process called &lt;a href="https://d2l.ai/chapter_linear-networks/softmax-regression.html#softmax-operation">softmax&lt;/a>.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/</link><description>std::bodun::blog. Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Add Mermaid to Hugo with Dark Mode</title><link>https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/</link><pubDate>Tue, 15 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/</guid><description>&lt;p>Recently, I was revisiting materials in Deep Learning. I need tools that generate diagrams easily. Drawing the graphs from scratch and upload them individually to the image hosting platform is a daunting process. This is when &lt;a href="https://github.com/mermaid-js/mermaid">Mermaid&lt;/a> comes into rescue. Now I can generate diagrams directly using Markdown. Here&amp;rsquo;s how to do it inside a &lt;a href="https://gohugo.io/">Hugo&lt;/a> site.&lt;/p>
+&lt;p>I use the &lt;a href="https://github.com/LukasJoswiak/etch">etch&lt;/a> theme, but this process should apply to all sites using Hugo. First, we create a new file &lt;code>/layouts/partials/mermaid.html&lt;/code>. We fill up &lt;code>mermaid.html&lt;/code> with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span> &lt;span class="na">src&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;span class="kd">let&lt;/span> &lt;span class="nx">isDark&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">matchMedia&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;(prefers-color-scheme: dark)&amp;#39;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">matches&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="kd">let&lt;/span> &lt;span class="nx">mermaidTheme&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="nx">isDark&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">?&lt;/span> &lt;span class="s1">&amp;#39;dark&amp;#39;&lt;/span> &lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;default&amp;#39;&lt;/span>&lt;span class="p">;&lt;/span>
+&lt;span class="kd">let&lt;/span> &lt;span class="nx">mermaidConfig&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">theme&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="nx">mermaidTheme&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">logLevel&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;fatal&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">securityLevel&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;strict&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">startOnLoad&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">arrowMarkerAbsolute&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">er&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">diagramPadding&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">20&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">layoutDirection&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;TB&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">minEntityWidth&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">minEntityHeight&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">75&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">entityPadding&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">15&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">stroke&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;gray&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">fill&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;honeydew&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">fontSize&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">12&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">useMaxWidth&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nx">flowchart&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">diagramPadding&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">8&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">htmlLabels&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">curve&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;basis&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nx">sequence&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">diagramMarginX&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">diagramMarginY&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">actorMargin&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">width&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">150&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">height&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">65&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">boxMargin&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">boxTextMargin&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">noteMargin&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">messageMargin&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">35&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">messageAlign&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;center&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">mirrorActors&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">bottomMarginAdj&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">useMaxWidth&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">true&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">rightAngles&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">showSequenceNumbers&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="nx">gantt&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="p">{&lt;/span>
+&lt;span class="nx">titleTopMargin&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">25&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">barHeight&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">20&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">barGap&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">4&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">topPadding&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">leftPadding&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">75&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">gridLineStartPadding&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">35&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">fontSize&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">11&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">fontFamily&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;&amp;#34;Open-Sans&amp;#34;, &amp;#34;sans-serif&amp;#34;&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">numberSectionStyles&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="mi">4&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">axisFormat&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="s1">&amp;#39;%Y-%m-%d&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="nx">topAxis&lt;/span>&lt;span class="o">:&lt;/span> &lt;span class="kc">false&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="p">},&lt;/span>
+&lt;span class="p">};&lt;/span>
+&lt;span class="nx">mermaid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">mermaidConfig&lt;/span>&lt;span class="p">);&lt;/span>
+&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>This setup allows us to change Mermaid-generated diagrams' theme based on the website&amp;rsquo;s current (light/dark) theme. This configuration is borrowed from the &lt;a href="https://github.com/mermaid-js/mermaid/blob/develop/docs/Setup.md">Setup.md&lt;/a> from mermaid-js (except the &lt;code>theme&lt;/code> part). You can find more information there about configuring mermaid.&lt;/p>
+&lt;p>Next, we create a new file &lt;code>/layouts/shortcodes/mermaid.html&lt;/code> and fill it up with:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">center&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">div&lt;/span> &lt;span class="na">class&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;mermaid&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+{{.Inner}}
+&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">div&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">center&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>Feel free to remove the &lt;code>&amp;lt;center&amp;gt;&lt;/code> tag if you want to customize the diagram&amp;rsquo;s layout. And&amp;hellip; we are done!&lt;/p>
+&lt;p>Here is an example sequenceDiagram. You should see that this diagram will adjust its theme accordingly based on light/dark mode. We use the example code from &lt;a href="https://mermaid-js.github.io/mermaid/#/">mermaid doc&lt;/a> (just uncomment the shortcode &lt;code>mermaid&lt;/code>):&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">{{/*&amp;lt; mermaid &amp;gt;*/}}
+sequenceDiagram
+participant Alice
+participant Bob
+Alice-&amp;gt;&amp;gt;John: Hello John, how are you?
+loop Healthcheck
+John-&amp;gt;&amp;gt;John: Fight against hypochondria
+end
+Note right of John: Rational thoughts &amp;lt;br/&amp;gt;prevail!
+John--&amp;gt;&amp;gt;Alice: Great!
+John-&amp;gt;&amp;gt;Bob: How about you?
+Bob--&amp;gt;&amp;gt;John: Jolly good!
+{{/*&amp;lt; /mermaid &amp;gt;*/}}
+&lt;/code>&lt;/pre>&lt;/div>&lt;center>
+&lt;div class="mermaid">
+sequenceDiagram
+participant Alice
+participant Bob
+Alice->>John: Hello John, how are you?
+loop Healthcheck
+John->>John: Fight against hypochondria
+end
+Note right of John: Rational thoughts &lt;br/>prevail!
+John-->>Alice: Great!
+John->>Bob: How about you?
+Bob-->>John: Jolly good!
+&lt;/div>
+&lt;/center>
+&lt;p>That&amp;rsquo;s it. Time to explore more Mermaid&amp;rsquo;s features.&lt;/p></description></item><item><title>Cross Entropy Loss</title><link>https://www.bodunhu.com/blog/posts/cross-entropy-loss/</link><pubDate>Sun, 13 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/cross-entropy-loss/</guid><description>&lt;p>Many deep learning tasks involve classification, where a model outputs a series of probabilities for their corresponding labels. The goal is to correctly predict a given input&amp;rsquo;s label. Mathematically, it means generating max probabilities for the correct label. The probabilities are generated through a process called &lt;a href="https://d2l.ai/chapter_linear-networks/softmax-regression.html#softmax-operation">softmax&lt;/a>.&lt;/p>
 &lt;p>The softmax function outputs a vector \(\hat{y}\), which represents estimated conditional probabilities of each class given an input \(x\), For example, \(\hat{y}_1 = P(y=\textrm{car}\ |\ x)\). Assume we have many features \(x^{(i)}\) and their corresponding labels \(y^{(i)}\). Then outputs of the model can be expressed succinctly as&lt;/p>
 &lt;p>\[
 P(Y\ |\ X) = \prod^{k}_{i=1} P(y^{(i)} | \ x^{(i)})
