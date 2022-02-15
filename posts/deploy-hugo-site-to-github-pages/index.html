@@ -30,10 +30,10 @@
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>ssh-keygen -t rsa -b <span class=m>4096</span> -C <span class=s2>&#34;</span><span class=k>$(</span>git config user.email<span class=k>)</span><span class=s2>&#34;</span> -f deployment -N <span class=s2>&#34;&#34;</span>
 </code></pre></div><p>This will create two files: <code>deployment</code> and <code>deployment.pub</code>, which corresponds to a private key and a public key.</p>
 <p>Next, execute <code>cat deployment</code> and copy the private key. Navigate to the private <em>source repository -> Settings -> Secrets -> New repository secret</em>. Paste the private key and save the change.</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-actions-secrets.png alt=Github-actions-secrets></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/deploy-hugo-site-to-github-pages/github-actions-secrets.png alt=Github-actions-secrets></p>
 <p>I&rsquo;ve already added the private key to the source directory and named it <code>PRIVATE_KEY</code>. You can named it however you want.</p>
 <p>Then, we go to the public repository for hosting our website. Navigate to the public <em>site repository -> Settings -> Deploy keys -> Add deploy key</em>. Execute <code>cat deployment.pub</code> and copy paste the result. You should see a SSH key added:</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-keys.png alt=Github-keys></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/deploy-hugo-site-to-github-pages/github-keys.png alt=Github-keys></p>
 <p>Finally, create a directory in the private repository in the following directory: <code>.github/workflows/deploy.yml</code>.</p>
 <div class=highlight><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=nt>name</span><span class=p>:</span><span class=w> </span><span class=l>github pages</span><span class=w>
 </span><span class=w>

@@ -25,7 +25,7 @@ P(Y\ |\ X) = \prod^{k}_{i=1} P(y^{(i)} | \ x^{(i)})
 \textrm{argmax} \frac{P(y|x)P(y)}{P(x)}
 \]&lt;/p>
 &lt;p>Suppose we have five documents as training data and one document as the input as testing data. Our objective is to give a label to the test sentence.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/MLE/text-example.png" alt="text-example">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/MLE/text-example.png" alt="text-example">&lt;/p>
 &lt;center>Credit: Eunsol Choi&lt;/center>
 &lt;p>Let&amp;rsquo;s define the probability of class as (\(N\) is the total number of classes)&lt;/p>
 &lt;p>\[
@@ -36,7 +36,7 @@ p(x) = \frac{count(x)}{N}
 p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 \]&lt;/p>
 &lt;p>The conditional probabilities for \(p(w_i|y)\) is&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/MLE/conditional_prob.png" alt="conditional-probabilities">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/MLE/conditional_prob.png" alt="conditional-probabilities">&lt;/p>
 &lt;p>Now, we want to find out which language label should we assign the sentence &amp;ldquo;Chinese Chinese Chinese Tokyo Japan&amp;rdquo;. This is the same as asking which labels (\(x\))) should we pick so that \(P(W|x)P(x)\) yields the greatest value. Mathematically, we want to find out where the gradient of the function \(P(W|x)P(x)\) is flat.&lt;/p>
 &lt;p>If we label the sentence as j (Japanese), we have \(P(j | d_5) \propto \frac{1}{4}\cdot (\frac{2}{9}^3)\cdot \frac{2}{9}\cdot \frac{2}{9} \approx 0.0001\). If we calculate \(P(c|d_5)\), we get 0.0003, which generates the largest value for \(P(x | y)\).&lt;/p></description></item><item><title>Machine Learning System Resources</title><link>https://www.bodunhu.com/blog/posts/machine-learning-system-resources/</link><pubDate>Sat, 08 Jan 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/machine-learning-system-resources/</guid><description>&lt;p>This is my personal list of resources related to machine learning systems. Feel free to drop me an email if you think there&amp;rsquo;s something worth mentioning. I will try to update this page frequently to include the most recent stuffs in mlsys.&lt;/p>
 &lt;h2 id="courses">Courses&lt;/h2>
@@ -179,9 +179,9 @@ Name=gpu File=/dev/nvidia2
 &lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Paper Review - Dynamic Tensor Rematerialization</title><link>https://www.bodunhu.com/blog/posts/paper-review-dynamic-tensor-rematerialization/</link><pubDate>Tue, 09 Nov 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/paper-review-dynamic-tensor-rematerialization/</guid><description>&lt;p>Dynamic Tensor Rematerialization (&lt;a href="https://arxiv.org/pdf/2006.09616.pdf">DTR&lt;/a>) treats GPU memory as a large cache, where tensors can be evicted to save memory, and recomputed if needed later.&lt;/p>
 &lt;p>DTR&amp;rsquo;s eviction policy relies on the heuristic \(h\). The heuristic assigns a value \(h(t)\) to each resident tensor \(t\), approximating the cost of evicting the tensor. DTR evicts the tensor with the lowest cost based on the value of \(h\). \(h\) can factor in arbitrary metadata.&lt;/p>
 &lt;p>During every operator call in &lt;a href="https://pytorch.org/">PyTorch&lt;/a>, DTR intercepts the call and performs the following tasks:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/069238d98fd95d4c7eeffea7655f1da8edad3cda/posts/DTR/DTR-operator-intercept.png#center" alt="DTR-operator-intercept">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/DTR/DTR-operator-intercept.png#center" alt="DTR-operator-intercept">&lt;/p>
 &lt;p>In short, whenever we perform an operation, we first recursively re-calculate all the non-resident tensors the current operation depends on, while evicting tensors we don&amp;rsquo;t need until there are enough GPU space left. To decide which tensors to evict, DTR uses the tensor with the lowest value \(h\):&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/DTR/tensor-evict.png#center" alt="tensor-evict">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/DTR/tensor-evict.png#center" alt="tensor-evict">&lt;/p>
 &lt;p>The heuristic \(h\) evicts tensors based on three properties: staleness, size, and compute cost. It evicts tensors that are: least recently used, takes large GPU memory space, and easy to recompute. \(H _{DTR}\) is computed as:&lt;/p>
 &lt;p>\[
 h _{DTR}(s, m, c) (t) := \frac{c(t)}{m(t) \cdot s(t)'}
@@ -203,7 +203,7 @@ h_ {DTR-improved}(s, m, c) (t) := \frac{c(t) + \sum _{u \in e ^{*} (t)} c(u)}{m(
 &lt;li>How to deal with PCIe lane interferences? E.g. one swap-in may happen later than in-trigger due to a previous swap-in still not finished.&lt;/li>
 &lt;/ul>
 &lt;p>The answer is quite simple. We use the runtime feedback at the back-access of a tensor. If the tensor is still being swapped in, it means the in-trigger time should be adjusted earlier. Note, this is based on the assumption of &lt;strong>regular tensor access pattern in deep learning training&lt;/strong>, as illustrated in the paper.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/71e8158e6f0d56f48f98bc476c2738ebb621f0fa/posts/capuchin/tensor-access-pattern.png#center" alt="tensor-access-pattern">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/capuchin/tensor-access-pattern.png#center" alt="tensor-access-pattern">&lt;/p>
 &lt;p>Recomputation, on the other hand, is performed only in &lt;em>on-demand&lt;/em> manner. No in-trigger is used for recomputation.&lt;/p>
 &lt;p>Capuchin relies on the principle that swap can be largely overlapped with computation, while recomputation will certainly incur performance penalty. Thus, it chooses swapping as the first choice until we cannot choose an in-trigger to perfectly hide prefetching overhead.&lt;/p>
 &lt;p>One thing to note here is when we select a tensor \(T\) to be recomputed, but such tensor relies on another tensor that is evicted, then we need to recompute the parent of the evicted tensor instead. This could potentially happen multiple times if more recomputation targets tensor \(T\). In short, recomputation and swapping cannot occur at the same time.&lt;/p>
@@ -220,28 +220,28 @@ h_ {DTR-improved}(s, m, c) (t) := \frac{c(t) + \sum _{u \in e ^{*} (t)} c(u)}{m(
 &lt;h3 id="initial-state-must-be-bi-valent">Initial State Must be Bi-valent&lt;/h3>
 &lt;p>We will use these facts to show why an algorithm will run infinitely under asynchronous assumptions. First, we claim that some initial state is bi-valent. This claim must be true by the proof of contradiction. Suppose we have some initial state that is uni-valent. We say two states are adjacent if all processes in both states agree on all values except one process. Two adjacent states must be either 0-valent or 1-valent (agree the global value is either 0 or 1).&lt;/p>
 &lt;p>For example, let&amp;rsquo;s say we have five processes in an initial uni-valent state (0-valent). We modify only one process&amp;rsquo;s value from 0 to 1 between two adjacent states. At some point in time, the system states changes from 0-valent to 1-valent (we refer to this moment as the crossover point).&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/115ab7e4ce4a2f4885abe7852b07aa24377d42e3/posts/consensus-problem/bi-valent-state.png" alt="bi-valent-state">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consensus-problem/bi-valent-state.png" alt="bi-valent-state">&lt;/p>
 &lt;p>We see at the crossover point the system state becomes 1-valent. Assume \(p_2\) fails before the crossover point, then according to adjacent states, some decision must be made, which contradicts with our assumption that all initial states are uni-valent. Therefore, we need the initial state to be bi-valent.&lt;/p>
 &lt;h3 id="always-bi-valent">Always Bi-valent&lt;/h3>
 &lt;p>Second, given the initial state is bi-valent, we then show that for any bi-valent state, we can always deliver the next message to process \(p\) while staying bi-valent. This means we can&amp;rsquo;t reach a certain decision no matter how much time has passed. More precisely, we will prove that no message can transform a system into a decided state by contradiction.&lt;/p>
 &lt;p>Suppose we have a system. Initially, this system state is 0-valent. We execute an event \(e = (p,m)\) (process \(p\) sends a message \(m\)). This event can either transform the system state \(C\) to 0-valent ot 1-valent at some point, while system state \(C\) can either be 0-valent or 1-valent.&lt;/p>
 &lt;p>At some point, the system state will change from \(C_0\) to \(C _1\). Let&amp;rsquo;s assume a different event \(e' = (p', m')\) causes such transition of states. Now, we know previously that event \(e\) can transform the system to 0-valent or 1-valent. Now we have two situations: (1) \(e\) transforms \(C_0\) to 0-valent; (2) \(e\) transforms \(C _0\) to \(C _1\). We know \(e\) will tranform \(C _1\) to 1-valent. Therefore, we can also say after \(e\) is applied to \(C_0\) and leads to state 0-valent, we use apply \(e'\) to the system such that the system state becomes 1-valent. Therefore, if \(p \neq p'\), then \(e\) and \(e'\) commute. This will leads to contradiction.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/e3a75156847acdc28d7c0c93abfec93fa284d10e/posts/consensus-problem/uni-valent-contradiction.png#center" alt="uni-valent">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consensus-problem/uni-valent-contradiction.png#center" alt="uni-valent">&lt;/p>
 &lt;p>To expand on this further, suppose event \(e\) leads to uni-valent state. Then, the absence of \(e\) (\(p\))-free will lead \(C _0\) to a decided state. In other words, \(p\)-free will lead the system to one decided states. However, we&amp;rsquo;ve shown \(e\) and \(e'\) commute, and now \(p\)-free, \(e\), and \(e'\)
 all commute, \(p\)-free will, in fact, leads the system to a &amp;lsquo;&amp;lsquo;decided&amp;rsquo;&amp;rsquo; state that is actually not decided, meaning we can&amp;rsquo;t reach a consensus. This scenario is shown below:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consensus-problem/not-uni-valent.png#center" alt="not-uni-valent">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consensus-problem/not-uni-valent.png#center" alt="not-uni-valent">&lt;/p>
 &lt;p>So, given the proof that we can&amp;rsquo;t reach consensus under asynchronous assumptions, what is the best we can do in practice?&lt;/p>
 &lt;h3 id="paxos-algorithm">Paxos Algorithm&lt;/h3>
 &lt;p>We will back up a little bit from the asynchronous case, and make compromises by having: (1) consistency/agreement under the case of asynchrony; (2) settle for the lack of termination.&lt;/p>
 &lt;p>In Paxos algorithm, we assume the majority of process are non-faulty. That means \(N &amp;gt; 2F\). Processes have three roles: proposer, acceptor, and learner. Proposers broadcast its proposals to all acceptors; acceptors accept a proposal (e.g. based on arrival times of proposals) and broadcasts accept messages to all learners; learners decide which values to accept (e.g. the majority of a accepted value).&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/52b5ca780736123db6b786a7e68276ec108bf240/posts/consensus-problem/paxos-basics.png#center" alt="Paxos-basics">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consensus-problem/paxos-basics.png#center" alt="Paxos-basics">&lt;/p>
 &lt;p>The problem is: even if one acceptor fails, the total number non-faulty processes will be \(N-1\) and we can&amp;rsquo;t say \(N-1 &amp;gt; 2F\) must hold.&lt;/p>
 &lt;p>To fix this problem, we can reduce the number proposers to one. At any moment, only one proposer is the leader. If a leader fails, a new leader becomes available and start sending out proposals.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/3247cac03c319335d55bdb8e1bca56731c15ef1f/posts/consensus-problem/paxos-leader.png#center" alt="paxos-leader">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consensus-problem/paxos-leader.png#center" alt="paxos-leader">&lt;/p>
 &lt;p>However, this solution still suffers from the same problem: if new leader is elected, it can not know whether the old leader&amp;rsquo;s proposal will be accepted.&lt;/p>
 &lt;p>Therefore, it is necessary for the new leader to establish a majority. The new leader must first broadcast a \(prepare\) message to all acceptors. Then acceptors will reply back with a \(prepared\) message back to the new leader. Therefore, when a majority is prepared, the new leader knows whether the old leader&amp;rsquo;s proposal &lt;em>might&lt;/em> be accepted.&lt;/p>
 &lt;p>To see why this is the case, suppose an old leader dies at some point, then a new leader comes in. This new leader broadcasts a \(prepare\) message to acceptors. Some acceptors reply back. We argue that if the old leader&amp;rsquo;s proposal is accepted by the &lt;em>majority&lt;/em> of acceptors, then this new leader will preserve the old proposal by evaluating the replies from acceptors and re-proposing the latest accepted value in the prepare phase.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/282bee06e56cc07dd145f024426032620984ad92/posts/consensus-problem/paxos.png#center" alt="paxos">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consensus-problem/paxos.png#center" alt="paxos">&lt;/p>
 &lt;p>The reason is: &lt;em>if there exists a majority of acceptors in the previous round, then there must exist at least one acceptor in both the old and the current round&lt;/em>, because add the sum of majorities exceeds the total number of processes. Therefore, there must be at least one acceptor that can send its accepted value back to the new leader. Since there is only one leader at any time, we can safely say the old value will be sent to the new leader.&lt;/p>
 &lt;p>In summary, if the new leader sees a prepare message with a value, then that value must come from the previous round and the new leader can re-propose that value; otherwise, the new leader can safely propose a new value.&lt;/p>
 &lt;section class="footnotes" role="doc-endnotes">
@@ -254,7 +254,7 @@ all commute, \(p\)-free will, in fact, leads the system to a &amp;lsquo;&amp;lsq
 &lt;/section></description></item><item><title>Fault Tolerance in Distributed Systems</title><link>https://www.bodunhu.com/blog/posts/fault-tolerance-in-distributed-systems/</link><pubDate>Tue, 05 Oct 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/fault-tolerance-in-distributed-systems/</guid><description>&lt;p>No systems can provide fault-free guarantees, including distributed systems. However, failures in distributed systems are &lt;em>independent&lt;/em>. It means only a subset of processes fail at once. We can exploit this feature and provide some degree of fault tolerance. The problem is, fault tolerance makes everything else much more difficult.&lt;/p>
 &lt;p>The most common fault models is the &lt;em>fail-stop&lt;/em>. It means a process completely &amp;ldquo;bricks&amp;rdquo;. When a process fail-stops, no messages can emerge from this process any more. We also don&amp;rsquo;t know if this process will ever restart. In addition, we must account for all possible states of the faulty process, including unsent messages in the process&amp;rsquo;s queue. On the other hand, it&amp;rsquo;s important to point out a process that takes a long time to respond is indistinguishable from a fail-stop. The intuition is such processes and the faulty ones may take an unknown amount of time before message emerge.&lt;/p>
 &lt;p>We use an example here to illustrate how and why a system fails to provide fault-tolerance. We take a system that replicates data by broadcasting operations using logical timestamps. This system uses &lt;a href="https://en.wikipedia.org/wiki/Lamport_timestamp">Lamport clock&lt;/a> to update local clocks (our previous &lt;a href="https://www.bodunhu.com/blog/blog/posts/lamport-distributed-mutual-exclusion/">post&lt;/a> on Lamport Distributed Mutual Exclusion explains how Lamport clock works). In short, we overwrite the value stored in a replica if an incoming message has later timestamp \(ts\).&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/670f3b49245d07e57781b1800609675ddcd1d33b/posts/fault-tolerance-in-distributed-systems/replication.png#center" alt="replication">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/fault-tolerance-in-distributed-systems/replication.png#center" alt="replication">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>This system is not fault-tolerant. Imagine when one replica receives a write (marked by red incoming &amp;ldquo;write&amp;rdquo;) request and then tries to write the value to other replicas. This replica then fail-stops right after it writes to one replica and never writes to the other replica. In this case, not all replicas see the writes, thus violating consistency.&lt;/p>
 &lt;p>The solution to this problem is quite simple: reliable atomic broadcast. Under atomic broadcast, all writes are all-or-nothing. It eliminates the possibility for a process to fail-stop amid broadcasting.&lt;/p>
@@ -263,10 +263,10 @@ all commute, \(p\)-free will, in fact, leads the system to a &amp;lsquo;&amp;lsq
 &lt;p>Thus, we want to extend the atomic broadcast so that updates become ordered. Under ordered atomic broadcast, writes are all-or-nothing and everyone agrees on the order of updates. If we assume the system to be fully asynchronous, ordered atomic broadcasts are not possible: (1) we can&amp;rsquo;t guarantee termination under asynchrony; (2) we could lose order. Thus, we rely on the synchronous approach.&lt;/p>
 &lt;p>Under the synchronous assumption, we can safely say a process fails after waiting for time \(t _{fail}\), where \(t _{fail} = 3 t _{msg} + 2 t _{turn}\). Here, \(t _{msg}\) is the message transfer latency, and \(t _{turn}\) is the max time to respond to a message.&lt;/p>
 &lt;p>To see why \(t _{fail}\) is calculated this way, we use the following example to explain the process:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/bd7266dfbbf067389a62ecded5feb6c1861b8a0f/posts/fault-tolerance-in-distributed-systems/fail-time.png#center" alt="process-fail">&lt;center>Source: Ken McMillan&lt;/center>&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/fault-tolerance-in-distributed-systems/fail-time.png#center" alt="process-fail">&lt;center>Source: Ken McMillan&lt;/center>&lt;/p>
 &lt;p>Imagine process \(p\) sends a message to \(q\) and waits for an ack from \(q\). Before \(q\) is able respond with the ack, it somehow crashes. The max time taken for \(p\) to see an aco from \(q\) would be two message transfer time plus the execution time by \(q\), which is \(2t _{msg} + t _{turn}\). We add \(t\) to indicate the elapsed time when \(p\) sends the request.&lt;/p>
 &lt;p>Now imagine \(q\) is able to broadcast a request right before it fails. Later, another process is able to forward this request back to \(p\). Then \(p\) needs to wait for three message transfer time plus two message processing time before it can assume that it will no longer receive message from \(q\).&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/d129b7823a217934cd3a826e5c4c4ee83ff30824/posts/fault-tolerance-in-distributed-systems/time-fail.png#center" alt="process-fail">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/fault-tolerance-in-distributed-systems/time-fail.png#center" alt="process-fail">&lt;/p>
 &lt;p>Under the synchronous assumption, ordered reliable atomic broadcast works as follows:&lt;/p>
 &lt;ul>
 &lt;li>When a client send a request to process \(p\), the process records logical time \(r _l(p,p)\) and physical time \(r _{t}(p,p)\). Then it broadcast the request.&lt;/li>
@@ -296,9 +296,9 @@ all commute, \(p\)-free will, in fact, leads the system to a &amp;lsquo;&amp;lsq
 &lt;li>If an event \(e_1\) ends before another event \(e_2\) begins in physical time, then \(e_1\) &lt;em>happens-before&lt;/em> \(e_2\). We define the &lt;em>happen before&lt;/em> relationship as \(hb(e_1, e_2)\). In simpler terms, is it possible for us to assume a &lt;em>causal connection&lt;/em> between two events?&lt;/li>
 &lt;/ul>
 &lt;p>Take the following scenario as an example. We can say \(hb(e_1, e_2)\) holds because we can establish a causality relation between these two events. We are able to assume \(P_1\) sent a message \(m_1\) to \(P_2\), which caused the execution of \(e_2\).&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/causality.png#center" alt="causality">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/causality.png#center" alt="causality">&lt;/p>
 &lt;p>Here is another example. Here, we can not establish a causal connection between \(e_1\) and \(e_2\) because we can not assume \(m_1\) caused the execution of \(e_2\)&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/non-causality.png#center" alt="non-causality">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/non-causality.png#center" alt="non-causality">&lt;/p>
 &lt;p>To say a set of events, denoted as \(E\), is &lt;em>linearizable&lt;/em>, the following conditions must be met:&lt;/p>
 &lt;ul>
 &lt;li>There exists a total order \(&amp;lt;_{lin}\) over events \(E\) s.t.
@@ -310,7 +310,7 @@ all commute, \(p\)-free will, in fact, leads the system to a &amp;lsquo;&amp;lsq
 &lt;/ul>
 &lt;p>In other words, a set of event \(E\) is linearizable if it respects the happen-before relationship, and is totally ordered.&lt;/p>
 &lt;p>Let&amp;rsquo;s look at one example. Suppose we have two processes \(P_1\) and \(P_2\). \(P_1\) writes 1 to location 0, and later reads from 0 and gets 1. \(P_2\) writes 2 to location 0 before \(P_1\) finishes its write.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/linearizable.png#center" alt="linearizable">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/linearizable.png#center" alt="linearizable">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>These events are linearizable. We can order these three events as:&lt;/p>
 &lt;p>\[
@@ -318,7 +318,7 @@ all commute, \(p\)-free will, in fact, leads the system to a &amp;lsquo;&amp;lsq
 \]&lt;/p>
 &lt;p>We know \(\texttt{write}(0, 0, 1)\) happens before \(\texttt{read}(0, 0, 1)\). The read gets the most recently written (not physical time, but causality) value, satisfying global consistency. Therefore, these events are linearizable.&lt;/p>
 &lt;p>Here is another example showing events that are not linearizable.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/not-linearizable.png#center" alt="not-linearizable">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/not-linearizable.png#center" alt="not-linearizable">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>No matter how you order these four events, there will always be a contradiction. For example, \(rd(0,0,1)\) happens after \(wr(1,0,2)\) and \(wr(0,0,1)\). In order to satisfy global consistency requirement (reading the most recently written value), we must order these three events as&lt;/p>
 &lt;p>\[
@@ -330,12 +330,12 @@ wr(1,0,2) \rightarrow wr(0,0,1)\rightarrow rd(0,0,1)\rightarrow\ ?
 &lt;p>A different and perhaps easier way of thinking linearizability is using commit points. We say a set of events \(E\) is linearizable if every event can be assigned a physical commit time \(t_e\) such that:&lt;/p>
 &lt;ul>
 &lt;li>\(t_e\) occurs during the execution of an event \(e\).&lt;/li>
-&lt;li>\((E,&amp;lt;_{lin})\) is globally consistent, where $e &amp;lt; _{lin}\ d$ iff $t_e &amp;lt; t_d$&lt;/li>
+&lt;li>\((E,\lt _{lin})\) is globally consistent, where \(e &amp;lt; _{lin}\ d\) iff \(t_e &amp;lt; t_d\)&lt;/li>
 &lt;/ul>
 &lt;p>The following picture presents a scenario where we set three commit points on three write/read operations.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/cf1f2e22f6368b743534a43fb95e55034b25beb3/posts/consistency-models/commit-point.png#center" alt="commit-points">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/commit-point.png#center" alt="commit-points">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
-&lt;p>We know these events are linearizable because the three commit points we picked respects the \(&amp;lt;_{lin}\) relationship. The commit point \(wr(0,0,1)\) is set after the commit point for \(wr(1,0,2)\) and we know \(wr(1,0,2)&amp;lt; _{lin}wr(0,0,1)\).&lt;/p>
+&lt;p>We know these events are linearizable because the three commit points we picked respects the \(\lt_{\textrm{lin}}\) relationship. The commit point \(wr(0,0,1)\) is set after the commit point for \(wr(1,0,2)\) and we know \(wr(1,0,2)&amp;lt; _{lin}wr(0,0,1)\).&lt;/p>
 &lt;h2 id="sequential-consistency">Sequential Consistency&lt;/h2>
 &lt;p>We can relax the requirement of linearizability even more, which leads us to sequential consistency. Sequential consistency (&lt;a href="http://www.lamport.org/">Lamport&lt;/a>) is based on slightly different assumptions compared to linearizability:&lt;/p>
 &lt;ul>
@@ -344,14 +344,14 @@ wr(1,0,2) \rightarrow wr(0,0,1)\rightarrow rd(0,0,1)\rightarrow\ ?
 &lt;/ul>
 &lt;p>These assumptions indicates each process doesn&amp;rsquo;t know the relative order of operations happening on other processes. Thus, we don&amp;rsquo;t have happen-before arc between processes.&lt;/p>
 &lt;p>Take the following example:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/a2725c4cfef0b2ad99da375186cf5f4cfd71e9ec/posts/consistency-models/sequential.png#center" alt="sequential">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/sequential.png#center" alt="sequential">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>We know these events meets sequential consistency by the following order. The reason is that we can&amp;rsquo;t say \(hb_{sc}(wr(0,0,1), wr(1, 0, 2))\) must hold. This example would not be linearizable because \(wr(0,0,1)\) happens before \(wr(1,0,2)\).&lt;/p>
 &lt;p>\[
 wr(1, 0, 2) \rightarrow wr(0,0,1) \rightarrow rd(0,0,1)
 \]&lt;/p>
 &lt;p>Take another example that is not sequentially consistent:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/7a6b663aa519c99e9d7837591b579ddccae88510/posts/consistency-models/not-sequential.png#center" alt="not-sequential">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/not-sequential.png#center" alt="not-sequential">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>For \(rd(0,0,2)\) to be true, it must be that \(hb_{sc}(wr(0,0,1), wr(1,0,2))\) holds; for \(rd(1,0,1)\) to be true, iut must be that \(hb_{sc}(wr(1,0,2), wr(0,0,1))\) holds. Now we have a circle of ordering constraint, thus reaching a contradiction.&lt;/p>
 &lt;h2 id="causal-consistency">Causal Consistency&lt;/h2>
@@ -371,11 +371,11 @@ RF(rd(p,a,v)) = wr(p',a',v') \rightarrow a=a' \land v = v'
 &lt;/ul>
 &lt;p>In layman&amp;rsquo;s term, it says that if a write operation \(e\) causes us to read a value \(x\), it can&amp;rsquo;t be that there is another write operation \(e'\) that happens after \(e\) and writes some value to the same address. Because if there is such a write operation, then \(RF\) will produce write operation \(e'\) instead of \(e\).&lt;/p>
 &lt;p>Take a previous example here:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/not-linearizable.png#center" alt="causal-consistency">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/not-linearizable.png#center" alt="causal-consistency">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>These events are causally consistent because \(RF(rd(0,0,1)) = wr(0,0,1)\) and \(RF(rd(1,0,2)) = wr(1,0,2)\). Thus \(hb_{RF}(wr(0,0,1), rd(0,0,1))\) and \(hb _{RF}(wr(1,0,2), rd(1,0,2))\). We also know we can&amp;rsquo;t say \(hb _{SC}(wr(0,0,1), wr(1,0,2))\) because sequential consistency assumes no communication between processes. Therefore, \(hb _{RF}(wr(0,0,1), wr(1,0,2))\) doesn&amp;rsquo;t hold, and we can safely say these events are causally consistent.&lt;/p>
 &lt;p>Let&amp;rsquo;s look at another example:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/not-causal.png#center" alt="not-causally-consistent">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/not-causal.png#center" alt="not-causally-consistent">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>This is because \(RF(rd(2,0,3)) = wr(0,0,3)\). However, there is a write operation \(wr(0,0,1)\) happening after \(wr(0,0,3)\) that write 1 to location 0. Therefore, it can&amp;rsquo;t be that \(wr(0,0,3)\) causes \(rd(2,0,3)\) because \(wr(0,0,1)\) interferes and creates a contradiction. The easiest way to detect whether a set of events is causally consistent is to see if there is a &lt;em>circle of dependencies&lt;/em>.&lt;/p>
 &lt;h2 id="s3-strong-consistency">S3 Strong Consistency&lt;/h2>
@@ -385,15 +385,15 @@ RF(rd(p,a,v)) = wr(p',a',v') \rightarrow a=a' \land v = v'
 &lt;li>Two reads must agree on the order of writes that &lt;em>happen before&lt;/em> both reads.&lt;/li>
 &lt;/ul>
 &lt;p>Here is an example that is causally consistent, but not S3 consistent:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/not-linearizable.png#center" alt="causal-consistency">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/not-linearizable.png#center" alt="causal-consistency">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>The reason is \(rd(1,0,2)\) sees write options as \(wr(0,0,1) \rightarrow wr(1,0,2)\) and \(rd(0,0,1)\) sees \(wr(1,0,2)\rightarrow wr(0,0,1)\).&lt;/p>
 &lt;p>However, with slight adjustment to the example, we have S3 consistency.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/S3-consistent.png#center" alt="S3-consistent">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/S3-consistent.png#center" alt="S3-consistent">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>The reason is because \(hb(wr(1,0,2),rd(0,0,2)\) doesn&amp;rsquo;t hold. So even if \(rd(1,0,2)\) sees write options as \(wr(0,0,1) \rightarrow wr(1,0,2)\) and \(rd(0,0,1)\) sees \(wr(1,0,2)\rightarrow wr(0,0,1)\), only \(wr(0,0,1)\) happens before both reads, thus they would agree on the ordering of writes.&lt;/p>
 &lt;h2 id="summary">Summary&lt;/h2>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/consistency-models/consistency-hierarchy.png#center" alt="consistency-hierarchy">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/consistency-models/consistency-hierarchy.png#center" alt="consistency-hierarchy">&lt;/p>
 &lt;center>Source: Ken McMillan&lt;/center>
 &lt;p>The consistency models discussed are only a tip of the iceberg. In fact, different storage service providers usually provide different consistency models. This may result in vendor lock-in because applications designed for one storage system may fall apart when deployed to another due to varying consistency implications.&lt;/p></description></item><item><title>Lamport Distributed Mutual Exclusion</title><link>https://www.bodunhu.com/blog/posts/lamport-distributed-mutual-exclusion/</link><pubDate>Tue, 21 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/lamport-distributed-mutual-exclusion/</guid><description>&lt;p>Normally, having consistent event ordering in a distributed system is hard because we have no common clock. Since we don&amp;rsquo;t have a common clock to measure with, we rely on logical properties of time in the absence of clock. Here we use &lt;em>causality&lt;/em> replation between events.&lt;/p>
 &lt;p>In essence, &lt;em>Causality&lt;/em> indicates a clock \(C\) is map from events to time satisfying: \(e\rightarrow e'\) implies \(C(e) &amp;lt; C(e')\)&lt;/p>
@@ -405,10 +405,10 @@ RF(rd(p,a,v)) = wr(p',a',v') \rightarrow a=a' \land v = v'
 &lt;/ul>
 &lt;p>This will give us a consistent total order of events in a distributed system.&lt;/p>
 &lt;p>Let&amp;rsquo;s take Lamport distributed mutual exclusion (DME) as an example. We use scalar clock to agree on the order of access to critical sections. Each process broadcasts a request with its local clock time. Receiver stores the request time and responds with its update local time (\(max(C(p), C(M)) + 1\)).&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/lamport-dme/lamport-dme.png#center" alt="lamport-dme">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/lamport-dme/lamport-dme.png#center" alt="lamport-dme">&lt;/p>
 &lt;p>A process can only enter critical section given the condition \(W\) is met: \(W \equiv \forall q \neq p,\ t(p,q) &amp;gt; r(p,p) \land r(p,p) &amp;lt; r(p,q)\). \(t(p, q)\) represents the latest time received by \(p\) from \(q\). \(r(p, q)\) is the request time received by \(p\) from \(q\) or \(+\infty\). Intuitively, it says if a process&amp;rsquo;s request time is smaller than all repsonses time and the process&amp;rsquo;s request time is smaller than all the other request time, then this process is the first one to send out the request and thus should enter critical section.&lt;/p>
 &lt;p>The reason why this protocol works is illustrated below:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/lamport-dme/lamport-dme-process.png#center" alt="lamport-dme-process">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/lamport-dme/lamport-dme-process.png#center" alt="lamport-dme-process">&lt;/p>
 &lt;p>When \(p_1\) sends a request at timestamp 2 and gets a repsonse with timestamp 3, we know \(p_1\) has the greatest clock value and \(p_0\) will update its own clock based on the timestamp sent from \(p_1\). Now \(p_1\) sees the response message from \(p_0\) with timestamp 3, it knows any request from \(p_0\) must have already been received, because the network channel is ordered and any request sent by \(p_0\) already arrived before the response with timestamp 3.&lt;/p>
 &lt;p>To see Lamport DME in action, we use &lt;a href="https://microsoft.github.io/ivy/language.html">Ivy&lt;/a> to specify the protocol. The source file is borrowed from &lt;a href="https://mcmil.net/wordpress/">Ken&amp;rsquo;s&lt;/a> presentation. The code is annotated and self-explanatory:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="cp">#lang ivy1.8
@@ -764,7 +764,7 @@ RF(rd(p,a,v)) = wr(p',a',v') \rightarrow a=a' \land v = v'
 &lt;li>need non-duplication for messages. Otherwise, we violate the fundamental properties of this protocol, or no mutual exclusion.&lt;/li>
 &lt;li>clients don&amp;rsquo;t spuriously release. This will be clear later when we demonstrate what happens if clients release multiple times.&lt;/li>
 &lt;/ul>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/token-ring-protocol/token-ring.png#center" alt="token-ring">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/token-ring-protocol/token-ring.png#center" alt="token-ring">&lt;/p>
 &lt;p>We want to guarantee that&lt;/p>
 &lt;ul>
 &lt;li>mutual exclusion holds.&lt;/li>
@@ -953,10 +953,10 @@ append.ivy: line 49: error: assertion failed
 append.ivy: line 49: error: assertion failed
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Sometimes BMC can help us find the error faster because it is systematically checking all possible actions. However, increasing the number of steps for the BMC can result in the exploration space growing exponentially, so we are going to use some combination of BMC and randomized test cases.&lt;/p></description></item><item><title>Whiz: Data-Driven Analytics Execution</title><link>https://www.bodunhu.com/blog/posts/whiz-data-driven-analytics-execution/</link><pubDate>Sun, 05 Sep 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/whiz-data-driven-analytics-execution/</guid><description>&lt;p>This paper by &lt;a href="https://utns.cs.utexas.edu/">UTNS&lt;/a> lab appeared in &lt;a href="https://www.usenix.org/conference/nsdi21">NSDI 2021&lt;/a>. It presents a data-analytics framework that decouples intermediate data from computations.&lt;/p>
 &lt;p>Whiz addresses several challenged posed by current analytics frameworks. The first one is data opacity. Most modern data analytics frameworks relies on MapReduce execution engine. The developer specifies the map and reduce function, which then get submitted to the analytics framework. The workflow can be expressed as a logical graph; the physical graph (which includes the cluster configuration, disk quota, etc.) is generated transparently. The workflow is shown below:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/whiz-data-driven-analytics-execution/limitation1.png#center" alt="mapreduce-limitation">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/whiz-data-driven-analytics-execution/limitation1.png#center" alt="mapreduce-limitation">&lt;/p>
 &lt;p>The problem is in the region marked yellow. It shows the execution engine has limited runtime visibility into the intermediate data. Thus, adapting processing logic of tasks based on the states of intermediate data becomes challenging.&lt;/p>
 &lt;p>In addition, task parallelism and intermediate data partition strategy are often static. In the graph above, the intermediate data partition tasks and the final reduce tasks might be determined prematurely, without taking the intermediate data partition characteristics into account. For example, &lt;a href="https://itnext.io/handling-data-skew-in-apache-spark-9f56343e58e8">data skew&lt;/a> (unevenly distributed jobs) causes different reduce nodes to process different amount of tasks. The graph below illustrates how the shuffle stage can result in disproportional intermediate data partitions.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/a0119d0227e48aee2dba3cb48571b11b360a68b9/posts/whiz-data-driven-analytics-execution/data-skew.png#center" alt="data-skew">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/whiz-data-driven-analytics-execution/data-skew.png#center" alt="data-skew">&lt;/p>
 &lt;p>Finally, Whiz addresses the limitation posed by compute-driven scheduling. In compute-driven scheduling, one stage usually relies on the completion of the upstream tasks, the may lead to compute idling waiting for remaining data to become available, even if the a subset of workers in the current stage is ready for execution. Decoupling data from computation enables the execution engine to treat intermediate data as first-class citizen, thus allowing finer-grained control of data processing.&lt;/p>
 &lt;p>In summary, Whiz solves two problems presented in compute-centric execution engines:&lt;/p>
 &lt;ul>
@@ -964,33 +964,33 @@ append.ivy: line 49: error: assertion failed
 &lt;li>intermediate data agnosticity.&lt;/li>
 &lt;/ul>
 &lt;p>Thus, Whiz creates a feedback loop between the execution service and the data service so that the execution can dynamically adjust its policy based on the information offered by the data service to optimize system performances.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/16b3d43877c2f4f40681509e5b683bef0bfa1034/posts/whiz-data-driven-analytics-execution/whiz-control-flow.png#center" alt="whiz-control-flow">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/whiz-data-driven-analytics-execution/whiz-control-flow.png#center" alt="whiz-control-flow">&lt;/p>
 &lt;p>Whiz classifies itself as a &lt;strong>data-driven&lt;/strong> execution engine, which drives execution based on intermediate data properties. Making intermediate data visible opens door for optimization opportunities, thus increasing performances. For more technical details regarding the architecture and implementation of Whiz, please refer to the original &lt;a href="https://www.usenix.org/system/files/nsdi21-grandl.pdf">paper&lt;/a>.&lt;/p></description></item><item><title>In-Network Aggregation for Shared Machine Learning Clusters</title><link>https://www.bodunhu.com/blog/posts/in-network-aggregation-for-shared-machine-learning-clusters/</link><pubDate>Tue, 31 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/in-network-aggregation-for-shared-machine-learning-clusters/</guid><description>&lt;p>This &lt;a href="https://proceedings.mlsys.org/paper/2021/file/eae27d77ca20db309e056e3d2dcd7d69-Paper.pdf">paper&lt;/a> by Nadeen appeared in MLSys 2021. It presents an in-network aggregation framework called &lt;em>PANAMA&lt;/em> for distributed ML training tasks. &lt;em>PANAMA&lt;/em> has two components: (1) an in-network hardware accelerator with support for floating-point gradient aggregation; (2) a domain-specific load-balancing and congestion control protocol.&lt;/p>
 &lt;h2 id="motivation">Motivation&lt;/h2>
 &lt;p>The primary motivation behind &lt;em>PANAMA&lt;/em> is the &lt;em>data-parallel&lt;/em> training (in which the neural network is replicated across \(N\) worker where each worker processes a subset of the training data) demands constant local gradient exchanging at every iteration, thus creating a huge amount of traffic.&lt;/p>
 &lt;p>For example, for a training job with \(1000\) workers and 1 GB DNN model size requring \(1000\) iterations, the total traffic will be about 2 PB.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/network-flow-size.png#center" alt="in-network-aggregation-traffic">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/in-network-aggregation-for-shared-machine-learning-clusters/network-flow-size.png#center" alt="in-network-aggregation-traffic">&lt;/p>
 &lt;h2 id="network-design">Network Design&lt;/h2>
 &lt;p>The paper assumes a traditional data center multi-tier folded &lt;a href="https://en.wikipedia.org/wiki/Clos_network">Clos topology&lt;/a>:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/clos.png#center" alt="clos-topology">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/in-network-aggregation-for-shared-machine-learning-clusters/clos.png#center" alt="clos-topology">&lt;/p>
 &lt;p>&lt;em>PANAMA&lt;/em> uses multiple aggregation trees per training job to spread the traffic across multiple paths and avoid congestion hotspots. This is different to equal-cost multi-path (ECMP) protocol because the aggregation flows are typically large. Bounding such flows to a single aggregation tree will create network imbalance.&lt;/p>
 &lt;h2 id="congestion-control">Congestion Control&lt;/h2>
 &lt;p>&lt;em>PANAMA&lt;/em> uses &lt;strong>implicit acknowledgments&lt;/strong> instead of traditional point-to-point approaches. Because each aggregated packets are constructed on the fly, one-to-one mapping between packets and the acknowledgements is unnecessary, if a worker receives aggregation results, that automatically serves as an &lt;em>implicit&lt;/em> acknowledgement. This eliminated the need to keep a per-flow congestion state at PSwitches.&lt;/p>
 &lt;p>Similar to &lt;a href="">DCTCP&lt;/a>, &lt;em>PANAMA&lt;/em> relies on ECN marks in the IP header to react to the network congestion. Since aggregation packets are created on the switch, each hardware accelerator need to perform a bitwise \(OR\) on the ECN field of received packets to mirror the traditional ECN bit.&lt;/p>
 &lt;h2 id="hardware-design">Hardware Design&lt;/h2>
 &lt;p>The design of the aggregation accelerator in &lt;em>PANAMA&lt;/em> is straightforward: it utilized the SIMD architecture in which the gradients are partitioned across adder trees. Adder tree can operate in parallel and pack the results and sent them to the output ports. The VID fields are merely used to correct aggregation.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/aggregater-arch.png#center" alt="aggregator-arch">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/in-network-aggregation-for-shared-machine-learning-clusters/aggregater-arch.png#center" alt="aggregator-arch">&lt;/p>
 &lt;p>Overall, the workflow is really simple and illustrated below:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/in-network-aggregation-for-shared-machine-learning-clusters/network-aggregation-workflow.png" alt="network-aggregation-workflow">&lt;/p></description></item><item><title>What is Memcached</title><link>https://www.bodunhu.com/blog/posts/what-is-memcached/</link><pubDate>Sun, 29 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/what-is-memcached/</guid><description>&lt;p>&lt;a href="https://www.linuxjournal.com/article/7451">Distributed Caching with Memcached &lt;i class="fas fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p></description></item><item><title>Deploy Hugo Site to GitHub Pages</title><link>https://www.bodunhu.com/blog/posts/deploy-hugo-site-to-github-pages/</link><pubDate>Fri, 27 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/deploy-hugo-site-to-github-pages/</guid><description>&lt;p>This post assumes the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for &lt;a href="https://pages.github.com/">GitHub Pages&lt;/a>.&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/in-network-aggregation-for-shared-machine-learning-clusters/network-aggregation-workflow.png" alt="network-aggregation-workflow">&lt;/p></description></item><item><title>What is Memcached</title><link>https://www.bodunhu.com/blog/posts/what-is-memcached/</link><pubDate>Sun, 29 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/what-is-memcached/</guid><description>&lt;p>&lt;a href="https://www.linuxjournal.com/article/7451">Distributed Caching with Memcached &lt;i class="fas fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p></description></item><item><title>Deploy Hugo Site to GitHub Pages</title><link>https://www.bodunhu.com/blog/posts/deploy-hugo-site-to-github-pages/</link><pubDate>Fri, 27 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/deploy-hugo-site-to-github-pages/</guid><description>&lt;p>This post assumes the user has already setup two separate repositories: a private repository for Hugo source files, and a public repository for &lt;a href="https://pages.github.com/">GitHub Pages&lt;/a>.&lt;/p>
 &lt;p>&lt;em>Note: test Hugo site by executing &lt;code>hugo server&lt;/code> in the source code directory to make sure the site is generated properly.&lt;/em>&lt;/p>
 &lt;p>Then, we need to generate a pair of keys by using the following command:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">ssh-keygen -t rsa -b &lt;span class="m">4096&lt;/span> -C &lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="k">$(&lt;/span>git config user.email&lt;span class="k">)&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span> -f deployment -N &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>This will create two files: &lt;code>deployment&lt;/code> and &lt;code>deployment.pub&lt;/code>, which corresponds to a private key and a public key.&lt;/p>
 &lt;p>Next, execute &lt;code>cat deployment&lt;/code> and copy the private key. Navigate to the private &lt;em>source repository -&amp;gt; Settings -&amp;gt; Secrets -&amp;gt; New repository secret&lt;/em>. Paste the private key and save the change.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-actions-secrets.png" alt="Github-actions-secrets">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/deploy-hugo-site-to-github-pages/github-actions-secrets.png" alt="Github-actions-secrets">&lt;/p>
 &lt;p>I&amp;rsquo;ve already added the private key to the source directory and named it &lt;code>PRIVATE_KEY&lt;/code>. You can named it however you want.&lt;/p>
 &lt;p>Then, we go to the public repository for hosting our website. Navigate to the public &lt;em>site repository -&amp;gt; Settings -&amp;gt; Deploy keys -&amp;gt; Add deploy key&lt;/em>. Execute &lt;code>cat deployment.pub&lt;/code> and copy paste the result. You should see a SSH key added:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/deploy-hugo-site-to-github-pages/github-keys.png" alt="Github-keys">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/deploy-hugo-site-to-github-pages/github-keys.png" alt="Github-keys">&lt;/p>
 &lt;p>Finally, create a directory in the private repository in the following directory: &lt;code>.github/workflows/deploy.yml&lt;/code>.&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-yaml" data-lang="yaml">&lt;span class="nt">name&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">github pages&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="w">
@@ -1046,14 +1046,14 @@ append.ivy: line 49: error: assertion failed
 \).&lt;/p>
 &lt;h2 id="states-between-0-and-1">States between 0 and 1&lt;/h2>
 &lt;p>Both the states \(|0\rangle\) and \(|1\rangle\) are called computational basis states, which maps to classical 0 and 1 states. There are more states for a qubit. We&amp;rsquo;ve already learned that a quantum state is a two-dimensional vector. An example is given:&lt;/p>
-&lt;p>&lt;a href="https://quantum.country/qcvc#general-states-of-a-qubit">&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/quantum-state-in-a-nutshell/quantum-state-eg.png#center" alt="quantum-state-example">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://quantum.country/qcvc#general-states-of-a-qubit">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/quantum-state-in-a-nutshell/quantum-state-eg.png#center" alt="quantum-state-example">&lt;/a>&lt;/p>
 &lt;p>The state \(0.6|0\rangle + 0.8|1\rangle\) is just a combination of the \(|0\rangle\) vector and the \(|1\rangle\) vector. A state like this is a &lt;em>superposition&lt;/em> of \(|0\rangle\) and \(|1\rangle\), a fancy way of saying a linear combination of \(|0\rangle\) and \(|1\rangle\). \(0.6\) is the &lt;em>amplitude&lt;/em> for state \(|0\rangle\), and \(0.8\) is the &lt;em>amplitude&lt;/em> for state \(|1\rangle\).&lt;/p>
 &lt;p>Not all linear combination of vector \(|0\rangle\) and \(|1\rangle\) are qubit states. There is one constraint: &lt;em>the sums of the squares of the amplitudes must be 1&lt;/em>. For example, we can compute \(0.6^2 + 0.8^2\) and verify the result is 1.&lt;/p>
 &lt;p>For general quantum states, the amplitudes can be complex numbers as well. Denoting both amplitudes as \(\alpha\) and \(\beta\), a quantum state can be formally written as:&lt;/p>
 &lt;p>\[\alpha |0\rangle + \beta |1\rangle \wedge \alpha^2 + \beta^2 = 1\]&lt;/p>
 &lt;p>\(\alpha^2 + \beta^2 = 1\) is called the &lt;em>normalization constraint&lt;/em>.&lt;/p>
 &lt;p>If we think of \(|0\rangle\) and \(|1\rangle\) as orthonormal vectors, we can visualize the possible linear combination of these two vectors as a circle of radius 1:&lt;/p>
-&lt;p>&lt;a href="https://quantum.country/qcvc#general-states-of-a-qubit">&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/quantum-state-in-a-nutshell/quantum-states.png#center" alt="quantum-states">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://quantum.country/qcvc#general-states-of-a-qubit">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/quantum-state-in-a-nutshell/quantum-states.png#center" alt="quantum-states">&lt;/a>&lt;/p>
 &lt;p>Since amplitudes can be complex numbers, the state space really becomes a sphere. Summing all these up:&lt;/p>
 &lt;blockquote>
 &lt;p>the quantum state of a qubit is a vector of unit length in a two-dimensional complex vector space known as state space.&lt;/p>
@@ -1088,7 +1088,7 @@ append.ivy: line 49: error: assertion failed
 &lt;/li>
 &lt;/ul>
 &lt;p>A lot of people often convolute step 2 and 3. They try to write and revise at the same time, which is anything but efficient. It&amp;rsquo;s hard to resist the impulse to be perfect. Paying too much attention to details obfuscates the whole picture. Unsurprisingly, the class poll shows most people focus on the writing step:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/writing-in-the-sciences-writting-process/writing-poll.png#center" alt="writing-poll">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/writing-in-the-sciences-writting-process/writing-poll.png#center" alt="writing-poll">&lt;/p>
 &lt;p>A better time allocation would look like:&lt;/p>
 &lt;ol>
 &lt;li>Prewriting (70%)&lt;/li>
@@ -1149,7 +1149,7 @@ append.ivy: line 49: error: assertion failed
 &lt;/ul>
 &lt;h3 id="writing-introductions">Writing Introductions&lt;/h3>
 &lt;p>The good news is that the introduction is easier to write than you may realize. Typically, the recommended range for an introduction is 2 to 5 paragraphs long. The introduction forms a cone structure:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/writing-in-the-sciences-writting-process/cone.png#center" alt="introduction-structure-cone">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/writing-in-the-sciences-writting-process/cone.png#center" alt="introduction-structure-cone">&lt;/p>
 &lt;p>The idea is to start from something general, then quickly narrow down to your specific study. So an introduction starts from some general background, then to what&amp;rsquo;s unknown. Then we narrow down to our hypothesis. In summary, the introduction is divided into:&lt;/p>
 &lt;ul>
 &lt;li>What&amp;rsquo;s known&lt;/li>
@@ -1444,7 +1444,7 @@ e_i A^HA e_i = \left\lVert Ae_i \right\rVert^2 = \left\lVert e_i \right\rVert^2 
 &lt;p>Suppose we have \(|\psi\rangle = |e_i\rangle + |e_j\rangle\), we already know that \(\left\lVert A |\psi\rangle \right\rVert^2 = \left\lVert |\psi\rangle \right\rVert^2 = 1 + 1 = 2\), and we know we can expand \(\left\lVert A |\psi\rangle \right\rVert^2\) to \(1 + e_i A^HA e_j + e_j A^HA e_i + 1\), we would get \(e_i A^HA e_j + e_j A^HA e_i = 0\).&lt;/p>
 &lt;p>Then, suppose instead we have \(|\psi\rangle = |e_i\rangle + i|e_j\rangle\), following the same process, we would get \(e_i A^HA e_j - e_j A^HA e_i = 0\). Combining with the fact that \(e_i A^HA e_j + e_j A^HA e_i = 0\), we&amp;rsquo;ve proven that the off-diagonal elements in \(A^HA\) are all \(0\). We can extend the vector \(\psi\) to higher-dimensional vectors and the proof will be similar.&lt;/p></description></item><item><title>BGP in a Nutshell</title><link>https://www.bodunhu.com/blog/posts/bgp-in-a-nutshell/</link><pubDate>Tue, 06 Jul 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/bgp-in-a-nutshell/</guid><description>&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Border_Gateway_Protocol">Border Gateway Protocol (BGP)&lt;/a> protocol has a very simple purpose: choose the fastest and the most efficient route to deliver a message from one &lt;a href="https://www.cloudflare.com/learning/network-layer/what-is-an-autonomous-system/">autonomous system (AS)&lt;/a> to another. In layman&amp;rsquo;s term, BGP is the GPS for the internet. Many contents here are credit to Prof. &lt;a href="https://www.cs.utexas.edu/~gouda/">Mohamed G. Gouda&lt;/a>.&lt;/p>
 &lt;p>In a nutshell, BGP informs each router \(R\) how to route packets to an IP prefix \(pf\) (i.e. block of IP addresses) that is used in \(AS_i\) different from \(AS_j\), where \(R\) is located:&lt;/p>
-&lt;p>&lt;a href="https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf">&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/how-bgp-works/bgp.png#center" alt="bgp-in-a-nutshell">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/bgp.png#center" alt="bgp-in-a-nutshell">&lt;/a>&lt;/p>
 &lt;p>BGP consists of two parts:&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://en.wikipedia.org/wiki/Border_Gateway_Protocol">external BGP (eBGP)&lt;/a>: informs each gateway&lt;/li>
@@ -1467,7 +1467,7 @@ e_i A^HA e_i = \left\lVert Ae_i \right\rVert^2 = \left\lVert e_i \right\rVert^2 
 &lt;p>The BGP next-hop attribute is the next hop IP address that is going to be used to reach a certain destination.&lt;/p>
 &lt;/blockquote>
 &lt;p>Here is an example illustrating how one AS lets other ASes know the route leading to itself. Assume we have three ASes. AS1 wants other ASes to know how to reach itself:&lt;/p>
-&lt;p>&lt;a href="https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf">&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/how-bgp-works/route-advertisement.png#center" alt="eBGP">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/route-advertisement.png#center" alt="eBGP">&lt;/a>&lt;/p>
 &lt;p>AS1 is trying to broadcast the path to reach itself, it sends the first route advertisement message (1) as:&lt;/p>
 &lt;p>\[
 (pf,\ (AS1),\ x)
@@ -1480,7 +1480,7 @@ e_i A^HA e_i = \left\lVert Ae_i \right\rVert^2 = \left\lVert e_i \right\rVert^2 
 &lt;h2 id="ibgp">iBGP&lt;/h2>
 &lt;p>For iBGP, there is a TCP connection between each two routers in the same AS, given the only one of them is a gateway.&lt;/p>
 &lt;p>Here is an example. Suppose the gateway \(A\) in \(AS_j\) needs to broadcast its routing information to other routers in \(AS_j\):&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/how-bgp-works/iBGP.png#center" alt="iBGP">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/iBGP.png#center" alt="iBGP">&lt;/p>
 &lt;p>The normal eBGP advertisement will be something like \((pf,\ (AS_1,\ &amp;hellip;,\ AS_j),\ x)\).&lt;/p>
 &lt;blockquote>
 &lt;p>For iBGP, the protocol states that the next hop advertised by eBGP should be carried into iBGP. Therefore, for all routers \(C_1,\ &amp;hellip;,\ C_n\), the next hop to reach \(pf\) will be \(x\) which is provided by \(AS_i\). It&amp;rsquo;s your job to make sure \(x\) is reachable via &lt;a href="https://en.wikipedia.org/wiki/Interior_gateway_protocol">IGP&lt;/a>.&lt;/p>
@@ -1536,7 +1536,7 @@ p_F \bigwedge_{(G=G_1\circ G_2)\in S_F} CNF(p_g \leftrightarrow p_{g_1} \circ p_
 &lt;p>Precisely, the size of resulting formula is bound by \(30n + 2\) where \(n\) is the size of original formula.&lt;/p>
 &lt;h2 id="dpll">DPLL&lt;/h2>
 &lt;p>The &lt;a href="https://en.wikipedia.org/wiki/DPLL_algorithm">Davis-Putnam-Logemann-Loveland (DPLL)&lt;/a> algorithm can be expressed as:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/SAT_solver/dpll.png#center" alt="DPLL">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/SAT_solver/dpll.png#center" alt="DPLL">&lt;/p>
 &lt;p>&lt;em>BCP&lt;/em> stands for &lt;a href="https://en.wikipedia.org/wiki/Unit_propagation">boolean constraint propagation&lt;/a>. It requires that one of the clauses must be a unit clause. Performing BCP (or unit resolution) is same as replacing a literal with true in the original clauses.&lt;/p>
 &lt;p>&lt;em>choose_variable&lt;/em> contains multiple heuristics. For now we can consider a variable is randomly picked.&lt;/p>
 &lt;p>The red part is optimization to the original DPLL. &lt;a href="https://en.wikipedia.org/wiki/DPLL_algorithm">Pure literal Propagation (PLP)&lt;/a>. All it does is if variable \(p\) occurs only appears &lt;strong>only&lt;/strong> in the form of \(p\) or \(\neg p\) in the entire formula, we will set all occurences of \(p\) or \(\neg p\) to true or false.&lt;/p></description></item><item><title>Experience on Dafny Programming</title><link>https://www.bodunhu.com/blog/posts/experience-on-dafny-programming/</link><pubDate>Sun, 16 May 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/experience-on-dafny-programming/</guid><description>&lt;p>Because of Professor &lt;a href="https://www.cs.utexas.edu/~isil/">Dillig&lt;/a>&amp;rsquo;s &lt;a href="https://www.cs.utexas.edu/~isil/cs389L/">class&lt;/a>, I finally got the chance to try out &lt;a href="https://en.wikipedia.org/wiki/Dafny">Dafny&lt;/a>, a language made by &lt;a href="https://www.microsoft.com/en-us/research/">Microsoft Research&lt;/a>, with built-in support for formal specification through &lt;a href="https://en.wikipedia.org/wiki/Precondition">preconditions&lt;/a>, &lt;a href="https://en.wikipedia.org/wiki/Postcondition">postconditions&lt;/a>, &lt;a href="https://en.wikipedia.org/wiki/Loop_invariant">loop invariants&lt;/a> and &lt;a href="https://en.wikipedia.org/wiki/Loop_variant">loop variants&lt;/a>. I often think, what if we write programs in a verification language, would there be much less bugs and will it make our lives much easier than sitting in front a screen for hours grinding at bugs. Here are some thoughts I want to put down before they are gone in my head.&lt;/p>
@@ -1566,10 +1566,10 @@ ensures in == reverse(reverse(in));
 &lt;h2 id="ethereum-architecture">Ethereum Architecture&lt;/h2>
 &lt;p>To understand the high-level architecture of Ethereum, we compare it with the traditional client/server architecture. I really like &lt;a href="https://www.zastrin.com/courses/ethereum-primer/lessons/2-1">Zastrin&lt;/a>&amp;rsquo;s illustration.&lt;/p>
 &lt;p>Here is how a traditional client/server architecture looks like:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ethereum/Webapp-Architecture.png#center" alt="client-server-architecture">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/ethereum/Webapp-Architecture.png#center" alt="client-server-architecture">&lt;/p>
 &lt;p>The main point is that the web application is deployed on centralized platforms or hosting services like AWS. All client applications need to access the centralized component for requested services.&lt;/p>
 &lt;p>The architecture of Ethereum is shown below:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ethereum/Ethereum-Architecture.png#center" alt="ethereum-architecture">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/ethereum/Ethereum-Architecture.png#center" alt="ethereum-architecture">&lt;/p>
 &lt;p>The major difference here is that each client interacts with a decentralized application instead. Each computer holds a replica of all the data as well as the code. You can think of your computer as a dedicated mini server handling only your requests. Of course, what this implies is you will need to download the entire Ethereum blockchain to be able to use the application.&lt;/p>
 &lt;p>This is obviously infeasible. In practice, there are solutions like &lt;a href="https://metamask.io/">Metamask&lt;/a> to mitigate the problem so your storage space won&amp;rsquo;t be saturated. But the high-level concept holds.&lt;/p>
 &lt;p>A Ethereum blockchain consists of two components:&lt;/p>
@@ -1597,13 +1597,13 @@ ensures in == reverse(reverse(in));
 &lt;p>The earlier, the better&lt;/p>
 &lt;/blockquote>
 &lt;p>More importantly, grad school applications, especially in Computer Science, has become extremely competitive over the years. The admission rate for most top CS departments is well below 10 percent. Having publications, or even just research experiences, is likely gonna decide whether you are getting accepted. To some extent, &amp;ldquo;publish or perish&amp;rdquo; also applies to Ph.D. application.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/cs-phd-application/publish-or-perish.jpg" alt="publish-or-perish">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/cs-phd-application/publish-or-perish.jpg" alt="publish-or-perish">&lt;/p>
 &lt;p>I had friends who asked me whether they should wait until junior or senior years to get started in research because by then they will have taken enough courses and are better equipped with the background. My suggestion is no. First, part of research is about learning: you settle on a problem and you find ways to solve it. Learning happens throughout this process. My advisor Chris always says you learn more by doing research. My personal experience has reenforced this statement. Second, there simply might not be enough time for you to finish the research project by the time application process starts. It&amp;rsquo;s possible to pull a rabbit out of the hat in some areas like theory or machine learning. But for areas like systems, the sheer amount of workloads makes submission cycle really long. This is exacerbated by the relatively small number of top conferences. In addition, there will be several months before you are notified of the final decision.&lt;/p>
 &lt;p>For example, my first GPU project took more than a year to finish. It was then rejected and cost another several months before it was published. By the time my application started, my paper was still under submission and I didn&amp;rsquo;t hear anything back until late January.&lt;/p>
 &lt;p>Another problem people asked me is how to pick a research area in the first place. I use a small trick I learned from a post on Quora: figure out what you spend most time on. For a really long time, I thought I would eventually do something related to deep learning, because, well, that&amp;rsquo;s what everybody is doing. However, I found myself spending much more time browsing through &lt;a href="https://lwn.net/">LWN.net&lt;/a> or Linux kernel code than actual deep learning. So I decided doing systems suites me better.&lt;/p>
 &lt;h2 id="picking-schools">Picking Schools&lt;/h2>
 &lt;p>So I&amp;rsquo;ve decided to apply for PhD, it&amp;rsquo;s time to pick which schools to apply to. Ph.D. is equivalent to research apprenticeship. Therefore, the application process is very much &lt;em>faculty-oriented&lt;/em>. I highly recommend &lt;a href="https://csrankings.org/">csrankings&lt;/a>. It is capable of filtering out a lot of unwanted information and focus on your research interests quickly. It&amp;rsquo;s much quicker and more convenient to see all names in one place than browsing through every person&amp;rsquo;s name in every university. But you should still take a loof at each university&amp;rsquo;s faculty list because csrankings might not contain the most up-to-date information.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/cs-phd-application/phdcomics.gif#center" alt="phd-comics">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/cs-phd-application/phdcomics.gif#center" alt="phd-comics">&lt;/p>
 &lt;p>In terms of how many schools to apply, my suggestion is &amp;ldquo;the more, the better&amp;rdquo;. Statistically speaking, more application increases your chance of getting accepted. The major problem is the application fee and the need to tailor each SOP to different schools. I applied 20 programs, all in U.S.. This is way above the average number and I don&amp;rsquo;t really recommend most people doing it. However, applying more programs does gave me several interviews from schools I thought weren&amp;rsquo;t the best fit. For example, there is one AP who just came to the university and has research interests closely matching mine, but his personal information is not yet reflected in both &lt;a href="https://csrankings.org/">csrankings&lt;/a> and the school&amp;rsquo;s website. Another interviews I got are from a professor coming from a more theoretical background but is in need of students with more system skills to build the underlying infrastructure.&lt;/p>
 &lt;h2 id="statement-of-purpose">Statement of Purpose&lt;/h2>
 &lt;p>You will need to submit a SOP to every school you apply to. There are many tutorials online on how to come up with the best SOP so I won&amp;rsquo;t go over them. In general, I think there are two things to consider:&lt;/p>
@@ -1663,7 +1663,7 @@ If we decide to sell more books, each one will generate an additional block (vau
 &lt;/ul>
 &lt;p>In essence, a blockchain is a series of immutable blocks, each storing the information of an event(s) whose validity is approved by a majority of other participants. Simple as that.&lt;/p>
 &lt;p>I like using the term &amp;lsquo;&amp;lsquo;distributed ledger&amp;rsquo;&amp;rsquo; to characterize blockchain. In Prof. Anand&amp;rsquo;s slides, this graph summarizes how a distributed ledger differs from traditional centralized ledger:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/blockchain/ledger.png" alt="hyper-ledger">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/blockchain/ledger.png" alt="hyper-ledger">&lt;/p>
 &lt;p>The main difference is how consensus is achieved. In centralized ledger, we have a single that decides the &amp;lsquo;&amp;lsquo;golden record&amp;rsquo;&amp;rsquo;. In a distributed ledger, consensus is achieved is everybody agrees with it. To give an example, we would pay a 45-dollar electricity bill each month to Texas electricity company because the price standard is set by the company alone. In a distributed ledger world, we might pay 32 dollars instead, if every single residents living in the building agrees this is the best price. Essentially, we eliminate the centralized entity and distribute the ability of making decisions to each individual evenly.&lt;/p>
 &lt;p>In super-simple terms, a blockchain is just a computer file for storing data. The reason why it&amp;rsquo;s so secure is because there doesn&amp;rsquo;t exist a single central point of attack for hackers to target.&lt;/p>
 &lt;h2 id="sketch-on-blockchain">Sketch on Blockchain&lt;/h2>
@@ -1702,7 +1702,7 @@ There are many great articles talking about Bitcoin in details, but I found the 
 &lt;p>In short, I think trust is not &amp;lsquo;&amp;lsquo;removed&amp;rsquo;&amp;rsquo;, it is merely achieved through a different way. I&amp;rsquo;d like to modify Prof. Anand&amp;rsquo;s summary on Bitcoin: Bitcoin is an engineering solution to solve trust issues.&lt;/p>
 &lt;h2 id="blockchain-structure">Blockchain Structure&lt;/h2>
 &lt;p>The structure of blockchain is surprisingly simple. A blockchain consists a series of blocks, each holding batches of valid transactions that are hashed and encoded into a &lt;a href="https://en.wikipedia.org/wiki/Merkle_tree">Merkle tree&lt;/a>, with only the root of the tree included in the block&amp;rsquo;s hash. Each block also includes a hash value of prior block in the blockchain. The essentially forms a linked list, except we replaced pointer with a hash value of a block.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/d237cddc277de92e56a762d91ef91e13d0b0fe58/posts/blockchain/block_chain_structure.png" alt="blockchain_structure">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/blockchain/block_chain_structure.png" alt="blockchain_structure">&lt;/p>
 &lt;p>Using hash value to link block has another benefit that it protects the integrity of all previous blocks. For example, if an attacker modifies the data in one block, the action will consequently change the block&amp;rsquo;s corresponding hash value, resulting the hash value stored in the next block being invalidated. The attack needs to modify hash values starting from the modified block all the way to the latest block. In addition, the modified blockchain would be different compared the one stored in other nodes across the internet, making attacking even more difficult.&lt;/p>
 &lt;h3 id="mining">Mining&lt;/h3>
 &lt;p>After explaining the basic concepts behind blocks, it becomes easy to understand the purpose of mining. Mining, in its essence, is using proof-of-work to implement a distributed timestamp server on a P2P bases.&lt;/p>
@@ -1946,15 +1946,15 @@ would use the procedure above to generated equivalence closure. Then, because $f
 &lt;p>This is an example for illustration purposes, borrowed from Prof. &lt;a href="https://www.cs.utexas.edu/~isil/">Dillig&lt;/a>&amp;rsquo;s slides:&lt;/p>
 &lt;p>Given formula $F\ : \ f^3(a) = a \land f^5(a) = a \land f(a) \neq a$&lt;/p>
 &lt;p>The initial DAG would be:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG.png#center" alt="congruence-closure-DAG">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG.png#center" alt="congruence-closure-DAG">&lt;/p>
 &lt;p>Process equality $f^3(a) = a$ gives us:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_1.png#center" alt="congruence-closure-DAG-2">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG_1.png#center" alt="congruence-closure-DAG-2">&lt;/p>
 &lt;p>Recursively merging the parents results in:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_2.png#center" alt="congruence-closure-DAG-3">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG_2.png#center" alt="congruence-closure-DAG-3">&lt;/p>
 &lt;p>Process equality $f^5(a) = a$ gives us:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_3.png#center" alt="congruence-closure-DAG-4">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG_3.png#center" alt="congruence-closure-DAG-4">&lt;/p>
 &lt;p>Now in this step, $f^2(a)$ and $a$ are in the same congruence class, thus we will perform the same operation on their parents, processing equality $f^3(a) = f(a)$:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_5.png#center" alt="congruence-closure-DAG-5">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG_5.png#center" alt="congruence-closure-DAG-5">&lt;/p>
 &lt;p>We find $f(a) \neq a$ has a conflict because node $a$&amp;rsquo;s representative is $f(a)$, indicating they are in the same congruence class, meeting congruence relation.
 Thus the formula is UNSAT.&lt;/p></description></item><item><title>Program Loading and Memory Mapping in Linux</title><link>https://www.bodunhu.com/blog/posts/program-loading-and-memory-mapping-in-linux/</link><pubDate>Tue, 03 Nov 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/program-loading-and-memory-mapping-in-linux/</guid><description>&lt;p>This is a summary over program loading, dynamical paging, signal handling, and memory mapping in Linux.&lt;/p>
 &lt;h2 id="execve-syscall">execve Syscall&lt;/h2>
@@ -2857,9 +2857,9 @@ nivcsw: 8(7)&lt;/li>
 &lt;p>Memory Virtualization is done by interposing an extra abstraction layer between a &lt;code>physical address&lt;/code> from the VM&amp;rsquo;s point of view, and a &lt;code>machine address&lt;/code> which represents the actual hardware memory. ESX Server maintains a &lt;em>pmap&lt;/em> data structure for each VM to translate PPMs to MPNs. A separate &lt;em>shadow page table&lt;/em>, consistent with the physical-to-machine mappings, is used to map virtual-to-machine page mappings. This avoids additional overheads as the hardware TLB will cache direct virtual-to-machine address translations read from the shadow page table.&lt;/p>
 &lt;/blockquote>
 &lt;h2 id="key-features">Key features&lt;/h2>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ESXServer/ballooning.png" alt="vmware-esx-server-memory">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/ESXServer/ballooning.png" alt="vmware-esx-server-memory">&lt;/p>
 &lt;p>&lt;strong>Ballooning&lt;/strong> is a technique used by the server to achieve memory reclamation. As its name suggests, the hypervisor inflates the balloon by instructing the balloon driver module to allocate pinned physical pages and deflates it by instructing it to deallocate previously-allocated pages. The idea behind this technique is that the hypervisor is unaware of the specific usage patterns of policies of its guests, therefore the making page replacement decisions is best done in the guest VM. When the hypervisor over commits memory, it needs some way to claim memories from the VMs. By consuming some of the memory that the guest OS believes is physically present in the virtual machine. The guest OS will then swap memory to disk reducing the load on the host&amp;rsquo;s physical memory. The host will them reallocate that memory to other VMs. A details description of ballooning can be found in this &lt;a href="https://www.vladan.fr/what-is-vmware-memory-ballooning/">post&lt;/a>.&lt;/p>
-&lt;p>&lt;a href="https://www.vmware.com/pdf/usenix_resource_mgmt.pdf">&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ESXServer/pghash.png#center" alt="vmware-esx-server-page-coloring">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.vmware.com/pdf/usenix_resource_mgmt.pdf">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/ESXServer/pghash.png#center" alt="vmware-esx-server-page-coloring">&lt;/a>&lt;/p>
 &lt;blockquote>
 &lt;p>Page Coloring can be used to reduce cache misses or partition resources. But it might complicates memory management, especially with the presence of huge pages. Because coloring enforces ownership, thus might result in distinct L2 cache entries.&lt;/p>
 &lt;/blockquote>
@@ -2868,7 +2868,7 @@ nivcsw: 8(7)&lt;/li>
 &lt;h2 id="questions">Questions&lt;/h2>
 &lt;p>a. What is the overhead of ballooning? Triggering memory management in the VM by &amp;ldquo;tricking&amp;rdquo; it into thinking the the memory resource is scarce/plentiful may have unexpected behaviors.&lt;br>
 b. Do content-based sharing pose security vulnerabilities?&lt;br>
-c. Remapping hot I/O pages to low memory can be a bottleneck if the page number is high. How does modern hypervisor solution cope with this issue?&lt;/p></description></item><item><title>Xen and the Art of Virtualization</title><link>https://www.bodunhu.com/blog/posts/xen-and-the-art-of-virtualization/</link><pubDate>Wed, 16 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/xen-and-the-art-of-virtualization/</guid><description>&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/0791e7ebcbe4f2bcd31731894055dc928f105911/posts/Xen/Xen.png#center" alt="xen-architecture">&lt;/p>
+c. Remapping hot I/O pages to low memory can be a bottleneck if the page number is high. How does modern hypervisor solution cope with this issue?&lt;/p></description></item><item><title>Xen and the Art of Virtualization</title><link>https://www.bodunhu.com/blog/posts/xen-and-the-art-of-virtualization/</link><pubDate>Wed, 16 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/xen-and-the-art-of-virtualization/</guid><description>&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Xen/Xen.png#center" alt="xen-architecture">&lt;/p>
 &lt;p>Xen is an x86 virtual machine monitor which allows multiple commodity operating systems to share conventional hardware in a safe and resource managed fashion, without sacrificing either performance or functionality. Xen is type I hypervisor, which directly runs on top of bare metal. We will summarize what Xen is what its attributes are.&lt;/p>
 &lt;blockquote>
 &lt;p>paravirtualization - presents a virtual machine abstraction that is similar but not identical to the underlying hardware.&lt;/p>
@@ -2878,11 +2878,11 @@ c. Remapping hot I/O pages to low memory can be a bottleneck if the page number 
 &lt;p>&lt;strong>CPU&lt;/strong> virtualization has implications for guest OSes. Principally, OS the most privileged entity on top of hardware. A hypervisor in the middle means the guests OSes must be modified to run a lower privilege level. On x86, this is not a problem since OSes executes in ring 0 while applications execute in ring 3, leaving ring 1 and ring 2 unused.
 Privileged instructions executed by the guest has to go through the check of hypervisor in general. For performance reasons, system call exceptions can be handled directly by the CPU. As for paging faults, this needs to go through the hypervisor because only code in ring 0 can result the faulting address from &lt;code>CR2&lt;/code>.&lt;/p>
 &lt;p>&lt;strong>Device I/O&lt;/strong> is implemented by transfer data between guest and Xen using shared-memory async buffer-descriptor rings. Event delivery is achieved by hypervisor sending notification to its guest asynchronously. When and whether to hold off these callbacks is at the discretion of the guest.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Xen/xen_ringbug.png#center" alt="xen-ring-buffer">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Xen/xen_ringbug.png#center" alt="xen-ring-buffer">&lt;/p>
 &lt;p>Essentially, the virtualization interface design is based on a number of factors. The hypervisor acts as a security guard that validates the guest&amp;rsquo;s request which would go directly to hardware normally if running in ring 0. The bottom line is the hypervisor shouldn&amp;rsquo;t be involved unless the there are hardware limitations, or when resource validation or management are required. The goal is to separate policy from mechanism wherever possible. This similar to exokernel in that the hypervisor merely provides basic functionalities without understanding higher level issues.&lt;/p>
 &lt;h2 id="questions">Questions&lt;/h2>
 &lt;p>a. Why does x86 make it hard to support efficient virtualization?&lt;br>
-b. How does Xen exists in 64MB section at the top of every address space avoid TLB flushes when entering and leaving the hypervisor?&lt;/p></description></item><item><title>Start Linux Kernel Hacking</title><link>https://www.bodunhu.com/blog/posts/start-linux-kernel-hacking/</link><pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/start-linux-kernel-hacking/</guid><description>&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/linux_kernel_hacking/linux.jpg#center" alt="Linux">&lt;/p>
+b. How does Xen exists in 64MB section at the top of every address space avoid TLB flushes when entering and leaving the hypervisor?&lt;/p></description></item><item><title>Start Linux Kernel Hacking</title><link>https://www.bodunhu.com/blog/posts/start-linux-kernel-hacking/</link><pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/start-linux-kernel-hacking/</guid><description>&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/linux_kernel_hacking/linux.jpg#center" alt="Linux">&lt;/p>
 &lt;p>This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well.&lt;/p>
 &lt;!--description-->
 &lt;h2 id="getting-the-vm-running-in-kvm">Getting the VM running in KVM&lt;/h2>
@@ -3059,7 +3059,7 @@ wireless local area networks. Degraded transmitting rate is caused by CSMA/CA ch
 &lt;p>where the constant overhead&lt;/p>
 &lt;p>$$t_{ov} = DIFS + t_{pr} + SIFS + t_{pr} + t_{ack}$$&lt;/p>
 &lt;p>The transmission process can be represented by the graph&lt;/p>
-&lt;p>&lt;a href="https://ieeexplore.ieee.org/document/1208921">&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ieee_anomaly/transmission_single_frame.png#center" alt="wireless-transmission-single-frame">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://ieeexplore.ieee.org/document/1208921">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/ieee_anomaly/transmission_single_frame.png#center" alt="wireless-transmission-single-frame">&lt;/a>&lt;/p>
 &lt;!-- The takeaway here is that $t_{pr}$ varies based on the bit rate used by the host. If the bit rate changes from 1 Mb/s to 2, $5.5$, or $11$ Mb/s, the value of $t_{pr}$ changes from $192 \mu s$ to $96 \mu s$, resulting in less than maximum throughput. -->
 &lt;p>When there are multiple hosts attempting to transmit, a host will execute the exponential backoff algorithm - it waits for a random interval to avoid saturating the channel, resulting in extra time spent in the contention procedure:&lt;/p>
 &lt;p>$$T = t_{tr} + t_{ov} + t_{cont}(N)$$&lt;/p>
@@ -3086,7 +3086,7 @@ wireless local area networks. Degraded transmitting rate is caused by CSMA/CA ch
 &lt;p>In general, the experimental value of \(P_c(N)\) seems to match the theory model. One thing the paper could illustrates better is to show how experimental value matches the equation as the number of hosts increases. The average and cumulative throughput value also seems reasonable compared to the expression discussed before.&lt;/p>
 &lt;p>The throughput is measured using three different tools: &lt;em>netperf&lt;/em>, &lt;em>tcpperf&lt;/em>, and &lt;em>udpperf&lt;/em>. This idea of duplication makes the data collected more reliable and persuasive, which is especially useful in benchmarking since the results can be sensitive to environmental variable changes.&lt;/p>
 &lt;p>The presented results justify the statement made in the paper. For example, the measured TCP throughput for two hosts is shown to degrade as time passes:&lt;/p>
-&lt;p>&lt;a href="https://ieeexplore.ieee.org/document/1208921">&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/ieee_anomaly/TCP_degrade.png#center" alt="TCP-degrade-performance">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://ieeexplore.ieee.org/document/1208921">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/ieee_anomaly/TCP_degrade.png#center" alt="TCP-degrade-performance">&lt;/a>&lt;/p>
 &lt;p>One thing the paper can articulate more is how this seemly periodic pattern is related to the model. Another concern is the number of device used to conduct these experiments. The number of devices used seems to be much smaller than what would be in real-world scenario. It will be interesting to see how the performances are affected with a lot devices competing for a channel. This can be further extended to measuring performances with multiple devices having lower bit rate, which is more likely to capture real-world use cases. The potential performance impact is not clear given the present measurement.&lt;/p>
 &lt;p>The paper also claims the useful throughput strongly depends on the number of competing host. More data related to how the number of hosts is related to performance impact will make this paper more interesting. It may be hard to achieve as many papers resort to simulation.&lt;/p>
 &lt;p>This paper has made improvements over previous work in that it studies the performance of 802.11 WLANs, with one host having lower bit rate, whereas many other assume that all hosts communicate using the same bit rate. This is a step forward to capture more realistic situations. Overall, the paper does a good job in terms of proving its point. It captures the most critical information and it&amp;rsquo;s easy to follow the concept. However, the neat structure can make readers without sufficient background to spend more time catching up since the background section may not be enough for starters.&lt;/p>
@@ -3110,7 +3110,7 @@ wireless local area networks. Degraded transmitting rate is caused by CSMA/CA ch
 &lt;p>However, generalization may not be a bad thing. As discussed in the &lt;em>UNIX the Timesharing System&lt;/em> paper, having a generalized and unified yet limited file system API can simplify programming efforts. Accessing both ordinary files and I/O devices is achieved by utilizing a unified interface. Nobody today wants to implement a different set of policies just for character device or block device.&lt;/p>
 &lt;h2 id="design">Design&lt;/h2>
 &lt;p>Essentially, exokernel consists of thin veneet that multiplexes and exports physical resources through a set of primitives. The libraries, running in the application space, use them to implement with special-purpose functionalities in a higher abstraction level. The architecture is shown in the Paper:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/exokernel_arch.png#center" alt="exokernel">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/exokernel/exokernel_arch.png#center" alt="exokernel">&lt;/p>
 &lt;p>There are three majors tasks to separate protection from management:&lt;/p>
 &lt;ul>
 &lt;li>Tracking ownership of resources.&lt;/li>
@@ -3206,7 +3206,7 @@ hardware mechanisms,software caching, and downloading application code.&lt;/p>
 &lt;p>I do find the graph in the exokernel paper interesting. It shows that when application-level message handlers are downloaded into the kernel, the roundtrip latency is almost not affected by the number of processes. Since the operation is performed inside kernel upon message arrival, no handling is needed from the application. This has the advantage that application handler is subject to scheduling, which has performance implications. (The choice of scheduler is the key bottleneck here.)&lt;/p>
 &lt;p align="center">
 &lt;a href="https://pdos.csail.mit.edu/6.828/2008/readings/engler95exokernel.pdf">
-&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/throughput.png" width="80%">
+&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/exokernel/throughput.png" width="80%">
 &lt;/a>
 &lt;/p>
 &lt;h2 id="modularity">Modularity&lt;/h2>
@@ -3326,7 +3326,7 @@ Since it&amp;rsquo;s a command, it also shared the luxury of having standard I/O
 &lt;p>Suppose the difference between the clock of P and Q is \(\Delta\) at synchronization, our goal is to adjust P&amp;rsquo;s logical clock C(t) to mitigate the difference. The adjustment is simple:&lt;/p>
 &lt;p>\[C(t)=H(t)+A(t)\]&lt;/p>
 &lt;p>Here C(t) is P&amp;rsquo;s logical clock, H(t) is P&amp;rsquo;s hardware clock, and A(t) is the adjustment function(can also be A(H(t))).&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/clock.png?token=ACKPLVNGE4DFY4GQF55PU7C5QFOGW#center" alt="probabilistic-sync">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/clock.png?token=ACKPLVNGE4DFY4GQF55PU7C5QFOGW#center" alt="probabilistic-sync">&lt;/p>
 &lt;p>A naive method will be simply subtract or add
 \(\Delta\) to C(t) to mitigate the difference. However, it will create a discontinuity in P&amp;rsquo;s clock, which may disrupt systems services. For example, if
 \(\Delta = 2\) seconds,the logical clock will instantly jump ahead 2 seconds and a stopwatch will skip one second.&lt;/p>
@@ -3352,7 +3352,7 @@ Since it&amp;rsquo;s a command, it also shared the luxury of having standard I/O
 , we can see that now m is a constant and not determined by the value of \(\alpha\). We lost control of the amortization rate \(m\), which is not desirable.&lt;/p>
 &lt;h2 id="general-case">General Case&lt;/h2>
 &lt;p>We now return to the general case where network delay and processing time are both present. The situation is represented below:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/general_case.png#center" alt="probabilistic-sync-general-case">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/general_case.png#center" alt="probabilistic-sync-general-case">&lt;/p>
 &lt;p>Looking at this graph, we can see slave P takes 2d real time to for a round-trip. Let&amp;rsquo;s also assume that 2D is the round-trip delay measured by P&amp;rsquo;s clock between sending and receiving. Then we can bound the clock time 2D based on the drift rate \(\rho\) of the clock:&lt;/p>
 &lt;p>\[2d(1-\rho)\leq 2D \leq2d(1+\rho)\]&lt;/p>
 &lt;p>Ignoring higher order terms of \(\rho\), we now have \(2d\leq(1+\rho)2D\).&lt;/p>
@@ -3398,7 +3398,7 @@ publisher={IET}
 &lt;p>Microkernels like &lt;a href="https://en.wikipedia.org/wiki/L4_microkernel_family">L4&lt;/a>, &lt;a href="https://en.wikipedia.org/wiki/Mach_(kernel)">Mach&lt;/a>, &lt;a href="https://en.wikipedia.org/wiki/ChorusOS">Chorus&lt;/a>, and &lt;a href="https://en.wikipedia.org/wiki/Spring_(operating_system)">Spring&lt;/a>, trapped page faults in the kernel but then reflected them up to other processes which carried out the
 actual page fault handling. This was done on a per-region basis, so each area of
 virtual memory was associated with some paging server. Memory objects could be shared between different processes and mapped differently in different address spaces.&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/os.png#center" alt="operating-system-kernel">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Barrelfish/os.png#center" alt="operating-system-kernel">&lt;/p>
 &lt;p>Such abstraction means that what happens when a page fault happens is entirely dependent on the code in the user-level pager. This design is highly extensible since it&amp;rsquo;s all user code and thus isolated, which means that if a user-level pager crashes, there&amp;rsquo;s a good chance the rest of the OS can continue quite happily since much of the functionality is moved away from the kernel.&lt;/p>
 &lt;p>However, moving functionality out of the kernel an important question: if user-space processes can manipulate virtual address spaces, how can
 we make sure that one user&amp;rsquo;s program can&amp;rsquo;t manipulate another address space and memory? Here we will introduce the concept of capabilities.&lt;/p>
@@ -3417,17 +3417,17 @@ against forgery. Capabilities can be implemented in various ways such as tagged 
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-c" data-lang="c">&lt;span class="n">Caprefa&lt;/span>&lt;span class="o">-&amp;gt;&lt;/span>&lt;span class="n">install&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Caprefb&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">slot&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">flags&lt;/span>&lt;span class="p">)&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="capabilities-in-barrelfish">Capabilities in Barrelfish&lt;/h2>
 &lt;p>According to Barrelfish documentation, all memory in Barrelfish (and some other system resources which do not occupy memory) is described using capabilities. Capabilities are typed, and capabilities can be retyped by users holding them according to certain rules and restrictions. The official documentation has very good explanation on the capability management in Barrelfish. Here is the permissible types for the retype invocation capability retyping:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/cap.png#center" alt="barrelfish-os-capability">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Barrelfish/cap.png#center" alt="barrelfish-os-capability">&lt;/p>
 &lt;p align="center">
 &lt;a href="http://www.barrelfish.org/publications/TN-013-CapabilityManagement.pdf">Image source&lt;/a>&lt;/p>
 &lt;p>Capabilities referring to memory regions. Capabilities can also be split, resulting 2 new capabilities of the same type, one for each half of the region. Some of the more important capability types in Barrelfish are shown in figure below. The picture is from the Barrelfish manual provided in CS378 Multi-core class by Simon Peter:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/cap_aos.png#center" alt="barrelfish-os-capability-aos">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Barrelfish/cap_aos.png#center" alt="barrelfish-os-capability-aos">&lt;/p>
 &lt;p>Allocation and management of physical memory is achieved by retyping and splitting operations on capabilities. For most kernels, the implementation is to constantly allocate and deallocate memory for a wide variety of purposes, much as any large C program relies heavily on malloc and free.&lt;/p>
 &lt;p>The problem is what the kernel should do when this runs out. The current solution in Linux is little more than &amp;ldquo;kill a random process and reclaim its memory&amp;rdquo;, which can be a problem for system stability. In Barrelfish, all kernel objects are actually allocated by user programs. If a user process wants to create another process (or dispatcher in Barrelfish parlance), it has to get a capability to a DRAM area of the right size, retype this capability to type Dispatcher, and hand this to the kernel. This will be covered in later posts. To access different types of memory resources, the corresponding capability has to be retyped to the right type.&lt;/p>
 &lt;h2 id="more-on-implementation">More On Implementation&lt;/h2>
 &lt;p>In Barrelfish, every capability resides in a slot in a CNode, so a pair (CNode, slot) would identify a capability. It is important to point out that the CNode is another capability itself. Each process in Barrelfish has a CSpace which is structured as a two-level table. So there are actually two different CNode capability types - one for the first level of the table, and one for the second. Every process has, within its &amp;ldquo;dispatcher control block&amp;rdquo;, a pointer to the top-level or root CNode which the kernel can traverse.&lt;/p>
 &lt;p>A capability reference in Barrelfish is very similar to VA: the first few bits can represent an index into the first level L1CNode, while the next few bits refer to a slot in a CNode referred to by the capability in the L1CNode slot. Here is a picture from the main pdf showing how the the CSpace is represented in Barrelfish:&lt;/p>
-&lt;p>&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/Barrelfish/Cspace.png#center" alt="barrelfish-os-cspace">&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Barrelfish/Cspace.png#center" alt="barrelfish-os-cspace">&lt;/p>
 &lt;h2 id="thoughts-on-design-decisions">Thoughts on Design Decisions&lt;/h2>
 &lt;p>Even though it is pretty straight forward to understand the CSpace structure, the actual implementation is a lot more complicated than that. Since the CSpace is not directly accessible by user space program, there are additional data structures used to keep track of available memory resources.&lt;/p>
 &lt;p>In our implementation, the user process keeps a doubly linked list of &lt;em>struct mmnode&lt;/em> to indicate the memory available for allocation. Each element in the free list tracks the information corresponding to one capability. However, there is a big problem with this seemingly simple implementation. Every time we allocate a practical memory space from the memory region, a new capability is created while the old capability still remain in the physical memory pointing to a memory range before the allocation happens. Therefore, the old capability would cover extra memory spaces that are already allocated and managed by other capabilities.&lt;/p>
@@ -3944,7 +3944,7 @@ Virtual Address calculation: o&lt;sub>MAX&lt;/sub> x p + o (here o is the offset
 &lt;p>Even though the concept of relocation is easy to understand, it can easily lead to problems with unused memory space. The biggest problem is &lt;strong>external fragmentation&lt;/strong>. When a process finished executing and the memory it occupied is deallocated, it will leave a &amp;ldquo;hole&amp;rdquo; behind and become available for other process to use. The problem is, as the size of the emory of the previously running process can be any random number, the &amp;ldquo;hole&amp;rdquo; it leaves behind may be too small for other processes to fit in. Even if it is big enough for other processes to fit in, they may eventually lead to smaller fragments that are too small for a process to use, which leads to external fragmentation. There&amp;rsquo;s also another problem called &lt;strong>internal fragmentation&lt;/strong>, but it won&amp;rsquo;t be discussed here.&lt;/p>
 &lt;h2 id="how-to-minimize-external-fragmentation">How to minimize external fragmentation?&lt;/h2>
 &lt;p>As we can see, relocation leaves rooms for external fragmentation, which can be a problem since unused spaces will be a waste. Are there any methods we can use to reduce the external fragmentation to minimize external fragmentation and better utilize the free blocks? There&amp;rsquo;re three policies we will discuss that can be used to achieve our goals. A reminder is that they can&amp;rsquo;t completely eliminate external fragmentation but merely minimize it to a certain level.&lt;/p>
-&lt;p>&lt;a href="http://www.differencebetween.net/technology/difference-between-internal-fragmentation-and-external-fragmentation/">&lt;img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/virtual-memory-overview/extermnal-frag.png#center" alt="external-fragmentation">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="http://www.differencebetween.net/technology/difference-between-internal-fragmentation-and-external-fragmentation/">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/virtual-memory-overview/extermnal-frag.png#center" alt="external-fragmentation">&lt;/a>&lt;/p>
 &lt;h2 id="policies">Policies&lt;/h2>
 &lt;h3 id="first-fit-policy">First-Fit policy&lt;/h3>
 &lt;p>Finding the first free block that can hold the requested amount of memory.&lt;/p>

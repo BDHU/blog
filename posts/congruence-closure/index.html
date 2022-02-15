@@ -58,15 +58,15 @@ would use the procedure above to generated equivalence closure. Then, because $f
 <p>This is an example for illustration purposes, borrowed from Prof. <a href=https://www.cs.utexas.edu/~isil/>Dillig</a>&rsquo;s slides:</p>
 <p>Given formula $F\ : \ f^3(a) = a \land f^5(a) = a \land f(a) \neq a$</p>
 <p>The initial DAG would be:</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG.png#center alt=congruence-closure-DAG></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG.png#center alt=congruence-closure-DAG></p>
 <p>Process equality $f^3(a) = a$ gives us:</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_1.png#center alt=congruence-closure-DAG-2></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG_1.png#center alt=congruence-closure-DAG-2></p>
 <p>Recursively merging the parents results in:</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_2.png#center alt=congruence-closure-DAG-3></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG_2.png#center alt=congruence-closure-DAG-3></p>
 <p>Process equality $f^5(a) = a$ gives us:</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_3.png#center alt=congruence-closure-DAG-4></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG_3.png#center alt=congruence-closure-DAG-4></p>
 <p>Now in this step, $f^2(a)$ and $a$ are in the same congruence class, thus we will perform the same operation on their parents, processing equality $f^3(a) = f(a)$:</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/congruence_algorithm/DAG_5.png#center alt=congruence-closure-DAG-5></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/congruence_algorithm/DAG_5.png#center alt=congruence-closure-DAG-5></p>
 <p>We find $f(a) \neq a$ has a conflict because node $a$&rsquo;s representative is $f(a)$, indicating they are in the same congruence class, meeting congruence relation.
 Thus the formula is UNSAT.</p>
 <div style=width:100% id=comment>

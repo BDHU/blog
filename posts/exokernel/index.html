@@ -42,7 +42,7 @@
 <p>However, generalization may not be a bad thing. As discussed in the <em>UNIX the Timesharing System</em> paper, having a generalized and unified yet limited file system API can simplify programming efforts. Accessing both ordinary files and I/O devices is achieved by utilizing a unified interface. Nobody today wants to implement a different set of policies just for character device or block device.</p>
 <h2 id=design>Design</h2>
 <p>Essentially, exokernel consists of thin veneet that multiplexes and exports physical resources through a set of primitives. The libraries, running in the application space, use them to implement with special-purpose functionalities in a higher abstraction level. The architecture is shown in the Paper:</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/exokernel_arch.png#center alt=exokernel></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/exokernel/exokernel_arch.png#center alt=exokernel></p>
 <p>There are three majors tasks to separate protection from management:</p>
 <ul>
 <li>Tracking ownership of resources.</li>
@@ -138,7 +138,7 @@ hardware mechanisms,software caching, and downloading application code.</p>
 <p>I do find the graph in the exokernel paper interesting. It shows that when application-level message handlers are downloaded into the kernel, the roundtrip latency is almost not affected by the number of processes. Since the operation is performed inside kernel upon message arrival, no handling is needed from the application. This has the advantage that application handler is subject to scheduling, which has performance implications. (The choice of scheduler is the key bottleneck here.)</p>
 <p align=center>
 <a href=https://pdos.csail.mit.edu/6.828/2008/readings/engler95exokernel.pdf>
-<img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/exokernel/throughput.png width=80%>
+<img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/exokernel/throughput.png width=80%>
 </a>
 </p>
 <h2 id=modularity>Modularity</h2>

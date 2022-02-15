@@ -33,7 +33,7 @@
 \textrm{argmax} \frac{P(y|x)P(y)}{P(x)}
 \]</p>
 <p>Suppose we have five documents as training data and one document as the input as testing data. Our objective is to give a label to the test sentence.</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/MLE/text-example.png alt=text-example></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/MLE/text-example.png alt=text-example></p>
 <center>Credit: Eunsol Choi</center>
 <p>Let&rsquo;s define the probability of class as (\(N\) is the total number of classes)</p>
 <p>\[
@@ -44,7 +44,7 @@ p(x) = \frac{count(x)}{N}
 p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 \]</p>
 <p>The conditional probabilities for \(p(w_i|y)\) is</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/MLE/conditional_prob.png alt=conditional-probabilities></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/MLE/conditional_prob.png alt=conditional-probabilities></p>
 <p>Now, we want to find out which language label should we assign the sentence &ldquo;Chinese Chinese Chinese Tokyo Japan&rdquo;. This is the same as asking which labels (\(x\))) should we pick so that \(P(W|x)P(x)\) yields the greatest value. Mathematically, we want to find out where the gradient of the function \(P(W|x)P(x)\) is flat.</p>
 <p>If we label the sentence as j (Japanese), we have \(P(j | d_5) \propto \frac{1}{4}\cdot (\frac{2}{9}^3)\cdot \frac{2}{9}\cdot \frac{2}{9} \approx 0.0001\). If we calculate \(P(c|d_5)\), we get 0.0003, which generates the largest value for \(P(x | y)\).</p>
 <div style=width:100% id=comment>

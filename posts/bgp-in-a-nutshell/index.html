@@ -26,7 +26,7 @@
 </div>
 </header><p><a href=https://en.wikipedia.org/wiki/Border_Gateway_Protocol>Border Gateway Protocol (BGP)</a> protocol has a very simple purpose: choose the fastest and the most efficient route to deliver a message from one <a href=https://www.cloudflare.com/learning/network-layer/what-is-an-autonomous-system/>autonomous system (AS)</a> to another. In layman&rsquo;s term, BGP is the GPS for the internet. Many contents here are credit to Prof. <a href=https://www.cs.utexas.edu/~gouda/>Mohamed G. Gouda</a>.</p>
 <p>In a nutshell, BGP informs each router \(R\) how to route packets to an IP prefix \(pf\) (i.e. block of IP addresses) that is used in \(AS_i\) different from \(AS_j\), where \(R\) is located:</p>
-<p><a href=https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/how-bgp-works/bgp.png#center alt=bgp-in-a-nutshell></a></p>
+<p><a href=https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/bgp.png#center alt=bgp-in-a-nutshell></a></p>
 <p>BGP consists of two parts:</p>
 <ul>
 <li><a href=https://en.wikipedia.org/wiki/Border_Gateway_Protocol>external BGP (eBGP)</a>: informs each gateway</li>
@@ -49,7 +49,7 @@
 <p>The BGP next-hop attribute is the next hop IP address that is going to be used to reach a certain destination.</p>
 </blockquote>
 <p>Here is an example illustrating how one AS lets other ASes know the route leading to itself. Assume we have three ASes. AS1 wants other ASes to know how to reach itself:</p>
-<p><a href=https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/how-bgp-works/route-advertisement.png#center alt=eBGP></a></p>
+<p><a href=https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/route-advertisement.png#center alt=eBGP></a></p>
 <p>AS1 is trying to broadcast the path to reach itself, it sends the first route advertisement message (1) as:</p>
 <p>\[
 (pf,\ (AS1),\ x)
@@ -62,7 +62,7 @@
 <h2 id=ibgp>iBGP</h2>
 <p>For iBGP, there is a TCP connection between each two routers in the same AS, given the only one of them is a gateway.</p>
 <p>Here is an example. Suppose the gateway \(A\) in \(AS_j\) needs to broadcast its routing information to other routers in \(AS_j\):</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/posts/how-bgp-works/iBGP.png#center alt=iBGP></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/iBGP.png#center alt=iBGP></p>
 <p>The normal eBGP advertisement will be something like \((pf,\ (AS_1,\ &mldr;,\ AS_j),\ x)\).</p>
 <blockquote>
 <p>For iBGP, the protocol states that the next hop advertised by eBGP should be carried into iBGP. Therefore, for all routers \(C_1,\ &mldr;,\ C_n\), the next hop to reach \(pf\) will be \(x\) which is provided by \(AS_i\). It&rsquo;s your job to make sure \(x\) is reachable via <a href=https://en.wikipedia.org/wiki/Interior_gateway_protocol>IGP</a>.</p>

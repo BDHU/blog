@@ -37,7 +37,7 @@
 <li>How to deal with PCIe lane interferences? E.g. one swap-in may happen later than in-trigger due to a previous swap-in still not finished.</li>
 </ul>
 <p>The answer is quite simple. We use the runtime feedback at the back-access of a tensor. If the tensor is still being swapped in, it means the in-trigger time should be adjusted earlier. Note, this is based on the assumption of <strong>regular tensor access pattern in deep learning training</strong>, as illustrated in the paper.</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/71e8158e6f0d56f48f98bc476c2738ebb621f0fa/posts/capuchin/tensor-access-pattern.png#center alt=tensor-access-pattern></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/capuchin/tensor-access-pattern.png#center alt=tensor-access-pattern></p>
 <p>Recomputation, on the other hand, is performed only in <em>on-demand</em> manner. No in-trigger is used for recomputation.</p>
 <p>Capuchin relies on the principle that swap can be largely overlapped with computation, while recomputation will certainly incur performance penalty. Thus, it chooses swapping as the first choice until we cannot choose an in-trigger to perfectly hide prefetching overhead.</p>
 <p>One thing to note here is when we select a tensor \(T\) to be recomputed, but such tensor relies on another tensor that is evicted, then we need to recompute the parent of the evicted tensor instead. This could potentially happen multiple times if more recomputation targets tensor \(T\). In short, recomputation and swapping cannot occur at the same time.</p>

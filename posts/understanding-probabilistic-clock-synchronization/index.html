@@ -31,7 +31,7 @@
 <p>Suppose the difference between the clock of P and Q is \(\Delta\) at synchronization, our goal is to adjust P&rsquo;s logical clock C(t) to mitigate the difference. The adjustment is simple:</p>
 <p>\[C(t)=H(t)+A(t)\]</p>
 <p>Here C(t) is P&rsquo;s logical clock, H(t) is P&rsquo;s hardware clock, and A(t) is the adjustment function(can also be A(H(t))).</p>
-<p><img src="https://raw.githubusercontent.com/BDHU/Page_pics/master/clock.png?token=ACKPLVNGE4DFY4GQF55PU7C5QFOGW#center" alt=probabilistic-sync></p>
+<p><img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/clock.png?token=ACKPLVNGE4DFY4GQF55PU7C5QFOGW#center" alt=probabilistic-sync></p>
 <p>A naive method will be simply subtract or add
 \(\Delta\) to C(t) to mitigate the difference. However, it will create a discontinuity in P&rsquo;s clock, which may disrupt systems services. For example, if
 \(\Delta = 2\) seconds,the logical clock will instantly jump ahead 2 seconds and a stopwatch will skip one second.</p>
@@ -57,7 +57,7 @@
 , we can see that now m is a constant and not determined by the value of \(\alpha\). We lost control of the amortization rate \(m\), which is not desirable.</p>
 <h2 id=general-case>General Case</h2>
 <p>We now return to the general case where network delay and processing time are both present. The situation is represented below:</p>
-<p><img src=https://raw.githubusercontent.com/BDHU/Page_pics/master/general_case.png#center alt=probabilistic-sync-general-case></p>
+<p><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/general_case.png#center alt=probabilistic-sync-general-case></p>
 <p>Looking at this graph, we can see slave P takes 2d real time to for a round-trip. Let&rsquo;s also assume that 2D is the round-trip delay measured by P&rsquo;s clock between sending and receiving. Then we can bound the clock time 2D based on the drift rate \(\rho\) of the clock:</p>
 <p>\[2d(1-\rho)\leq 2D \leq2d(1+\rho)\]</p>
 <p>Ignoring higher order terms of \(\rho\), we now have \(2d\leq(1+\rho)2D\).</p>
