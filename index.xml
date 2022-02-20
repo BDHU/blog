@@ -164,9 +164,14 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;h2 id="tutorials">Tutorials&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://d2l.ai/">Dive into Deep Learning&lt;/a>: interactive deep learning book with code, math, and discussions.&lt;/li>
+&lt;li>&lt;a href="https://cs231n.github.io/">CS231n: Convolutional Neural Networks for Visual Recognition&lt;/a>&lt;/li>
 &lt;li>&lt;a href="http://blog.ezyang.com/2019/05/pytorch-internals/">Pytorch-Internals&lt;/a>: must-read for PyTorch basics.&lt;/li>
 &lt;li>&lt;a href="https://ericmjl.github.io/dl-workshop/index.html">Differential Programming with JAX&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://roberttlange.github.io/posts/2020/03/blog-post-10/">Getting started with JAX (MLPs, CNNs &amp;amp; RNNs) &lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="backpropagation">Backpropagation&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="http://cs231n.stanford.edu/vecDerivs.pdf">Vector, Matrix, and Tensor Derivatives&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Megatron with FastMoE</title><link>https://www.bodunhu.com/blog/posts/megatron-with-fastmoe/</link><pubDate>Wed, 01 Dec 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/megatron-with-fastmoe/</guid><description>&lt;p>This is a guide on setting up &lt;a href="https://github.com/NVIDIA/Megatron-LM">Megatron-LM&lt;/a> with &lt;a href="https://github.com/laekov/fastmoe">FastMoE&lt;/a>. Megatron is a transformer developed by the Applied Deep Learning Research team at NVIDIA. FastMoE enables PyTorch support for the Mixture of Experts (MoE) models. We use the FastMoE layer to replace the MLP layers in the transformer language model.&lt;/p>
 &lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;h3 id="docker">Docker&lt;/h3>
