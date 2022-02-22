@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/</link><description>std::bodun::blog. Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Add Mermaid to Hugo with Dark Mode</title><link>https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/</link><pubDate>Tue, 15 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/</guid><description>&lt;p>Recently, I was revisiting materials in Deep Learning. I need tools that generate diagrams easily. Drawing the graphs from scratch and upload them individually to the image hosting platform is a daunting process. This is when &lt;a href="https://github.com/mermaid-js/mermaid">Mermaid&lt;/a> comes into rescue. Now I can generate diagrams directly using Markdown. Here&amp;rsquo;s how to do it inside a &lt;a href="https://gohugo.io/">Hugo&lt;/a> site.&lt;/p>
-&lt;p>I use the &lt;a href="https://github.com/LukasJoswiak/etch">etch&lt;/a> theme, but this process should apply to all sites using Hugo. First, we create a new file &lt;code>/layouts/partials/mermaid.html&lt;/code>. We fill up &lt;code>mermaid.html&lt;/code> with:&lt;/p>
+&lt;p>I use the &lt;a href="https://github.com/LukasJoswiak/etch">etch&lt;/a> theme, but this process should apply to all sites using Hugo. First, we create a new file &lt;code>/layouts/shortcodes/mermaid.html&lt;/code>. We fill up &lt;code>mermaid.html&lt;/code> with:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span> &lt;span class="na">src&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
 &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
 &lt;span class="kd">let&lt;/span> &lt;span class="nx">isDark&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">window&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">matchMedia&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;(prefers-color-scheme: dark)&amp;#39;&lt;/span>&lt;span class="p">).&lt;/span>&lt;span class="nx">matches&lt;/span>&lt;span class="p">;&lt;/span>
@@ -60,14 +60,17 @@
 &lt;span class="nx">mermaid&lt;/span>&lt;span class="p">.&lt;/span>&lt;span class="nx">initialize&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nx">mermaidConfig&lt;/span>&lt;span class="p">);&lt;/span>
 &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>This setup allows us to change Mermaid-generated diagrams' theme based on the website&amp;rsquo;s current (light/dark) theme. This configuration is borrowed from the &lt;a href="https://github.com/mermaid-js/mermaid/blob/develop/docs/Setup.md">Setup.md&lt;/a> from mermaid-js (except the &lt;code>theme&lt;/code> part). You can find more information there about configuring mermaid.&lt;/p>
-&lt;p>Next, we create a new file &lt;code>/layouts/shortcodes/mermaid.html&lt;/code> and fill it up with:&lt;/p>
+&lt;blockquote>
+&lt;p>(You can also do this in &lt;code>partials&lt;/code>, but it will slow down the loading time since the mermaid js file is always loaded regardless whether you are actually using it)&lt;/p>
+&lt;/blockquote>
+&lt;p>Next, we add the follow lines to the file &lt;code>/layouts/shortcodes/mermaid.html&lt;/code>:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">center&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
 &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">div&lt;/span> &lt;span class="na">class&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;mermaid&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
 {{.Inner}}
 &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">div&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
 &lt;span class="p">&amp;lt;/&lt;/span>&lt;span class="nt">center&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
 &lt;/code>&lt;/pre>&lt;/div>&lt;p>Feel free to remove the &lt;code>&amp;lt;center&amp;gt;&lt;/code> tag if you want to customize the diagram&amp;rsquo;s layout. And&amp;hellip; we are done!&lt;/p>
-&lt;p>Here is an example sequenceDiagram. You should see that this diagram will adjust its theme accordingly based on light/dark mode. We use the example code from &lt;a href="https://mermaid-js.github.io/mermaid/#/">mermaid doc&lt;/a> (just uncomment the shortcode &lt;code>mermaid&lt;/code>):&lt;/p>
+&lt;p>Here is an example sequenceDiagram. You should see that this diagram will adjust its theme accordingly based on light/dark mode. We use the example code from &lt;a href="https://mermaid-js.github.io/mermaid/#/">mermaid doc&lt;/a> (just uncomment &lt;code>mermaid&lt;/code> in the shortcode &lt;code>{{/*&amp;lt; mermaid &amp;gt;*/}}&lt;/code>):&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-text" data-lang="text">{{/*&amp;lt; mermaid &amp;gt;*/}}
 sequenceDiagram
 participant Alice
@@ -81,7 +84,66 @@ John--&amp;gt;&amp;gt;Alice: Great!
 John-&amp;gt;&amp;gt;Bob: How about you?
 Bob--&amp;gt;&amp;gt;John: Jolly good!
 {{/*&amp;lt; /mermaid &amp;gt;*/}}
-&lt;/code>&lt;/pre>&lt;/div>&lt;center>
+&lt;/code>&lt;/pre>&lt;/div>&lt;script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js">&lt;/script>
+&lt;script>
+let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+let mermaidTheme = (isDark) ? 'dark' : 'default';
+let mermaidConfig = {
+theme: mermaidTheme,
+logLevel: 'fatal',
+securityLevel: 'strict',
+startOnLoad: true,
+arrowMarkerAbsolute: false,
+er: {
+diagramPadding: 20,
+layoutDirection: 'TB',
+minEntityWidth: 100,
+minEntityHeight: 75,
+entityPadding: 15,
+stroke: 'gray',
+fill: 'honeydew',
+fontSize: 12,
+useMaxWidth: true,
+},
+flowchart: {
+diagramPadding: 8,
+htmlLabels: true,
+curve: 'basis',
+},
+sequence: {
+diagramMarginX: 50,
+diagramMarginY: 10,
+actorMargin: 50,
+width: 150,
+height: 65,
+boxMargin: 10,
+boxTextMargin: 5,
+noteMargin: 10,
+messageMargin: 35,
+messageAlign: 'center',
+mirrorActors: true,
+bottomMarginAdj: 1,
+useMaxWidth: true,
+rightAngles: false,
+showSequenceNumbers: false,
+},
+gantt: {
+titleTopMargin: 25,
+barHeight: 20,
+barGap: 4,
+topPadding: 50,
+leftPadding: 75,
+gridLineStartPadding: 35,
+fontSize: 11,
+fontFamily: '"Open-Sans", "sans-serif"',
+numberSectionStyles: 4,
+axisFormat: '%Y-%m-%d',
+topAxis: false,
+},
+};
+mermaid.initialize(mermaidConfig);
+&lt;/script>
+&lt;center>
 &lt;div class="mermaid">
 sequenceDiagram
 participant Alice
@@ -96,7 +158,7 @@ John->>Bob: How about you?
 Bob-->>John: Jolly good!
 &lt;/div>
 &lt;/center>
-&lt;p>That&amp;rsquo;s it. Time to explore more Mermaid&amp;rsquo;s features.&lt;/p></description></item><item><title>Cross Entropy Loss</title><link>https://www.bodunhu.com/blog/posts/cross-entropy-loss/</link><pubDate>Sun, 13 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/cross-entropy-loss/</guid><description>&lt;p>Many deep learning tasks involve classification, where a model outputs a series of probabilities for their corresponding labels. The goal is to correctly predict a given input&amp;rsquo;s label. Mathematically, it means generating max probabilities for the correct label. The probabilities are generated through a process called &lt;a href="https://d2l.ai/chapter_linear-networks/softmax-regression.html#softmax-operation">softmax&lt;/a>.&lt;/p>
+&lt;p>This diagram will adjust its theme based on light/dark theme. You can find more features from the Mermaid &lt;a href="https://mermaid-js.github.io/mermaid/#/">website&lt;/a>.&lt;/p></description></item><item><title>Cross Entropy Loss</title><link>https://www.bodunhu.com/blog/posts/cross-entropy-loss/</link><pubDate>Sun, 13 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/cross-entropy-loss/</guid><description>&lt;p>Many deep learning tasks involve classification, where a model outputs a series of probabilities for their corresponding labels. The goal is to correctly predict a given input&amp;rsquo;s label. Mathematically, it means generating max probabilities for the correct label. The probabilities are generated through a process called &lt;a href="https://d2l.ai/chapter_linear-networks/softmax-regression.html#softmax-operation">softmax&lt;/a>.&lt;/p>
 &lt;p>The softmax function outputs a vector \(\hat{y}\), which represents estimated conditional probabilities of each class given an input \(x\), For example, \(\hat{y}_1 = P(y=\textrm{car}\ |\ x)\). Assume we have many features \(x^{(i)}\) and their corresponding labels \(y^{(i)}\). Then outputs of the model can be expressed succinctly as&lt;/p>
 &lt;p>\[
 P(Y\ |\ X) = \prod^{k}_{i=1} P(y^{(i)} | \ x^{(i)})
@@ -1130,7 +1192,7 @@ append.ivy: line 49: error: assertion failed
 &lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">publish_branch&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">branch_to_publish&lt;/span>&lt;span class="w">
 &lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="nt">publish_dir&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="w"> &lt;/span>&lt;span class="l">./public&lt;/span>&lt;span class="w">
 &lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>Finally, make sure you create a file named &lt;code>.nojekyll&lt;/code> in the root directory of the public repository to prevent GitHub Pages from building the site using Jekyll.&lt;/p>
-&lt;p>Every time you make commits to the private repository, the site will be automatically generated and published on the public repository.&lt;/p></description></item><item><title>Quantum Search Algorithm</title><link>https://www.bodunhu.com/blog/posts/quantum-search-algorithm/</link><pubDate>Fri, 20 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/quantum-search-algorithm/</guid><description>&lt;p>&lt;a href="https://quantum.country/search">How the quantum search algorithm works &lt;i class="fas fa-external-link-alt">&lt;/i>&lt;/a>&lt;/p></description></item><item><title>Quantum State in a Nutshell</title><link>https://www.bodunhu.com/blog/posts/quantum-state-in-a-nutshell/</link><pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/quantum-state-in-a-nutshell/</guid><description>&lt;p>There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to &amp;ldquo;the state of a qubit is 0, 1, or 0 and 1 at the same time&amp;rdquo;. This statement leads to both confusion and misinterpretation. The explanation I found on &lt;a href="https://quantum.country/qcvc">Quantum computing for the very curious&lt;/a> is by far the most elegant and simplest:&lt;/p>
+&lt;p>Every time you make commits to the private repository, the site will be automatically generated and published on the public repository.&lt;/p></description></item><item><title>Quantum Search Algorithm</title><link>https://www.bodunhu.com/blog/posts/quantum-search-algorithm/</link><pubDate>Fri, 20 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/quantum-search-algorithm/</guid><description>&lt;p>&lt;a href="https://quantum.country/search">How the quantum search algorithm works&lt;/a>&lt;/p></description></item><item><title>Quantum State in a Nutshell</title><link>https://www.bodunhu.com/blog/posts/quantum-state-in-a-nutshell/</link><pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/quantum-state-in-a-nutshell/</guid><description>&lt;p>There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to &amp;ldquo;the state of a qubit is 0, 1, or 0 and 1 at the same time&amp;rdquo;. This statement leads to both confusion and misinterpretation. The explanation I found on &lt;a href="https://quantum.country/qcvc">Quantum computing for the very curious&lt;/a> is by far the most elegant and simplest:&lt;/p>
 &lt;blockquote>
 &lt;p>The state of a qubit is a vector in a two-dimensional vector space. This vector space is known as state space.&lt;/p>
 &lt;/blockquote>
