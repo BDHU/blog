@@ -1633,7 +1633,7 @@ e_i A^HA e_i = \left\lVert Ae_i \right\rVert^2 = \left\lVert e_i \right\rVert^2 
 &lt;p>The BGP next-hop attribute is the next hop IP address that is going to be used to reach a certain destination.&lt;/p>
 &lt;/blockquote>
 &lt;p>Here is an example illustrating how one AS lets other ASes know the route leading to itself. Assume we have three ASes. AS1 wants other ASes to know how to reach itself:&lt;/p>
-&lt;p>&lt;a href="https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/route-advertisement.png#center" alt="eBGP">&lt;/a>&lt;/p>
+&lt;p>&lt;a href="https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf">&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/route-adv.jpg#center" alt="eBGP">&lt;/a>&lt;/p>
 &lt;p>AS1 is trying to broadcast the path to reach itself, it sends the first route advertisement message (1) as:&lt;/p>
 &lt;p>\[
 (pf,\ (AS1),\ x)
