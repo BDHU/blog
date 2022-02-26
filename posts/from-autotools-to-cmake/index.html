@@ -28,7 +28,7 @@
 <header id=post-header>
 <h1>From Autotools to CMake</h1>
 <div>
-<time>Jun 21, 2021</time>
+<time>Updated Jul 7, 2021</time>
 </div>
 </header><p>Since my <a href=https://ieeexplore.ieee.org/document/9238617>paper on GPU benchmarking</a> was published, every once in a while, I got emails asking me why <a href=https://github.com/utcs-scea/altis>Altis</a> doesn&rsquo;t build on their platforms. It almost always has something to do a small <a href=https://github.com/utcs-scea/altis/blob/deprecated/config/find_cuda_libs.sh>script</a> which is responsible for finding CUDA dependencies. This script is invoked every single time <code>make</code> is executed. For some reason, the regular expression in the script sometimes breaks randomly, depending on the Linux distro, the kernel version, the host architecture, or even the CUDA version. After enough requests piled up in my inbox, I decided enough is enough and it&rsquo;s time to ditch the autotools shenanigans for CMake.</p>
 <p>When I started this project, it already had a skeleton build system based on autotools. The old build system generates automake and autoconf files. It worked fine for me on the server I used so I never bothered to make big adjustments. However, the problem soon arises when I upgrade some packages or switched to another server in our lab.</p>

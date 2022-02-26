@@ -28,7 +28,7 @@
 <header id=post-header>
 <h1>Map Reduce</h1>
 <div>
-<time>Apr 1, 2018</time>
+<time>Updated May 19, 2021</time>
 </div>
 </header><p>I was always interested by the name &ldquo;map reduce&rdquo; since two years ago when I first heard this term. But I&rsquo;ve never put any effort to know the concept until Chris mentioned it in class because it will be on the next exam so I figured I&rsquo;d better figure out what is going on before it was too late. Just kidding:) But map reduce does borrows a lot of characteristics from traditional relational databases even though many useful and important features in RDBMS are eliminated from the map reduce system. You can check this long list of roasts on map reduce <a href=http://www.cs.utexas.edu/~rossbach/cs378/papers/dewitt08blog-mapreduce-backwards.pdf>here</a>.</p>
 <p>But the intention of this post is not about roasting map reduce so if you absolutely resent how map reduce is such a disgrace to RDBMS you are in the wrong place. Essentially, MapReduce is a programming model. Users need to define a <em>map</em> function that processes a key/value pair, producing a set of key/value pairs, then a <em>reduce</em> function will read these intermediate pair, merging pairs with the same intermediate key. It is important to realize the MapReduce is a programming model because it allows the programmers to follow this model without having to worry about the technical details needed to ensure the operations between clusters. In fact, the programming model is very easy to understand. Everything you need is already summarized in the name <em>MapReduce</em>.</p>

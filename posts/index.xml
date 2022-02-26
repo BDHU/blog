@@ -1,4 +1,172 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/posts/</link><description>std::bodun::blog. Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Add Mermaid to Hugo with Dark Mode</title><link>https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/</link><pubDate>Tue, 15 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/</guid><description>&lt;p>Recently, I was revisiting materials in Deep Learning. I need tools that generate diagrams easily. Drawing the graphs from scratch and upload them individually to the image hosting platform is a daunting process. This is when &lt;a href="https://github.com/mermaid-js/mermaid">Mermaid&lt;/a> comes into rescue. Now I can generate diagrams directly using Markdown. Here&amp;rsquo;s how to do it inside a &lt;a href="https://gohugo.io/">Hugo&lt;/a> site.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/posts/</link><description>std::bodun::blog. Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>FlexFlow</title><link>https://www.bodunhu.com/blog/posts/flexflow/</link><pubDate>Tue, 22 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/flexflow/</guid><description>&lt;p>&lt;a href="https://flexflow.ai/">FlexFlow&lt;/a> is a deep learning framework that discovers a fast parallelization strategy for distributed DNN training. It uses &lt;em>SOAP&lt;/em> (Sample-Operation-Attribute-Parameter) search space of parallelization strategies. in short, FlexFlow automates the parallelization of model training.&lt;/p>
+&lt;p>The four elements in &lt;em>SOAP&lt;/em> search space represent something that can be sliced into smaller chunks. For example, &lt;em>sample&lt;/em> and &lt;em>parameter&lt;/em> can be thought of as slicing training data and model parameters. &lt;em>Operation&lt;/em> describes how operations (e.g. &lt;code>matmul&lt;/code>, &lt;code>add&lt;/code>, etc.) can be parallelized. &lt;em>Attribute&lt;/em> further describes how to partition a sample.&lt;/p>
+&lt;h2 id="problem-inputs">Problem Inputs&lt;/h2>
+&lt;p>Since FlexFlow is about searching for solutions, the framework is given two inputs: an &lt;strong>operator graph&lt;/strong> \(\mathcal{G}\), which include all operations and state in a DNN model, and a &lt;strong>device topology&lt;/strong> \(\mathcal{D}\). Both are described as graphs.&lt;/p>
+&lt;p>Each node \(o_i \in \mathcal{G}\) is an operation (e.g. &lt;code>matmul&lt;/code>). Each edge \(o_i, o_j \in \mathcal{G}\) is a tensor. In contrast, each node \(d_i \in \mathcal{D}\) is a computing device, and edge edge \((d_i, d_j) \in \mathcal{D}\) is hardware connection (e.g. NVLink, network link, etc.), Each edge are also labeled with its bandwidth and latency.&lt;/p>
+&lt;p>The FlexFlow optimizer uses the operator graph \(\mathcal{G}\) and the device topology graph \(\mathcal{D}\) to generate a discovered strategy to a distributed runtime.&lt;/p>
+&lt;h2 id="how-to-search-for-parallelization-strategies">How to search for parallelization strategies&lt;/h2>
+&lt;p>Ultimately, FlexFlow is trying to achieve two things: find parallelization configuration on the operator graph \(\mathcal{G}\), and map the output the device topology \(\mathcal{D}\).&lt;/p>
+&lt;p>For an operation \(o_i\), it is given &lt;em>parallelizable dimensions&lt;/em> \(\mathcal{P}_i\), which is the set of all divisible dimensions in its &lt;em>output&lt;/em> tensor. The &lt;a href="https://arxiv.org/pdf/1807.05358.pdf">paper&lt;/a> provides a 1D convolution example:&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_pics/posts/flexflow/parallelization.png" alt="parallelization">&lt;/p>
+&lt;p>For data parallelism, we can see the input data is splitted into smaller micro-batches. In model parallelism, the batch dimension remains the same, while the model is splitted and handles the same input data. The intuition is for a given tensor, there exists many ways to divide it.&lt;/p>
+&lt;p>There are many dimensions in \(\mathcal{P}_i\), each single parallelization configuration is denoted as \(c_i\). Therefore, the product of all \(c_i\), represented as \(|c_i|\), is the total number of divided output tensors.&lt;/p>
+&lt;p>Each parallelization configuration \(c_i\) partitions the operation \(o\) into \(|c_i|\) &lt;em>tasks&lt;/em>. (denoted as \(t_{i:1}&amp;hellip;, t_{i|c_i|}\)). Each task represents a divided operation and is assigned to a device. The paper claims that, given the output tensor of a task and its operation type, we can infer the input tensors to execute each task. It gives an example of dividing the &lt;code>matmul&lt;/code> operation:&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_pics/posts/flexflow/matmul.png" alt="divided-matmul">&lt;/p>
+&lt;p>Given the output tensor is splitted across its sample (batch) dimension and feature dimension, and the task type is &lt;code>matmul&lt;/code>, we can use these information to infer the input tensors \(X\) and \(W\).&lt;/p>
+&lt;script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js">&lt;/script>
+&lt;script>
+let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+let mermaidTheme = (isDark) ? 'dark' : 'default';
+let mermaidConfig = {
+theme: mermaidTheme,
+logLevel: 'fatal',
+securityLevel: 'strict',
+startOnLoad: true,
+arrowMarkerAbsolute: false,
+er: {
+diagramPadding: 20,
+layoutDirection: 'TB',
+minEntityWidth: 100,
+minEntityHeight: 75,
+entityPadding: 15,
+stroke: 'gray',
+fill: 'honeydew',
+fontSize: 12,
+useMaxWidth: true,
+},
+flowchart: {
+diagramPadding: 8,
+htmlLabels: true,
+curve: 'basis',
+},
+sequence: {
+diagramMarginX: 50,
+diagramMarginY: 10,
+actorMargin: 50,
+width: 150,
+height: 65,
+boxMargin: 10,
+boxTextMargin: 5,
+noteMargin: 10,
+messageMargin: 35,
+messageAlign: 'center',
+mirrorActors: true,
+bottomMarginAdj: 1,
+useMaxWidth: true,
+rightAngles: false,
+showSequenceNumbers: false,
+},
+gantt: {
+titleTopMargin: 25,
+barHeight: 20,
+barGap: 4,
+topPadding: 50,
+leftPadding: 75,
+gridLineStartPadding: 35,
+fontSize: 11,
+fontFamily: '"Open-Sans", "sans-serif"',
+numberSectionStyles: 4,
+axisFormat: '%Y-%m-%d',
+topAxis: false,
+},
+};
+mermaid.initialize(mermaidConfig);
+&lt;/script>
+&lt;center>
+&lt;div class="mermaid">
+graph TD;
+Operator-Graph-->Parallelization-Strategy;
+Device-Topology-->Parallelization-Strategy;
+&lt;/div>
+&lt;/center>
+&lt;p>The parallelization configurations \(c_i\) for each operation \(o_i\) is combined in a final configuration \(\mathcal{S}\).&lt;/p>
+&lt;h2 id="building-task-graph">Building Task Graph&lt;/h2>
+&lt;p>Now we have the operation graph \(\mathcal{G}\), the device topology graph \(\mathcal{D}\), and the parallelization strategy \(\mathcal{S}\), we can construct the &lt;em>task graph&lt;/em>.&lt;/p>
+&lt;script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js">&lt;/script>
+&lt;script>
+let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+let mermaidTheme = (isDark) ? 'dark' : 'default';
+let mermaidConfig = {
+theme: mermaidTheme,
+logLevel: 'fatal',
+securityLevel: 'strict',
+startOnLoad: true,
+arrowMarkerAbsolute: false,
+er: {
+diagramPadding: 20,
+layoutDirection: 'TB',
+minEntityWidth: 100,
+minEntityHeight: 75,
+entityPadding: 15,
+stroke: 'gray',
+fill: 'honeydew',
+fontSize: 12,
+useMaxWidth: true,
+},
+flowchart: {
+diagramPadding: 8,
+htmlLabels: true,
+curve: 'basis',
+},
+sequence: {
+diagramMarginX: 50,
+diagramMarginY: 10,
+actorMargin: 50,
+width: 150,
+height: 65,
+boxMargin: 10,
+boxTextMargin: 5,
+noteMargin: 10,
+messageMargin: 35,
+messageAlign: 'center',
+mirrorActors: true,
+bottomMarginAdj: 1,
+useMaxWidth: true,
+rightAngles: false,
+showSequenceNumbers: false,
+},
+gantt: {
+titleTopMargin: 25,
+barHeight: 20,
+barGap: 4,
+topPadding: 50,
+leftPadding: 75,
+gridLineStartPadding: 35,
+fontSize: 11,
+fontFamily: '"Open-Sans", "sans-serif"',
+numberSectionStyles: 4,
+axisFormat: '%Y-%m-%d',
+topAxis: false,
+},
+};
+mermaid.initialize(mermaidConfig);
+&lt;/script>
+&lt;center>
+&lt;div class="mermaid">
+graph TD;
+Operator-Graph-->Task-Graph;
+Device-Topology-->Task-Graph;
+Parallelization-Strategy-->Task-Graph;
+&lt;/div>
+&lt;/center>
+&lt;p>In essence, the task graph specifies the dependencies between each computation and communication task. The task graph is denoted as \(\mathcal{T} = (\mathcal{T}_N , \mathcal{T}_E)\). If two tasks are assigned to the same computation device (e.g. same GPU), no communication task is required. Otherwise, we add a communication task to \(\mathcal{T}_E\). For example, given a operator graph with a set of configurations \(\mathcal{S}\):&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_pics/posts/flexflow/operator-graph.png" alt="operator-graph">&lt;/p>
+&lt;p>The task graph will reflect the logical dependency between each task:&lt;/p>
+&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_pics/posts/flexflow/task-graph.png" alt="task-graph">&lt;/p>
+&lt;p>Each computation task is also marked with its average execution time &lt;code>exeTime&lt;/code> (from running on the real device multiple times). A communication task&amp;rsquo;s &lt;code>exeTime&lt;/code> is calculated by dividing the tensor size by the bandwidth.&lt;/p>
+&lt;h2 id="use-simulation-to-estimate-execution-overhead">Use Simulation to Estimate Execution Overhead&lt;/h2>
+&lt;p>Now that we have the task graph with all dependencies specified, it&amp;rsquo;s time to evaluate (or simulate) the execution time of the whole task graph.&lt;/p>
+&lt;p>In essence, we know how a model is &lt;strong>partitioned&lt;/strong> and &lt;strong>placed&lt;/strong> in a cluster, we need to figure out how to &lt;strong>schedule&lt;/strong> the execution.&lt;/p>
+&lt;p>The simplest way to simulate the task graph execution is as follows:&lt;/p>
+&lt;ul>
+&lt;li>Given a task graph, if there are some task nodes that doesn&amp;rsquo;t have an input/s, meaning such tasks represent the beginning layers of a neural network, then they are put into a ready queue waiting to be executed.&lt;/li>
+&lt;li>Next, we dequeue the task from the ready queue based on the ready time (the time it is enqueued), or the previously executed task&amp;rsquo;s finish time.&lt;/li>
+&lt;li>After this task finishes (simulated) execution, we look at other tasks that depend on this just-finished-execution task, if the other tasks' dependees all finish execution, then this task can be put into the ready queue.&lt;/li>
+&lt;/ul>
+&lt;p>However, we haven&amp;rsquo;t seen how the task graph \(\mathcal{T}\) might change once we update the configuration of an operation node \(o_i\). FlexFlow only propose a new parallelization strategy by change the configuration of a single operation \(o_i\) at a time. Therefore, whenever we generate a new configuration for an operator, we only need to re-simulate task involved in the portion of the execution timeline that changes. It means we can generate a new task graph from a previous task graph, thus speeding up the simulation process.&lt;/p>
+&lt;h2 id="execution-optimizer">Execution Optimizer&lt;/h2>
+&lt;p>Previously, we assumed the parallelization strategy is generated through some black box function. In fact, the &lt;em>execution optimizer&lt;/em> is in charging of taking an operator graph and a device topology as inputs to find an efficient parallelization strategy.&lt;/p>
+&lt;p>In fact, the optimizer uses Markov chain Monte Carlo (MCMC) method to sample generated parallelization configurations. It uses the simulation cost as an oracle so that the proposed new configuration will be more likely to be sampled from the ones with less simulation overhead. This method is very greedy but the author argue it can potentially escape from local minimum.&lt;/p></description></item><item><title>Add Mermaid to Hugo with Dark Mode</title><link>https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/</link><pubDate>Tue, 15 Feb 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/add-mermaid-to-hugo-with-dark-mode/</guid><description>&lt;p>Recently, I was revisiting materials in Deep Learning. I need tools that generate diagrams easily. Drawing the graphs from scratch and upload them individually to the image hosting platform is a daunting process. This is when &lt;a href="https://github.com/mermaid-js/mermaid">Mermaid&lt;/a> comes into rescue. Now I can generate diagrams directly using Markdown. Here&amp;rsquo;s how to do it inside a &lt;a href="https://gohugo.io/">Hugo&lt;/a> site.&lt;/p>
 &lt;p>I use the &lt;a href="https://github.com/LukasJoswiak/etch">etch&lt;/a> theme, but this process should apply to all sites using Hugo. First, we create a new file &lt;code>/layouts/shortcodes/mermaid.html&lt;/code>. We fill up &lt;code>mermaid.html&lt;/code> with:&lt;/p>
 &lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-html" data-lang="html">&lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span> &lt;span class="na">src&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s">&amp;#34;https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js&amp;#34;&lt;/span>&lt;span class="p">&amp;gt;&amp;lt;/&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
 &lt;span class="p">&amp;lt;&lt;/span>&lt;span class="nt">script&lt;/span>&lt;span class="p">&amp;gt;&lt;/span>
@@ -3575,7 +3743,7 @@ different subject, and each column represents a different object. Each entry in 
 matrix contains a list of permissible actions.&lt;/p>
 &lt;p>Thus, we have two targets to emphasis: the subject and the object. The ACL(access control list) focuses on the object being operated on.&lt;/p>
 &lt;p>A good example will be whenever you enter &lt;em>ls -a&lt;/em> in a Linux terminal, you will get list of entries specifies the attributes of a file. Here the attributes represent how a object (in this case, a file) may be accessed.&lt;/p>
-&lt;p>On the other hand, a capability can be thought of as a &amp;ldquo;key&amp;rdquo; or &amp;ldquo;licence&amp;rdquo;. It is an unforgettable token which grants authority. Possession of a capability for an object gives the holder the right to perform certain operations on the object.&lt;/p>
+&lt;p>On the other hand, a capability can be thought of as a &amp;ldquo;key&amp;rdquo; or &amp;ldquo;license&amp;rdquo;. It is an unforgettable token which grants authority. Possession of a capability for an object gives the holder the right to perform certain operations on the object.&lt;/p>
 &lt;p>A good example will be the file descriptor in Linux. A file is accessed through its file descriptor. Here the file descriptor serves as the &amp;ldquo;key&amp;rdquo; to gain access to the file itself. Capabilities provide fine-grained access control: it is easy to provide access to specific subjects, and it is easy to delegate permissions to others in a controlled manner.&lt;/p>
 &lt;p>Note that to be correct, any capability representation must protect capabilities
 against forgery. Capabilities can be implemented in various ways such as tagged capabilities, sparse capabilities, or partitioned capabilities. In Barrelfish we used the partitioned capabilities.&lt;/p>
@@ -3588,7 +3756,7 @@ against forgery. Capabilities can be implemented in various ways such as tagged 
 &lt;a href="http://www.barrelfish.org/publications/TN-013-CapabilityManagement.pdf">Image source&lt;/a>&lt;/p>
 &lt;p>Capabilities referring to memory regions. Capabilities can also be split, resulting 2 new capabilities of the same type, one for each half of the region. Some of the more important capability types in Barrelfish are shown in figure below. The picture is from the Barrelfish manual provided in CS378 Multi-core class by Simon Peter:&lt;/p>
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Barrelfish/cap_aos.png#center" alt="barrelfish-os-capability-aos">&lt;/p>
-&lt;p>Allocation and management of physical memory is achieved by retyping and splitting operations on capabilities. For most kernels, the implementation is to constantly allocate and deallocate memory for a wide variety of purposes, much as any large C program relies heavily on malloc and free.&lt;/p>
+&lt;p>Allocation and management of physical memory is achieved by retyping and splitting operations on capabilities. For most kernels, the implementation is to constantly allocate and deallocate memory for a wide variety of purposes, much as any large C program relies heavily on &lt;code>malloc&lt;/code> and &lt;code>free&lt;/code>.&lt;/p>
 &lt;p>The problem is what the kernel should do when this runs out. The current solution in Linux is little more than &amp;ldquo;kill a random process and reclaim its memory&amp;rdquo;, which can be a problem for system stability. In Barrelfish, all kernel objects are actually allocated by user programs. If a user process wants to create another process (or dispatcher in Barrelfish parlance), it has to get a capability to a DRAM area of the right size, retype this capability to type Dispatcher, and hand this to the kernel. This will be covered in later posts. To access different types of memory resources, the corresponding capability has to be retyped to the right type.&lt;/p>
 &lt;h2 id="more-on-implementation">More On Implementation&lt;/h2>
 &lt;p>In Barrelfish, every capability resides in a slot in a CNode, so a pair (CNode, slot) would identify a capability. It is important to point out that the CNode is another capability itself. Each process in Barrelfish has a CSpace which is structured as a two-level table. So there are actually two different CNode capability types - one for the first level of the table, and one for the second. Every process has, within its &amp;ldquo;dispatcher control block&amp;rdquo;, a pointer to the top-level or root CNode which the kernel can traverse.&lt;/p>
@@ -3596,14 +3764,14 @@ against forgery. Capabilities can be implemented in various ways such as tagged 
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Barrelfish/Cspace.png#center" alt="barrelfish-os-cspace">&lt;/p>
 &lt;h2 id="thoughts-on-design-decisions">Thoughts on Design Decisions&lt;/h2>
 &lt;p>Even though it is pretty straight forward to understand the CSpace structure, the actual implementation is a lot more complicated than that. Since the CSpace is not directly accessible by user space program, there are additional data structures used to keep track of available memory resources.&lt;/p>
-&lt;p>In our implementation, the user process keeps a doubly linked list of &lt;em>struct mmnode&lt;/em> to indicate the memory available for allocation. Each element in the free list tracks the information corresponding to one capability. However, there is a big problem with this seemingly simple implementation. Every time we allocate a practical memory space from the memory region, a new capability is created while the old capability still remain in the physical memory pointing to a memory range before the allocation happens. Therefore, the old capability would cover extra memory spaces that are already allocated and managed by other capabilities.&lt;/p>
-&lt;p>To solve this problem, we maintain the allocation information in the &lt;em>struct mmnode&lt;/em> each time an allocation occurs. If a capability covering physical address space from 0 to 100 is requested for 20 units of memory space, then the memory available for the next allocation would be from 20 to 100 even though the capability itself still manages 0 to 100. By restricting subsequent accesses only to the new memory range, the old capability can still be kept around and used later for retyping.&lt;/p>
+&lt;p>In our implementation, the user process keeps a doubly linked list of &lt;code>struct mmnode&lt;/code> to indicate the memory available for allocation. Each element in the free list tracks the information corresponding to one capability. However, there is a big problem with this seemingly simple implementation. Every time we allocate a practical memory space from the memory region, a new capability is created while the old capability still remain in the physical memory pointing to a memory range before the allocation happens. Therefore, the old capability would cover extra memory spaces that are already allocated and managed by other capabilities.&lt;/p>
+&lt;p>To solve this problem, we maintain the allocation information in the &lt;code>struct mmnode&lt;/code> each time an allocation occurs. If a capability covering physical address space from 0 to 100 is requested for 20 units of memory space, then the memory available for the next allocation would be from 20 to 100 even though the capability itself still manages 0 to 100. By restricting subsequent accesses only to the new memory range, the old capability can still be kept around and used later for retyping.&lt;/p>
 &lt;p>Another Problem emerges when we try to free a memory. Since everything is managed by capabilities, freeing a piece of memory also involves managing the capability responsible for the memory. So an intuitive thought could be whenever a memory space is freed, the corresponding capability is merged back to a piece of memory adjacent to it, managed by a different capability.&lt;/p>
 &lt;p>However, since capabilities can not be merged, an alternative choice would be to simple destroy it during free. However, this is even a bigger problem in Barrelfish.&lt;/p>
 &lt;p>Imagine the scenario where capability A is partially allocate from memory space 30 to 100. Later on another memory is freed and that piece of memory is managed by capability with base 100 and size 20, so the memory range covers 100 to 120, which indicates these the two capability could be &amp;ldquo;merged&amp;rdquo;.&lt;/p>
 &lt;p>In this case, if the first capability is destroyed, all children of the first capability will also be destroyed, thus the already allocated memory from 0 to 20 will be thrown away, which is not desired. If the second capability is destroyed, the first one will also be destroyed to create a new capability covering 20 to 120, which will still results in the destruction of capability A.&lt;/p>
 &lt;p>Our assumption here is that the parent or root capability is never destroyed when added to the free list. Whenever a capability needs to be freed, the memory manager is responsible to make sure the capability is only merged with another capability from the same parent capability.&lt;/p>
-&lt;p>This is done by creating another list of nodes that tracks all parent capabilities. It is only added when the memory manager adds new capabilities to the free list. After the user initializes free, the memory manager actually creates a new free struct mmnode first, then it find the node&amp;rsquo;s parent node, copying the parent&amp;rsquo;s capability and attributes to the newly created node with updated offset to indicate that the memory hasn&amp;rsquo;t been freed yet.&lt;/p>
+&lt;p>This is done by creating another list of nodes that tracks all parent capabilities. It is only added when the memory manager adds new capabilities to the free list. After the user initializes free, the memory manager actually creates a new free &lt;code>struct mmnode&lt;/code> first, then it find the node&amp;rsquo;s parent node, copying the parent&amp;rsquo;s capability and attributes to the newly created node with updated offset to indicate that the memory hasn&amp;rsquo;t been freed yet.&lt;/p>
 &lt;p>After that, the memory manager insert the node into the free list. If the memory manager finds out that there are capabilities adjacent to the just-added node, then we simply need to update the attributes of the corresponding mmnode to indicate that merging succeeds. The old mmnode is simply thrown away.&lt;/p>
 &lt;p>The advantage of this implementation is that root or parent capabilities are kept around and the next retype will be fairly simple. The implementation is also very straightforward.&lt;/p>
 &lt;p>There is of course more efficient solution than a linked list. For example, Linux uses both linked list and red-black tree to store thread information. The redundant data structures can be used in different scenarios when appropriate. However, we only use this simplified version to prove our concepts. Optimizations vary but the general concept still works pretty well.&lt;/p></description></item><item><title>Pascal GPU memory and cache hierarchy</title><link>https://www.bodunhu.com/blog/posts/pascal-gpu-memory-and-cache-hierarchy/</link><pubDate>Tue, 15 Jan 2019 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/pascal-gpu-memory-and-cache-hierarchy/</guid><description>&lt;p>Memory access efficiency allows fully utilizing the computational power of graphics processing units (GPUs). However, many GPU vendors like NVIDIA kept the GPU memory hierarchy as a secret. Therefore it becomes hard to measure GPUs performance and sets barriers to understand memory access patterns, which is a key component to improve program&amp;rsquo;s performance.&lt;/p>
