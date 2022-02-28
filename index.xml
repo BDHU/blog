@@ -390,6 +390,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://utns.cs.utexas.edu/">UTNS Lab&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://sites.utexas.edu/neeraja/">Neeraja Yadwadkar at UT Austin&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://faculty.cc.gatech.edu/~atumanov/index.html#researchgroup">SAIL: Systems for Artificial Intelligence Lab @ GT&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.microsoft.com/en-us/research/people/amar/">Amar Phanishayee at MSR&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="tutorials">Tutorials&lt;/h2>
 &lt;ul>
@@ -397,7 +398,8 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://cs231n.github.io/">CS231n: Convolutional Neural Networks for Visual Recognition&lt;/a>&lt;/li>
 &lt;li>&lt;a href="http://blog.ezyang.com/2019/05/pytorch-internals/">Pytorch-Internals&lt;/a>: must-read for PyTorch basics.&lt;/li>
 &lt;li>&lt;a href="https://ericmjl.github.io/dl-workshop/index.html">Differential Programming with JAX&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://roberttlange.github.io/posts/2020/03/blog-post-10/">Getting started with JAX (MLPs, CNNs &amp;amp; RNNs) &lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://roberttlange.github.io/posts/2020/03/blog-post-10/">Getting started with JAX (MLPs, CNNs &amp;amp; RNNs)&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://physicsbaseddeeplearning.org/intro.html">Physics-based Deep Learning&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="backpropagation">Backpropagation&lt;/h2>
 &lt;ul>
