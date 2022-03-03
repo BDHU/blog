@@ -4,40 +4,25 @@
 <meta name=description content="std::bodun::blog. Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
 <link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
 <link rel=stylesheet href=/blog/css/style.min.css>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script>
 <script type=text/javascript id=MathJax-script src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js async></script>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-108144808-1","auto"),ga("send","pageview"))</script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-108144808-1","auto"),ga("send","pageview"))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
-<title>Quantum State in a Nutshell</title>
-</head>
-<body><header id=banner>
-<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
-<nav>
+<title>Quantum State in a Nutshell</title></head><body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2><nav>
 <ul>
 <li>
 <a href=/blog/posts/ title=posts>archive</a>
 </li><li>
 <a href=https://www.bodunhu.com/ title=about>about</a>
-</li>
-</ul>
-</nav>
-</header>
-<main id=content>
+</li></ul></nav></header><main id=content>
 <article>
 <header id=post-header>
-<h1>Quantum State in a Nutshell</h1>
-<div>
+<h1>Quantum State in a Nutshell</h1><div>
 <time>Updated Feb 14, 2022</time>
-</div>
-</header><p>There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to &ldquo;the state of a qubit is 0, 1, or 0 and 1 at the same time&rdquo;. This statement leads to both confusion and misinterpretation. The explanation I found on <a href=https://quantum.country/qcvc>Quantum computing for the very curious</a> is by far the most elegant and simplest:</p>
-<blockquote>
-<p>The state of a qubit is a vector in a two-dimensional vector space. This vector space is known as state space.</p>
-</blockquote>
-<p>I will use many of great content from <a href=https://quantum.country/qcvc>Quantum computing for the very curious</a> to explain things.</p>
-<h2 id=mapping-qubits-to-classical-bits>Mapping qubits to classical bits</h2>
-<p>We&rsquo;ve described what a qubit state is, but provided no link between a qubit state and a classical bit state. There are two possible states for a classical bit: 0 and 1. The corresponding states for a qubit is slightly fancier: \(|0\rangle \) and \(|1\rangle \).</p>
-<p>The notation with \(|\) and \(\rangle\) is called a \(ket\) notation. With a number wrapped between them, \(0\) or \(1\) are called \(kets\). A \(ket\) is a fancy term for a vector. In fact, \(|0\rangle\) is really just \(
+</div></header><p>There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to &ldquo;the state of a qubit is 0, 1, or 0 and 1 at the same time&rdquo;. This statement leads to both confusion and misinterpretation. The explanation I found on <a href=https://quantum.country/qcvc>Quantum computing for the very curious</a> is by far the most elegant and simplest:</p><blockquote>
+<p>The state of a qubit is a vector in a two-dimensional vector space. This vector space is known as state space.</p></blockquote><p>I will use many of great content from <a href=https://quantum.country/qcvc>Quantum computing for the very curious</a> to explain things.</p><h2 id=mapping-qubits-to-classical-bits>Mapping qubits to classical bits</h2><p>We&rsquo;ve described what a qubit state is, but provided no link between a qubit state and a classical bit state. There are two possible states for a classical bit: 0 and 1. The corresponding states for a qubit is slightly fancier: \(|0\rangle \) and \(|1\rangle \).</p><p>The notation with \(|\) and \(\rangle\) is called a \(ket\) notation. With a number wrapped between them, \(0\) or \(1\) are called \(kets\). A \(ket\) is a fancy term for a vector. In fact, \(|0\rangle\) is really just \(
 \begin{bmatrix}
 1 \newline
 0
@@ -47,31 +32,8 @@
 0 \newline
 1
 \end{bmatrix}
-\).</p>
-<h2 id=states-between-0-and-1>States between 0 and 1</h2>
-<p>Both the states \(|0\rangle\) and \(|1\rangle\) are called computational basis states, which maps to classical 0 and 1 states. There are more states for a qubit. We&rsquo;ve already learned that a quantum state is a two-dimensional vector. An example is given:</p>
-<p><a href=https://quantum.country/qcvc#general-states-of-a-qubit><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/quantum-state-in-a-nutshell/quantum-state-eg.png#center alt=quantum-state-example></a></p>
-<p>The state \(0.6|0\rangle + 0.8|1\rangle\) is just a combination of the \(|0\rangle\) vector and the \(|1\rangle\) vector. A state like this is a <em>superposition</em> of \(|0\rangle\) and \(|1\rangle\), a fancy way of saying a linear combination of \(|0\rangle\) and \(|1\rangle\). \(0.6\) is the <em>amplitude</em> for state \(|0\rangle\), and \(0.8\) is the <em>amplitude</em> for state \(|1\rangle\).</p>
-<p>Not all linear combination of vector \(|0\rangle\) and \(|1\rangle\) are qubit states. There is one constraint: <em>the sums of the squares of the amplitudes must be 1</em>. For example, we can compute \(0.6^2 + 0.8^2\) and verify the result is 1.</p>
-<p>For general quantum states, the amplitudes can be complex numbers as well. Denoting both amplitudes as \(\alpha\) and \(\beta\), a quantum state can be formally written as:</p>
-<p>\[\alpha |0\rangle + \beta |1\rangle \wedge \alpha^2 + \beta^2 = 1\]</p>
-<p>\(\alpha^2 + \beta^2 = 1\) is called the <em>normalization constraint</em>.</p>
-<p>If we think of \(|0\rangle\) and \(|1\rangle\) as orthonormal vectors, we can visualize the possible linear combination of these two vectors as a circle of radius 1:</p>
-<p><a href=https://quantum.country/qcvc#general-states-of-a-qubit><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/quantum-state-in-a-nutshell/quantum-states.png#center alt=quantum-states></a></p>
-<p>Since amplitudes can be complex numbers, the state space really becomes a sphere. Summing all these up:</p>
-<blockquote>
-<p>the quantum state of a qubit is a vector of unit length in a two-dimensional complex vector space known as state space.</p>
-<p>&ndash; <em>Quantum computing for the very curious</em></p>
-</blockquote>
-<h2 id=measuring-a-qubit>Measuring a qubit</h2>
-<p>Suppose we have qubit in a quantum state \(\alpha |0\rangle + \beta |1\rangle\). We want to observe the state of this specific qubit. It turns out the law of physics prohibits us from figuring out the the amplitudes \(\alpha\) and \(\beta\) if they start out unknown. In short, the quantum state of any system is not directly observable.</p>
-<p>To figure out the quantum state. We rely on a process called <em>measurement in the computational basis</em>. Suppose a qubit is in the state \(\alpha |0\rangle + \beta |1\rangle\). Measuring the state of this qubit gives us the outcome \(0\) with probability \(|\alpha|^2\), or 1 with probability \(|\beta|^2\). The state of the qubit after the measurement is thus either \(|0\rangle\) or \(|1\rangle\). After the measurement, \(\alpha\) and \(\beta\) are gone.</p>
-<div style=width:100% id=comment>
+\).</p><h2 id=states-between-0-and-1>States between 0 and 1</h2><p>Both the states \(|0\rangle\) and \(|1\rangle\) are called computational basis states, which maps to classical 0 and 1 states. There are more states for a qubit. We&rsquo;ve already learned that a quantum state is a two-dimensional vector. An example is given:</p><p><a href=https://quantum.country/qcvc#general-states-of-a-qubit><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/quantum-state-in-a-nutshell/quantum-state-eg.png#center alt=quantum-state-example></a></p><p>The state \(0.6|0\rangle + 0.8|1\rangle\) is just a combination of the \(|0\rangle\) vector and the \(|1\rangle\) vector. A state like this is a <em>superposition</em> of \(|0\rangle\) and \(|1\rangle\), a fancy way of saying a linear combination of \(|0\rangle\) and \(|1\rangle\). \(0.6\) is the <em>amplitude</em> for state \(|0\rangle\), and \(0.8\) is the <em>amplitude</em> for state \(|1\rangle\).</p><p>Not all linear combination of vector \(|0\rangle\) and \(|1\rangle\) are qubit states. There is one constraint: <em>the sums of the squares of the amplitudes must be 1</em>. For example, we can compute \(0.6^2 + 0.8^2\) and verify the result is 1.</p><p>For general quantum states, the amplitudes can be complex numbers as well. Denoting both amplitudes as \(\alpha\) and \(\beta\), a quantum state can be formally written as:</p><p>\[\alpha |0\rangle + \beta |1\rangle \wedge \alpha^2 + \beta^2 = 1\]</p><p>\(\alpha^2 + \beta^2 = 1\) is called the <em>normalization constraint</em>.</p><p>If we think of \(|0\rangle\) and \(|1\rangle\) as orthonormal vectors, we can visualize the possible linear combination of these two vectors as a circle of radius 1:</p><p><a href=https://quantum.country/qcvc#general-states-of-a-qubit><img src=https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/quantum-state-in-a-nutshell/quantum-states.png#center alt=quantum-states></a></p><p>Since amplitudes can be complex numbers, the state space really becomes a sphere. Summing all these up:</p><blockquote>
+<p>the quantum state of a qubit is a vector of unit length in a two-dimensional complex vector space known as state space.</p><p>&ndash; <em>Quantum computing for the very curious</em></p></blockquote><h2 id=measuring-a-qubit>Measuring a qubit</h2><p>Suppose we have qubit in a quantum state \(\alpha |0\rangle + \beta |1\rangle\). We want to observe the state of this specific qubit. It turns out the law of physics prohibits us from figuring out the the amplitudes \(\alpha\) and \(\beta\) if they start out unknown. In short, the quantum state of any system is not directly observable.</p><p>To figure out the quantum state. We rely on a process called <em>measurement in the computational basis</em>. Suppose a qubit is in the state \(\alpha |0\rangle + \beta |1\rangle\). Measuring the state of this qubit gives us the outcome \(0\) with probability \(|\alpha|^2\), or 1 with probability \(|\beta|^2\). The state of the qubit after the measurement is thus either \(|0\rangle\) or \(|1\rangle\). After the measurement, \(\alpha\) and \(\beta\) are gone.</p><div style=width:100% id=comment>
 <script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
-</div>
-</article>
-</main><footer id=footer>
-<p>© 2022 Bodun Hu. All rights reserved.</p>
-</footer>
-</body>
-</html>
+</div></article></main><footer id=footer>
+<p>© 2022 Bodun Hu. All rights reserved.</p></footer></body></html>

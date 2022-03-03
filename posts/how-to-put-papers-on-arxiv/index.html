@@ -4,61 +4,31 @@
 <meta name=description content="std::bodun::blog. Personal Blog of Bodun (Edward) Hu. CS PhD student at University of Texas at Austin. Operating systems, network, heterogeneity, MLSys, anything system. UTCS">
 <link rel="shortcut icon" href=https://www.bodunhu.com/blog/favicon.ico>
 <link rel=stylesheet href=/blog/css/style.min.css>
-<script>MathJax={tex:{inlineMath:[['$','$'],['\\(','\\)']]},svg:{fontCache:'global'}}</script>
+<script>MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]},svg:{fontCache:"global"}}</script>
 <script type=text/javascript id=MathJax-script src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js async></script>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(a,e,f,g,b,c,d){a.GoogleAnalyticsObject=b,a[b]=a[b]||function(){(a[b].q=a[b].q||[]).push(arguments)},a[b].l=1*new Date,c=e.createElement(f),d=e.getElementsByTagName(f)[0],c.async=1,c.src=g,d.parentNode.insertBefore(c,d)}(window,document,'script','https://www.google-analytics.com/analytics.js','ga'),ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
-<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga('create','UA-108144808-1','auto'),ga('send','pageview'))</script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(function(e,o,i,a,t,n,s){e.GoogleAnalyticsObject=t,e[t]=e[t]||function(){(e[t].q=e[t].q||[]).push(arguments)},e[t].l=1*new Date,n=o.createElement(i),s=o.getElementsByTagName(i)[0],n.async=1,n.src=a,s.parentNode.insertBefore(n,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-108144808-1","auto"),ga("send","pageview"))</script>
+<script type=application/javascript>var doNotTrack=!1;doNotTrack||(window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)},ga.l=+new Date,ga("create","UA-108144808-1","auto"),ga("send","pageview"))</script>
 <script async src=https://www.google-analytics.com/analytics.js></script>
-<title>How to Put Papers on ArXiv</title>
-</head>
-<body><header id=banner>
-<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2>
-<nav>
+<title>How to Put Papers on ArXiv</title></head><body><header id=banner>
+<h2><a href=https://www.bodunhu.com/blog/>std::bodun::blog</a></h2><nav>
 <ul>
 <li>
 <a href=/blog/posts/ title=posts>archive</a>
 </li><li>
 <a href=https://www.bodunhu.com/ title=about>about</a>
-</li>
-</ul>
-</nav>
-</header>
-<main id=content>
+</li></ul></nav></header><main id=content>
 <article>
 <header id=post-header>
-<h1>How to Put Papers on ArXiv</h1>
-<div>
+<h1>How to Put Papers on ArXiv</h1><div>
 <time>Updated Aug 6, 2021</time>
-</div>
-</header><p>Recently, I was trying to put my research paper draft on ArXiv. I thought it would be as simple as submitting the pdf file, which should take approximately less than ten minutes. I was wrong. It took several hours to figure what was going on. I included some tips here to prevent mistakes I made from happening again.</p>
-<p>The first mistake I made was assuming a single submission of pdf file would be sufficient. ArXiv apparently has mechanisms detecting whether the submitted pdf file is generated using Tex/Latex. According to ArXiv:</p>
-<blockquote>
-<p>a PDF file created from a TeX/LaTeX file will be rejected. There are <a href=https://arxiv.org/help/faq/whytex>good reasons</a> why arXiv insists on TeX/LaTeX source if it is available. arXiv produces PDF automatically from all TeX submitted source. For information on viewing the PDF provided by arXiv, see our PDF browsing help.</p>
-</blockquote>
-<p>So, the first thing I came up with was to somehow make the pdf appearing &ldquo;anonymous&rdquo; to ArXiv. The were several methods but none of them appear to be practical. If you are interested there is a <a href=https://tex.stackexchange.com/questions/95080/making-an-anonymous-pdf-file-using-pdflatex/95109>link</a> to some methods that might be useful. <a href=https://ctan.org/pkg/pdfprivacy>pdfprivacy</a> is package used to remove or suppress pdf meta-data and it sounds promising but I haven&rsquo;t tried yet.</p>
-<p>So the only option left was to follow the restriction described. It was confusing at the beginning because the everything worked like a charm on Overleaf but it completely fell apart when I tried to compile the sources locally. I was under the impression that if it worked on Overleaf i should work everywhere else, which cause many hours of searching for potential problems related to local environment.</p>
-<p>After hours of frustration, it started to appear that there was nothing wrong with my local environment. The pdf produced by Overleaf was only &ldquo;appearing&rdquo; correct. There were several syntax issue in my .bib file, mostly caused by careless copy-and-paste and duplicate records. Overleaf simple suppressed some of those errors, which leads me to think everything was fine.</p>
-<p>There were also error messages popping up during compilation. Most of them are related to undefined references. Something like:</p>
-<p><code>Warning--empty journal in article</code></p>
-<p>The problem was that bibliographic information obtained from Google Scholar night include serious mistakes. The warning message was telling that entries of type @article require a non-empty journal field. For example, the entry could look like:</p>
-<div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text>@article{article,  
-  title={Something Cool},  
-  author={Somebody},
-  year={2019},
-  publisher={IET}
-}
-</code></pre></div><p>The four required fields for entries of type @article are author, title, journal, and year. This is why the warning message showed up. But it doesn&rsquo;t really affect the compilation on ArXiv.</p>
-<p>When I finally compiled all sources locally with success, I immediately moved all source on ArXiv hoping it would finally work. It didn&rsquo;t.</p>
-<p><code>! LaTeX Error: File 'shoc.pdf' not found.</code></p>
-<p>I had no idea why this occurred. All sources I used to compile were uploaded to ArXiv so there were no reasons for it to fail. More surprisingly, the references only failed for my .eps files but not .png files. According to ArXiv there are several <a href=https://arxiv.org/help/faq/psbad>reasons</a> why PostScript (PS/EPS) figures might fail on ArXiv. Due to the error message, it appears the system is trying to find a file called <em>shoc.pdf</em> to insert into the main pdf but somehow couldn&rsquo;t locate the file.</p>
-<p>The solution was to upload the pdf files produced locally to ArXiv. However, the locally generated files have slightly different name. All files names are modified to &ldquo;name-eps-convert-to.pdf&rdquo;. What a hassle!</p>
-<p>Overall, uploading to ArXiv was not the most pleasant experience. Latex&rsquo;s compilation system is the one to blame.</p>
-<div style=width:100% id=comment>
+</div></header><p>Recently, I was trying to put my research paper draft on ArXiv. I thought it would be as simple as submitting the pdf file, which should take approximately less than ten minutes. I was wrong. It took several hours to figure what was going on. I included some tips here to prevent mistakes I made from happening again.</p><p>The first mistake I made was assuming a single submission of pdf file would be sufficient. ArXiv apparently has mechanisms detecting whether the submitted pdf file is generated using Tex/Latex. According to ArXiv:</p><blockquote>
+<p>a PDF file created from a TeX/LaTeX file will be rejected. There are <a href=https://arxiv.org/help/faq/whytex>good reasons</a> why arXiv insists on TeX/LaTeX source if it is available. arXiv produces PDF automatically from all TeX submitted source. For information on viewing the PDF provided by arXiv, see our PDF browsing help.</p></blockquote><p>So, the first thing I came up with was to somehow make the pdf appearing &ldquo;anonymous&rdquo; to ArXiv. The were several methods but none of them appear to be practical. If you are interested there is a <a href=https://tex.stackexchange.com/questions/95080/making-an-anonymous-pdf-file-using-pdflatex/95109>link</a> to some methods that might be useful. <a href=https://ctan.org/pkg/pdfprivacy>pdfprivacy</a> is package used to remove or suppress pdf meta-data and it sounds promising but I haven&rsquo;t tried yet.</p><p>So the only option left was to follow the restriction described. It was confusing at the beginning because the everything worked like a charm on Overleaf but it completely fell apart when I tried to compile the sources locally. I was under the impression that if it worked on Overleaf i should work everywhere else, which cause many hours of searching for potential problems related to local environment.</p><p>After hours of frustration, it started to appear that there was nothing wrong with my local environment. The pdf produced by Overleaf was only &ldquo;appearing&rdquo; correct. There were several syntax issue in my .bib file, mostly caused by careless copy-and-paste and duplicate records. Overleaf simple suppressed some of those errors, which leads me to think everything was fine.</p><p>There were also error messages popping up during compilation. Most of them are related to undefined references. Something like:</p><p><code>Warning--empty journal in article</code></p><p>The problem was that bibliographic information obtained from Google Scholar night include serious mistakes. The warning message was telling that entries of type @article require a non-empty journal field. For example, the entry could look like:</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-text data-lang=text><span class=line><span class=cl>@article{article,  
+</span></span><span class=line><span class=cl>  title={Something Cool},  
+</span></span><span class=line><span class=cl>  author={Somebody},
+</span></span><span class=line><span class=cl>  year={2019},
+</span></span><span class=line><span class=cl>  publisher={IET}
+</span></span><span class=line><span class=cl>}
+</span></span></code></pre></div><p>The four required fields for entries of type @article are author, title, journal, and year. This is why the warning message showed up. But it doesn&rsquo;t really affect the compilation on ArXiv.</p><p>When I finally compiled all sources locally with success, I immediately moved all source on ArXiv hoping it would finally work. It didn&rsquo;t.</p><p><code>! LaTeX Error: File 'shoc.pdf' not found.</code></p><p>I had no idea why this occurred. All sources I used to compile were uploaded to ArXiv so there were no reasons for it to fail. More surprisingly, the references only failed for my .eps files but not .png files. According to ArXiv there are several <a href=https://arxiv.org/help/faq/psbad>reasons</a> why PostScript (PS/EPS) figures might fail on ArXiv. Due to the error message, it appears the system is trying to find a file called <em>shoc.pdf</em> to insert into the main pdf but somehow couldn&rsquo;t locate the file.</p><p>The solution was to upload the pdf files produced locally to ArXiv. However, the locally generated files have slightly different name. All files names are modified to &ldquo;name-eps-convert-to.pdf&rdquo;. What a hassle!</p><p>Overall, uploading to ArXiv was not the most pleasant experience. Latex&rsquo;s compilation system is the one to blame.</p><div style=width:100% id=comment>
 <script src=https://utteranc.es/client.js repo=BDHU/blog issue-term=pathname theme=preferred-color-scheme crossorigin=anonymous async></script>
-</div>
-</article>
-</main><footer id=footer>
-<p>© 2022 Bodun Hu. All rights reserved.</p>
-</footer>
-</body>
-</html>
+</div></article></main><footer id=footer>
+<p>© 2022 Bodun Hu. All rights reserved.</p></footer></body></html>
