@@ -424,6 +424,10 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/abs/2102.13267">LazyTensor: combining eager execution with domain-specific compilers&lt;/a>: combining dynamic graph with JIT. &lt;a href="https://zhuanlan.zhihu.com/p/383547872">summary&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cs.utexas.edu/~bornholt/papers/quantized-cgo20.pdf">Automatic Generation of High-Performance Quantized Machine Learning Kernels&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2002.03794.pdf">The Deep Learning Compiler: A Comprehensive Survey&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="dynamic-neural-network">Dynamic Neural Network&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2102.04906.pdf">Dynamic Neural Networks: A Survey&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>Megatron with FastMoE</title><link>https://www.bodunhu.com/blog/posts/megatron-with-fastmoe/</link><pubDate>Wed, 01 Dec 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/megatron-with-fastmoe/</guid><description>&lt;p>This is a guide on setting up &lt;a href="https://github.com/NVIDIA/Megatron-LM">Megatron-LM&lt;/a> with &lt;a href="https://github.com/laekov/fastmoe">FastMoE&lt;/a>. Megatron is a transformer developed by the Applied Deep Learning Research team at NVIDIA. FastMoE enables PyTorch support for the Mixture of Experts (MoE) models. We use the FastMoE layer to replace the MLP layers in the transformer language model.&lt;/p>
 &lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;h3 id="docker">Docker&lt;/h3>
