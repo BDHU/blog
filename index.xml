@@ -35,7 +35,7 @@
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_pics/posts/pathways/deadlock-conditions.png" alt="deadlock-conditions">&lt;/p>
 &lt;p>This is a classical example of deadlock in operating systems.&lt;/p>
 &lt;h2 id="solutions-to-deadlock">Solutions to Deadlock&lt;/h2>
-&lt;p>Using gang-scheduling helps preventing deadlocks, because it enforces the enqueueing order across multiple FIFO queues, instead of letting each queue handling tasks separately.&lt;/p>
+&lt;p>Using gang-scheduling helps preventing deadlocks, because it enforces a global enqueueing order across multiple FIFO queues, instead of letting each queue handling tasks separately.&lt;/p>
 &lt;p>The paper also mentions allowing device (e.g. GPUs) to execute tasks concurrently can prevent deadlocks. This is because concurrency eliminates the non-preemption property which is required for deadlocks to happen.&lt;/p>
 &lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_pics/posts/pathways/concurrency.jpg" alt="concurrency">&lt;/p>
 &lt;center>Src. Jinhui Yan&lt;/center>
