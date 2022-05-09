@@ -462,6 +462,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://zhuanlan.zhihu.com/p/495592456">解读谷歌Pathways架构（一）：Single-controller与Multi-controller&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://petewarden.com/2021/12/24/why-are-ml-compilers-so-hard/">Why are ML Compilers so Hard?&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://ai.googleblog.com/2022/05/alpa-automated-model-parallel-deep.html">Alpa: Automated Model-Parallel Deep Learning&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.telesens.co/2022/04/23/data-transfer-speed-comparison-ray-plasma-store-vs-s3/">Data Transfer Speed Comparison: Ray Plasma Store vs. S3&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="papers">Papers&lt;/h2>
 &lt;p>This section could potentially be extremely long..&lt;/p>
