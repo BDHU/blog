@@ -479,6 +479,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2102.04906.pdf">Dynamic Neural Networks: A Survey&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2204.00102.pdf">Dynamic Multimodal Fusion&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2106.04426.pdf">Hash Layers For Large Sparse Models&lt;/a>: Using hashing for MoE gating.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2205.12755.pdf">An Evolutionary Approach to Dynamic Introduction of Tasks in Large-scale Multitask Learning Systems&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h3 id="federated-learning">Federated Learning&lt;/h3>
 &lt;ul>
