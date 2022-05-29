@@ -451,6 +451,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://openmlsys.github.io/">机器学习系统：设计和实现&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://tvm.d2l.ai/">Dive into Deep Learning Compiler&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://jax.readthedocs.io/en/latest/autodidax.html">Autodidax: JAX core from scratch&lt;/a>: really really good resource for learning Jax internals.&lt;/li>
+&lt;li>&lt;a href="https://github.com/dfm/extending-jax">Extending JAX with custom C++ and CUDA code&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="backpropagation">Backpropagation&lt;/h2>
 &lt;ul>
@@ -464,6 +465,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://petewarden.com/2021/12/24/why-are-ml-compilers-so-hard/">Why are ML Compilers so Hard?&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://ai.googleblog.com/2022/05/alpa-automated-model-parallel-deep.html">Alpa: Automated Model-Parallel Deep Learning&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.telesens.co/2022/04/23/data-transfer-speed-comparison-ray-plasma-store-vs-s3/">Data Transfer Speed Comparison: Ray Plasma Store vs. S3&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.zhihu.com/column/giantpandacv">从零开始学深度学习编译器&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="papers">Papers&lt;/h2>
 &lt;p>This section could potentially be extremely long..&lt;/p>
