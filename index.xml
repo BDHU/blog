@@ -414,6 +414,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;/ul>
 &lt;h2 id="courses">Courses&lt;/h2>
 &lt;ul>
+&lt;li>&lt;a href="https://mlc.ai/summer22/">Machine Learning Compilation&lt;/a>: offered by &lt;a href="https://tqchen.com/">Tianqi Chen&lt;/a>, intro to ML compiler. Open to all.&lt;/li>
 &lt;li>&lt;a href="https://catalyst.cs.cmu.edu/15-884-mlsys-sp21/">15-884: Machine Learning Systems&lt;/a>: offered by &lt;a href="https://tqchen.com/">Tianqi Chen&lt;/a> at CMU.&lt;/li>
 &lt;li>&lt;a href="https://cseweb.ucsd.edu/classes/wi19/cse291-f/">CSE 291F: Advanced Data Analytics and ML Systems&lt;/a>: offered by &lt;a href="https://cseweb.ucsd.edu/~arunkk/">Arun Kumar&lt;/a> at UCSD.&lt;/li>
 &lt;li>&lt;a href="https://github.com/tqchen/tinyflow">Tinyflow&lt;/a>: tutorial code on how to build your own Deep Learning System in 2k Lines.&lt;/li>
