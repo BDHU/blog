@@ -572,6 +572,10 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2106.04426.pdf">Hash Layers For Large Sparse Models&lt;/a>: Using hashing for MoE gating.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2205.12755.pdf">An Evolutionary Approach to Dynamic Introduction of Tasks in Large-scale Multitask Learning Systems&lt;/a>&lt;/li>
 &lt;/ul>
+&lt;h3 id="auto-placement">Auto Placement&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2201.12023.pdf">Alpa: Automating Inter- and Intra-Operator Parallelism for Distributed Deep Learning&lt;/a>&lt;/li>
+&lt;/ul>
 &lt;h3 id="federated-learning">Federated Learning&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/1907.09693">A Survey on Federated Learning Systems: Vision, Hype and Reality for Data Privacy and Protection&lt;/a>&lt;/li>
