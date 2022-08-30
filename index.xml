@@ -559,9 +559,12 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;p>This section could potentially be extremely long..&lt;/p>
 &lt;h3 id="ml-compilers">ML Compilers&lt;/h3>
 &lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/1802.04799.pdf">TVM: An Automated End-to-End Optimizing Compiler for Deep Learning&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/abs/1901.10008">The OoO VLIW JIT Compiler for GPU Inference&lt;/a>: JIT Compiler to enable better GPU multiplexing.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/abs/2102.13267">LazyTensor: combining eager execution with domain-specific compilers&lt;/a>: combining dynamic graph with JIT. &lt;a href="https://zhuanlan.zhihu.com/p/383547872">summary&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cs.utexas.edu/~bornholt/papers/quantized-cgo20.pdf">Automatic Generation of High-Performance Quantized Machine Learning Kernels&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://proceedings.mlsys.org/paper/2022/file/fa7cdfad1a5aaf8370ebeda47a1ff1c3-Paper.pdf">DietCode: Automatic Optimization for Dynamic Tensor Programs&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://proceedings.mlsys.org/paper/2022/file/d3d9446802a44259755d38e6d163e820-Paper.pdf">The CoRa Tensor Compiler: Compilation for Ragged Tensors with Minimal Padding&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2002.03794.pdf">The Deep Learning Compiler: A Comprehensive Survey&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h3 id="dynamic-neural-network">Dynamic Neural Network&lt;/h3>
