@@ -48,7 +48,7 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>    <span class=cp># according to the timestamp. This ordering is useful in the proof
 </span></span></span><span class=line><span class=cl><span class=cp></span>    <span class=cp># of correctness. 
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>    <span class=n>class</span> <span class=n>msg_t</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>class</span> <span class=kt>msg_t</span> <span class=o>=</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=n>field</span> <span class=nl>kind</span> <span class=p>:</span> <span class=n>msg_kind</span>
 </span></span><span class=line><span class=cl>        <span class=n>field</span> <span class=nl>sender_id</span> <span class=p>:</span> <span class=n>host_id</span>
 </span></span><span class=line><span class=cl>        <span class=n>field</span> <span class=nl>ts</span> <span class=p>:</span> <span class=n>timestamp</span>
@@ -57,7 +57,7 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=cp># A useful enumerated type to describe node state:
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>    <span class=n>type</span> <span class=n>state_t</span> <span class=o>=</span> <span class=p>{</span><span class=n>idle</span><span class=p>,</span><span class=n>waiting</span><span class=p>,</span><span class=n>critical</span><span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=n>type</span> <span class=kt>state_t</span> <span class=o>=</span> <span class=p>{</span><span class=n>idle</span><span class=p>,</span><span class=n>waiting</span><span class=p>,</span><span class=n>critical</span><span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=cp># Finally we instantiate a network service via which our processes
 </span></span></span><span class=line><span class=cl><span class=cp></span>    <span class=cp># will communicate. Here, `transport.net` is a template defined in the
@@ -65,7 +65,7 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>    <span class=cp># parameter, which is the type of messages to be sent. Our instance
 </span></span></span><span class=line><span class=cl><span class=cp></span>    <span class=cp># of this template is an object called `net`. 
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>    <span class=n>instance</span> <span class=nl>net</span> <span class=p>:</span> <span class=n>tcp</span><span class=p>.</span><span class=n>net</span><span class=p>(</span><span class=n>msg_t</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>instance</span> <span class=nl>net</span> <span class=p>:</span> <span class=n>tcp</span><span class=p>.</span><span class=nf>net</span><span class=p>(</span><span class=kt>msg_t</span><span class=p>)</span>
 </span></span><span class=line><span class=cl><span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>
@@ -77,7 +77,7 @@
 </span></span></span><span class=line><span class=cl><span class=cp># This means that the process can refer to its own host identifier by
 </span></span></span><span class=line><span class=cl><span class=cp># the name `self`.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl><span class=n>process</span> <span class=n>node</span><span class=p>(</span><span class=nl>self</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl><span class=n>process</span> <span class=nf>node</span><span class=p>(</span><span class=nl>self</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>=</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>    <span class=cp># A process usually begins by declaring an *interface*. This
 </span></span></span><span class=line><span class=cl><span class=cp></span>    <span class=cp># consists of a set of *actions* that are either calls in from the
@@ -105,26 +105,26 @@
 </span></span><span class=line><span class=cl>    <span class=n>common</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>        <span class=n>specification</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>            <span class=n>var</span> <span class=n>client_state</span><span class=p>(</span><span class=nl>H</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>:</span> <span class=n>state_t</span>
+</span></span><span class=line><span class=cl>            <span class=n>var</span> <span class=nf>client_state</span><span class=p>(</span><span class=nl>H</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>:</span> <span class=kt>state_t</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>            <span class=n>after</span> <span class=n>init</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>                <span class=n>client_state</span><span class=p>(</span><span class=n>H</span><span class=p>)</span> <span class=o>:=</span> <span class=n>idle</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=nf>client_state</span><span class=p>(</span><span class=n>H</span><span class=p>)</span> <span class=o>:=</span> <span class=n>idle</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=p>}</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>            <span class=n>before</span> <span class=n>request</span><span class=p>(</span><span class=nl>self</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>                <span class=n>require</span> <span class=n>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>=</span> <span class=n>idle</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=n>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=n>waiting</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>before</span> <span class=nf>request</span><span class=p>(</span><span class=nl>self</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>require</span> <span class=nf>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>=</span> <span class=n>idle</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=nf>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=n>waiting</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=p>}</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>            <span class=n>before</span> <span class=n>grant</span><span class=p>(</span><span class=nl>self</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>                <span class=n>require</span> <span class=n>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>=</span> <span class=n>waiting</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>before</span> <span class=nf>grant</span><span class=p>(</span><span class=nl>self</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>require</span> <span class=nf>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>=</span> <span class=n>waiting</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>                <span class=n>require</span> <span class=nf>client_state</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>~=</span> <span class=n>critical</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=n>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=n>critical</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=nf>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=n>critical</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=p>}</span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>            <span class=n>before</span> <span class=n>release</span><span class=p>(</span><span class=nl>self</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>                <span class=n>require</span> <span class=n>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>=</span> <span class=n>critical</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=n>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=n>idle</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>before</span> <span class=nf>release</span><span class=p>(</span><span class=nl>self</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=n>require</span> <span class=nf>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>=</span> <span class=n>critical</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=nf>client_state</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=n>idle</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>        <span class=p>}</span>
@@ -141,7 +141,7 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>        <span class=cp># We also declare some local (per-process) types and variables. 
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>        <span class=n>var</span> <span class=nl>state</span> <span class=p>:</span> <span class=n>state_t</span>
+</span></span><span class=line><span class=cl>        <span class=n>var</span> <span class=nl>state</span> <span class=p>:</span> <span class=kt>state_t</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>        <span class=cp># We also keep track of the current timestamp
 </span></span></span><span class=line><span class=cl><span class=cp></span>
@@ -150,12 +150,12 @@
 </span></span><span class=line><span class=cl>        <span class=cp># Each process maintains a &#39;request queue&#39;, which a map from host_ids to
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># the timestamp of the current request from that host, or `0` if none.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>        <span class=n>var</span> <span class=n>request_ts</span><span class=p>(</span><span class=nl>X</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>:</span> <span class=n>timestamp</span>
+</span></span><span class=line><span class=cl>        <span class=n>var</span> <span class=nf>request_ts</span><span class=p>(</span><span class=nl>X</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>:</span> <span class=n>timestamp</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>        <span class=cp># This map records the highest timestamp of a reply received from
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># each host.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>        <span class=n>var</span> <span class=n>reply_ts</span><span class=p>(</span><span class=nl>X</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>:</span> <span class=n>timestamp</span>
+</span></span><span class=line><span class=cl>        <span class=n>var</span> <span class=nf>reply_ts</span><span class=p>(</span><span class=nl>X</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>:</span> <span class=n>timestamp</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>        <span class=cp># Having declared our variables, we initialize them. Code in an
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># `after init` section runs on initialization of the process. You
@@ -165,8 +165,8 @@
 </span></span><span class=line><span class=cl>        <span class=n>after</span> <span class=n>init</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=nl>state</span> <span class=p>:</span><span class=o>=</span> <span class=n>idle</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=nl>ts</span> <span class=p>:</span><span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>            <span class=n>request_ts</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>            <span class=n>reply_ts</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=nf>request_ts</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=nf>reply_ts</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>        <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>        <span class=cp># Now we come to the implementation code. Here we implement our
@@ -180,12 +180,12 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>
 </span></span><span class=line><span class=cl>        <span class=n>implement</span> <span class=n>request</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=nl>ts</span> <span class=p>:</span><span class=o>=</span> <span class=n>ts</span><span class=p>.</span><span class=n>next</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>            <span class=n>var</span> <span class=nl>outgoing</span> <span class=p>:</span> <span class=n>msg_t</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>var</span> <span class=nl>outgoing</span> <span class=p>:</span> <span class=kt>msg_t</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=n>outgoing</span><span class=p>.</span><span class=nl>kind</span> <span class=p>:</span><span class=o>=</span> <span class=n>request_kind</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=n>outgoing</span><span class=p>.</span><span class=nl>sender_id</span> <span class=p>:</span><span class=o>=</span> <span class=n>self</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=n>outgoing</span><span class=p>.</span><span class=nl>ts</span> <span class=p>:</span><span class=o>=</span> <span class=n>ts</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>            <span class=n>broadcast</span><span class=p>(</span><span class=n>outgoing</span><span class=p>);</span>
-</span></span><span class=line><span class=cl>            <span class=n>request_ts</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=n>ts</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=nf>broadcast</span><span class=p>(</span><span class=n>outgoing</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=nf>request_ts</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=n>ts</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=nl>state</span> <span class=p>:</span><span class=o>=</span> <span class=n>waiting</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=cp># BUG: should check waiting condition here, if host_id.max = 0
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=p>}</span>
@@ -197,18 +197,18 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># message.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
 </span></span><span class=line><span class=cl>
-</span></span><span class=line><span class=cl>        <span class=n>implement</span> <span class=n>sock</span><span class=p>.</span><span class=n>recv</span><span class=p>(</span><span class=nl>src</span><span class=p>:</span><span class=n>tcp</span><span class=p>.</span><span class=n>endpoint</span><span class=p>,</span><span class=nl>incoming</span><span class=p>:</span><span class=n>msg_t</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>implement</span> <span class=n>sock</span><span class=p>.</span><span class=nf>recv</span><span class=p>(</span><span class=nl>src</span><span class=p>:</span><span class=n>tcp</span><span class=p>.</span><span class=n>endpoint</span><span class=p>,</span><span class=nl>incoming</span><span class=p>:</span><span class=kt>msg_t</span><span class=p>)</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>            <span class=cp># debug &#34;recv&#34; with self = self, src = src, msg = incoming;
 </span></span></span><span class=line><span class=cl><span class=cp></span>
 </span></span><span class=line><span class=cl>            <span class=cp># First, we update out timestamp to reflect the incoming
 </span></span></span><span class=line><span class=cl><span class=cp></span>            <span class=cp># message.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>            <span class=nl>ts</span> <span class=p>:</span><span class=o>=</span> <span class=n>timestamp</span><span class=p>.</span><span class=n>max2</span><span class=p>(</span><span class=n>incoming</span><span class=p>.</span><span class=n>ts</span><span class=p>,</span><span class=n>ts</span><span class=p>).</span><span class=n>next</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=nl>ts</span> <span class=p>:</span><span class=o>=</span> <span class=n>timestamp</span><span class=p>.</span><span class=nf>max2</span><span class=p>(</span><span class=n>incoming</span><span class=p>.</span><span class=n>ts</span><span class=p>,</span><span class=n>ts</span><span class=p>).</span><span class=n>next</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>            <span class=cp># We partly construct an outgoing message
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>            <span class=n>var</span> <span class=nl>outgoing</span> <span class=p>:</span> <span class=n>msg_t</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>var</span> <span class=nl>outgoing</span> <span class=p>:</span> <span class=kt>msg_t</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=n>outgoing</span><span class=p>.</span><span class=nl>sender_id</span> <span class=p>:</span><span class=o>=</span> <span class=n>self</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=n>outgoing</span><span class=p>.</span><span class=nl>ts</span> <span class=p>:</span><span class=o>=</span> <span class=n>ts</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
@@ -219,15 +219,15 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>
 </span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=n>incoming</span><span class=p>.</span><span class=n>kind</span> <span class=o>=</span> <span class=n>request_kind</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>                <span class=n>outgoing</span><span class=p>.</span><span class=nl>kind</span> <span class=p>:</span><span class=o>=</span> <span class=n>reply_kind</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=n>request_ts</span><span class=p>(</span><span class=n>incoming</span><span class=p>.</span><span class=n>sender_id</span><span class=p>)</span> <span class=o>:=</span> <span class=n>incoming</span><span class=p>.</span><span class=n>ts</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>                <span class=n>unicast</span><span class=p>(</span><span class=n>outgoing</span><span class=p>,</span><span class=n>incoming</span><span class=p>.</span><span class=n>sender_id</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                <span class=nf>request_ts</span><span class=p>(</span><span class=n>incoming</span><span class=p>.</span><span class=n>sender_id</span><span class=p>)</span> <span class=o>:=</span> <span class=n>incoming</span><span class=p>.</span><span class=n>ts</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=nf>unicast</span><span class=p>(</span><span class=n>outgoing</span><span class=p>,</span><span class=n>incoming</span><span class=p>.</span><span class=n>sender_id</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>            <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>            <span class=cp># When we receive a `release` message, the sender&#39;s request
 </span></span></span><span class=line><span class=cl><span class=cp></span>            <span class=cp># must be at the head of our queue.  We dequeue it.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
 </span></span><span class=line><span class=cl>            <span class=k>else</span> <span class=k>if</span> <span class=n>incoming</span><span class=p>.</span><span class=n>kind</span> <span class=o>=</span> <span class=n>release_kind</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>                <span class=n>request_ts</span><span class=p>(</span><span class=n>incoming</span><span class=p>.</span><span class=n>sender_id</span><span class=p>)</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=nf>request_ts</span><span class=p>(</span><span class=n>incoming</span><span class=p>.</span><span class=n>sender_id</span><span class=p>)</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>            <span class=p>}</span>
 </span></span><span class=line><span class=cl>
@@ -237,7 +237,7 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>            <span class=cp># be the greatest so far.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
 </span></span><span class=line><span class=cl>            <span class=k>else</span> <span class=k>if</span> <span class=n>incoming</span><span class=p>.</span><span class=n>kind</span> <span class=o>=</span> <span class=n>reply_kind</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>                <span class=n>reply_ts</span><span class=p>(</span><span class=n>incoming</span><span class=p>.</span><span class=n>sender_id</span><span class=p>)</span> <span class=o>:=</span> <span class=n>incoming</span><span class=p>.</span><span class=n>ts</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>                <span class=nf>reply_ts</span><span class=p>(</span><span class=n>incoming</span><span class=p>.</span><span class=n>sender_id</span><span class=p>)</span> <span class=o>:=</span> <span class=n>incoming</span><span class=p>.</span><span class=n>ts</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>            <span class=cp># Having proceesed the incoming message, we might now be able
@@ -251,8 +251,8 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>
 </span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=n>state</span> <span class=o>=</span> <span class=n>waiting</span>
 </span></span><span class=line><span class=cl>            <span class=o>&amp;</span> <span class=n>forall</span> <span class=n>X</span><span class=p>.</span> <span class=n>X</span> <span class=o>~=</span> <span class=n>self</span> <span class=o>-&gt;</span>
-</span></span><span class=line><span class=cl>                          <span class=p>(</span><span class=n>request_ts</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>=</span> <span class=mi>0</span> <span class=o>|</span> <span class=n>lexord</span><span class=p>(</span><span class=n>request_ts</span><span class=p>(</span><span class=n>self</span><span class=p>),</span><span class=n>self</span><span class=p>,</span><span class=n>request_ts</span><span class=p>(</span><span class=n>X</span><span class=p>),</span><span class=n>X</span><span class=p>))</span>
-</span></span><span class=line><span class=cl>                             <span class=o>&amp;</span> <span class=n>reply_ts</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>&gt;</span> <span class=n>request_ts</span><span class=p>(</span><span class=n>self</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>                          <span class=p>(</span><span class=nf>request_ts</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>=</span> <span class=mi>0</span> <span class=o>|</span> <span class=nf>lexord</span><span class=p>(</span><span class=nf>request_ts</span><span class=p>(</span><span class=n>self</span><span class=p>),</span><span class=n>self</span><span class=p>,</span><span class=nf>request_ts</span><span class=p>(</span><span class=n>X</span><span class=p>),</span><span class=n>X</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>                             <span class=o>&amp;</span> <span class=nf>reply_ts</span><span class=p>(</span><span class=n>X</span><span class=p>)</span> <span class=o>&gt;</span> <span class=nf>request_ts</span><span class=p>(</span><span class=n>self</span><span class=p>)</span>
 </span></span><span class=line><span class=cl>            <span class=p>{</span>
 </span></span><span class=line><span class=cl>                <span class=nl>state</span> <span class=p>:</span><span class=o>=</span> <span class=n>critical</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>                <span class=n>grant</span><span class=p>;</span>
@@ -261,12 +261,12 @@
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>        <span class=n>implement</span> <span class=n>release</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=nl>ts</span> <span class=p>:</span><span class=o>=</span> <span class=n>ts</span><span class=p>.</span><span class=n>next</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>            <span class=n>request_ts</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>            <span class=n>var</span> <span class=nl>outgoing</span> <span class=p>:</span> <span class=n>msg_t</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=nf>request_ts</span><span class=p>(</span><span class=n>self</span><span class=p>)</span> <span class=o>:=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>            <span class=n>var</span> <span class=nl>outgoing</span> <span class=p>:</span> <span class=kt>msg_t</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=n>outgoing</span><span class=p>.</span><span class=nl>sender_id</span> <span class=p>:</span><span class=o>=</span> <span class=n>self</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=n>outgoing</span><span class=p>.</span><span class=nl>ts</span> <span class=p>:</span><span class=o>=</span> <span class=n>ts</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>            <span class=n>outgoing</span><span class=p>.</span><span class=nl>kind</span> <span class=p>:</span><span class=o>=</span> <span class=n>release_kind</span><span class=p>;</span>
-</span></span><span class=line><span class=cl>            <span class=n>broadcast</span><span class=p>(</span><span class=n>outgoing</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>            <span class=nf>broadcast</span><span class=p>(</span><span class=n>outgoing</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>            <span class=nl>state</span> <span class=p>:</span><span class=o>=</span> <span class=n>idle</span><span class=p>;</span>
 </span></span><span class=line><span class=cl>        <span class=p>}</span>
 </span></span><span class=line><span class=cl>
@@ -277,7 +277,7 @@
 </span></span><span class=line><span class=cl>        <span class=cp># This function takes two timestamp-host_id pairs and determines
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># whether (X1,Y1) &lt; (X2,Y2) in lexicogrpahic order.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>        <span class=n>function</span> <span class=n>lexord</span><span class=p>(</span><span class=nl>X1</span><span class=p>:</span><span class=n>timestamp</span><span class=p>,</span><span class=nl>Y1</span><span class=p>:</span><span class=n>host_id</span><span class=p>,</span><span class=nl>X2</span><span class=p>:</span><span class=n>timestamp</span><span class=p>,</span><span class=nl>Y2</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>=</span>
+</span></span><span class=line><span class=cl>        <span class=n>function</span> <span class=nf>lexord</span><span class=p>(</span><span class=nl>X1</span><span class=p>:</span><span class=n>timestamp</span><span class=p>,</span><span class=nl>Y1</span><span class=p>:</span><span class=n>host_id</span><span class=p>,</span><span class=nl>X2</span><span class=p>:</span><span class=n>timestamp</span><span class=p>,</span><span class=nl>Y2</span><span class=p>:</span><span class=n>host_id</span><span class=p>)</span> <span class=o>=</span>
 </span></span><span class=line><span class=cl>            <span class=n>X1</span> <span class=o>&lt;</span> <span class=n>X2</span> <span class=o>|</span> <span class=n>X1</span> <span class=o>=</span> <span class=n>X2</span> <span class=o>&amp;</span> <span class=n>Y1</span> <span class=o>&lt;</span> <span class=n>Y2</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>
@@ -292,9 +292,9 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># parameters that are determined at initialization and are
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># provided to all processes.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>        <span class=n>action</span> <span class=n>unicast</span><span class=p>(</span><span class=nl>outgoing</span><span class=p>:</span><span class=n>msg_t</span><span class=p>,</span> <span class=nl>dst_id</span> <span class=p>:</span> <span class=n>host_id</span><span class=p>)</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>action</span> <span class=nf>unicast</span><span class=p>(</span><span class=nl>outgoing</span><span class=p>:</span><span class=kt>msg_t</span><span class=p>,</span> <span class=nl>dst_id</span> <span class=p>:</span> <span class=n>host_id</span><span class=p>)</span> <span class=o>=</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=cp># debug &#34;send&#34; with dst = dst_id, msg = outgoing;
-</span></span></span><span class=line><span class=cl><span class=cp></span>            <span class=n>sock</span><span class=p>.</span><span class=n>send</span><span class=p>(</span><span class=n>node</span><span class=p>(</span><span class=n>dst_id</span><span class=p>).</span><span class=n>sock</span><span class=p>.</span><span class=n>id</span><span class=p>,</span><span class=n>outgoing</span><span class=p>);</span>
+</span></span></span><span class=line><span class=cl><span class=cp></span>            <span class=n>sock</span><span class=p>.</span><span class=nf>send</span><span class=p>(</span><span class=nf>node</span><span class=p>(</span><span class=n>dst_id</span><span class=p>).</span><span class=n>sock</span><span class=p>.</span><span class=n>id</span><span class=p>,</span><span class=n>outgoing</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>        <span class=p>}</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl>        <span class=cp># Action `broadcast` sends a message to all processes with
@@ -311,11 +311,11 @@
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># iterator type, however, does have a value corresponding to
 </span></span></span><span class=line><span class=cl><span class=cp></span>        <span class=cp># &#39;past the end&#39;.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl>        <span class=n>action</span> <span class=n>broadcast</span><span class=p>(</span><span class=nl>outgoing</span><span class=p>:</span><span class=n>msg_t</span><span class=p>)</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=n>action</span> <span class=nf>broadcast</span><span class=p>(</span><span class=nl>outgoing</span><span class=p>:</span><span class=kt>msg_t</span><span class=p>)</span> <span class=o>=</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>            <span class=k>for</span> <span class=n>it</span><span class=p>,</span><span class=n>dst_id</span> <span class=n>in</span> <span class=n>host_id</span><span class=p>.</span><span class=n>iter</span> <span class=p>{</span>
 </span></span><span class=line><span class=cl>                <span class=cp># do not send to self!
 </span></span></span><span class=line><span class=cl><span class=cp></span>                <span class=k>if</span> <span class=n>dst_id</span> <span class=o>~=</span> <span class=n>self</span> <span class=p>{</span>
-</span></span><span class=line><span class=cl>                    <span class=n>unicast</span><span class=p>(</span><span class=n>outgoing</span><span class=p>,</span> <span class=n>dst_id</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>                    <span class=nf>unicast</span><span class=p>(</span><span class=n>outgoing</span><span class=p>,</span> <span class=n>dst_id</span><span class=p>);</span>
 </span></span><span class=line><span class=cl>                <span class=p>}</span>
 </span></span><span class=line><span class=cl>            <span class=p>}</span>
 </span></span><span class=line><span class=cl>        <span class=p>}</span>
@@ -337,7 +337,7 @@
 </span></span></span><span class=line><span class=cl><span class=cp># TODO: As usual, we need the assumption that all endpoint id&#39;s are
 </span></span></span><span class=line><span class=cl><span class=cp># distinct.
 </span></span></span><span class=line><span class=cl><span class=cp></span>
-</span></span><span class=line><span class=cl><span class=n>axiom</span> <span class=n>node</span><span class=p>(</span><span class=n>X</span><span class=p>).</span><span class=n>sock</span><span class=p>.</span><span class=n>id</span> <span class=o>=</span> <span class=n>node</span><span class=p>(</span><span class=n>Y</span><span class=p>).</span><span class=n>sock</span><span class=p>.</span><span class=n>id</span> <span class=o>-&gt;</span> <span class=n>X</span> <span class=o>=</span> <span class=n>Y</span>
+</span></span><span class=line><span class=cl><span class=n>axiom</span> <span class=nf>node</span><span class=p>(</span><span class=n>X</span><span class=p>).</span><span class=n>sock</span><span class=p>.</span><span class=n>id</span> <span class=o>=</span> <span class=nf>node</span><span class=p>(</span><span class=n>Y</span><span class=p>).</span><span class=n>sock</span><span class=p>.</span><span class=n>id</span> <span class=o>-&gt;</span> <span class=n>X</span> <span class=o>=</span> <span class=n>Y</span>
 </span></span><span class=line><span class=cl>
 </span></span><span class=line><span class=cl><span class=cp># This says to try bounded model checking up to 20 steps (but Ivy
 </span></span></span><span class=line><span class=cl><span class=cp># won&#39;t actually get that far). The second parameter say to unroll the
