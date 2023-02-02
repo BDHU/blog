@@ -749,6 +749,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;h3 id="ml-compilers">ML Compilers&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/1802.04799.pdf">TVM: An Automated End-to-End Optimizing Compiler for Deep Learning&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/1805.08166.pdf">Learning to Optimize Tensor Programs&lt;/a>: facilitate efficient ML kernel search using ML.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/abs/1901.10008">The OoO VLIW JIT Compiler for GPU Inference&lt;/a>: JIT Compiler to enable better GPU multiplexing.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/abs/2102.13267">LazyTensor: combining eager execution with domain-specific compilers&lt;/a>: combining dynamic graph with JIT. &lt;a href="https://zhuanlan.zhihu.com/p/383547872">summary&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.cs.utexas.edu/~bornholt/papers/quantized-cgo20.pdf">Automatic Generation of High-Performance Quantized Machine Learning Kernels&lt;/a>&lt;/li>
