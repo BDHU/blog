@@ -764,6 +764,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://www.usenix.org/system/files/conference/nsdi17/nsdi17-crankshaw.pdf">Clipper: A Low-Latency Online Prediction Serving System&lt;/a>: a nice overview of inference system. Not SOTA but a good starter.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2209.00159.pdf">Orloj: Predictably Serving Unpredictable DNNs&lt;/a>: shares similarity to Clipper, but targeting models that may yield unpredictable performance.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2302.11665.pdf">AlpaServe: Statistical Multiplexing with Model Parallelism for Deep Learning Serving&lt;/a>: how to multiplex devices to serve multiple model while meeting latency constraint.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2203.09040.pdf">A Survey of Multi-Tenant Deep Learning Inference on GPU&lt;/a>: efficient resource management for multi-tenant inference.&lt;/li>
 &lt;/ul>
 &lt;h3 id="dynamic-neural-network">Dynamic Neural Network&lt;/h3>
 &lt;ul>
