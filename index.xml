@@ -282,7 +282,19 @@ permitting high resource utilization as well as scalability&lt;/p>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result[vb, vc_o, vh, vw] &lt;span style="color:#f92672">=&lt;/span> T&lt;span style="color:#f92672">.&lt;/span>int64(&lt;span style="color:#ae81ff">0&lt;/span>)
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> &lt;span style="color:#75715e"># compute rule&lt;/span>
 &lt;/span>&lt;/span>&lt;span style="display:flex;">&lt;span> result[vb, vc_o, vh, vw] &lt;span style="color:#f92672">+=&lt;/span> data[vb, vc_i, vh&lt;span style="color:#f92672">+&lt;/span>vw_h, vw&lt;span style="color:#f92672">+&lt;/span>vw_w] &lt;span style="color:#f92672">*&lt;/span> weight[vc_o, vc_i, vw_h, vw_w]
-&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Pathways: Google's New ML System</title><link>https://www.bodunhu.com/blog/posts/pathways-googles-new-ml-system/</link><pubDate>Thu, 31 Mar 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/pathways-googles-new-ml-system/</guid><description>&lt;p>Google recently released the paper about its new ML system called &lt;a href="https://arxiv.org/pdf/2203.12533.pdf">Pathways&lt;/a>. I&amp;rsquo;m a bit surprised since I expect it to introduce a brand new model architecture. In fact, this paper is not easy to digest at all. I feel like it&amp;rsquo;s written for people who spent many years developing ML frameworks. Anyway, we will try to understand why it is developed and how it works. Also, you should check this &lt;a href="https://zhuanlan.zhihu.com/p/495592456">post&lt;/a> (in Chinese). This post explains many concepts in Pathways much more clearly. Many contents here are credited to this post.&lt;/p>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div></description></item><item><title>Pathways: Google's New ML System</title><link>https://www.bodunhu.com/blog/posts/pathways-googles-new-ml-system/</link><pubDate>Thu, 31 Mar 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/pathways-googles-new-ml-system/</guid><description>&lt;aside id="toc">
+&lt;h4>Table of Contents&lt;/h4>
+&lt;nav id="TableOfContents">
+&lt;ul>
+&lt;li>&lt;a href="#single-controller">Single-Controller&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#multi-controller-systems">Multi-Controller Systems&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#going-back-to-single-controller">Going Back to Single-Controller&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#deadlock">Deadlock&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#solutions-to-deadlock">Solutions to Deadlock&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/nav>
+&lt;/aside>
+&lt;p>Google recently released the paper about its new ML system called &lt;a href="https://arxiv.org/pdf/2203.12533.pdf">Pathways&lt;/a>. I&amp;rsquo;m a bit surprised since I expect it to introduce a brand new model architecture. In fact, this paper is not easy to digest at all. I feel like it&amp;rsquo;s written for people who spent many years developing ML frameworks. Anyway, we will try to understand why it is developed and how it works. Also, you should check this &lt;a href="https://zhuanlan.zhihu.com/p/495592456">post&lt;/a> (in Chinese). This post explains many concepts in Pathways much more clearly. Many contents here are credited to this post.&lt;/p>
 &lt;p>This paper spends a long time discussing single-controller and multi-controller. It&amp;rsquo;s really confusing to understand all these SPMD, MPMD, single-controller, and multi-controller stuffs. Pathways claims the future ML framework should go &lt;strong>back&lt;/strong> to single-controller. By &amp;ldquo;back&amp;rdquo; I mean ML frameworks were originally single-controller, then they adopted multi-controller. Now, we are going back to single-controller again.&lt;/p>
 &lt;h2 id="single-controller">Single-Controller&lt;/h2>
 &lt;p>TensorFlow v1 is a classic example of single-controller system. The high level idea is the user would define a dataflow graph through a Python client. This graph is then submitted to the &lt;code>session.run&lt;/code> (runtime system). The system consists of a single master and many other workers. The mater will compile and the dataflow graph submitted by the client, then divides the graph into sub-graphs. Then the master submits those subgraphs to other workers.&lt;/p>
@@ -2728,7 +2740,19 @@ language &lt;strong>IMP&lt;/strong>.&lt;/p>
 &lt;p>\begin{equation}\tag{*}
 VC(S, Q) \land P \rightarrow awp(S, Q)
 \end{equation}&lt;/p>
-&lt;p>Thus, if we can prove the validity of the above equation *, we know the program obeys specification.&lt;/p></description></item><item><title>Congruence Closure</title><link>https://www.bodunhu.com/blog/posts/congruence-closure/</link><pubDate>Sat, 27 Mar 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/congruence-closure/</guid><description>&lt;p>This is a summary of how to compute congruence closure. I implemented the algorithm to compute congruence closure and thought I&amp;rsquo;d never forget it. But my memory starts to get blurry just after two days. So I figured I&amp;rsquo;d put things down so I don&amp;rsquo;t have to watch the entire lecture again the next time I need it.&lt;/p>
+&lt;p>Thus, if we can prove the validity of the above equation *, we know the program obeys specification.&lt;/p></description></item><item><title>Congruence Closure</title><link>https://www.bodunhu.com/blog/posts/congruence-closure/</link><pubDate>Sat, 27 Mar 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/congruence-closure/</guid><description>&lt;aside id="toc">
+&lt;h4>Table of Contents&lt;/h4>
+&lt;nav id="TableOfContents">
+&lt;ul>
+&lt;li>&lt;a href="#equivalence-relation">Equivalence Relation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#congruence-relation">Congruence Relation&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#equivalence-closure">Equivalence Closure&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#congruence-closure">Congruence Closure&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#algorithm-to-compute-congruence-closure">Algorithm to Compute Congruence Closure&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/nav>
+&lt;/aside>
+&lt;p>This is a summary of how to compute congruence closure. I implemented the algorithm to compute congruence closure and thought I&amp;rsquo;d never forget it. But my memory starts to get blurry just after two days. So I figured I&amp;rsquo;d put things down so I don&amp;rsquo;t have to watch the entire lecture again the next time I need it.&lt;/p>
 &lt;!--description-->
 &lt;h2 id="equivalence-relation">Equivalence Relation&lt;/h2>
 &lt;p>Equivalence relation has three properties: reflexive, symmetric, and transitive.
@@ -3716,6 +3740,21 @@ Privileged instructions executed by the guest has to go through the check of hyp
 &lt;h2 id="questions">Questions&lt;/h2>
 &lt;p>a. Why does x86 make it hard to support efficient virtualization?&lt;br>
 b. How does Xen exists in 64MB section at the top of every address space avoid TLB flushes when entering and leaving the hypervisor?&lt;/p></description></item><item><title>Start Linux Kernel Hacking</title><link>https://www.bodunhu.com/blog/posts/start-linux-kernel-hacking/</link><pubDate>Mon, 14 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/start-linux-kernel-hacking/</guid><description>&lt;p>&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/linux_kernel_hacking/linux.jpg#center" alt="Linux">&lt;/p>
+&lt;aside id="toc">
+&lt;h4>Table of Contents&lt;/h4>
+&lt;nav id="TableOfContents">
+&lt;ul>
+&lt;li>&lt;a href="#getting-the-vm-running-in-kvm">Getting the VM running in KVM&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#building-the-kernel">Building the Kernel&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#build-and-install-kernel-modules">Build and Install Kernel Modules&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#booting-kvm-with-the-new-kernel">Booting KVM with the new Kernel&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#booting-process">Booting Process&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#debugging-kernel">Debugging Kernel&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#set-breakpoints">Set Breakpoints&lt;/a>&lt;/li>
+&lt;li>&lt;a href="#syscall">Syscall&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;/nav>
+&lt;/aside>
 &lt;p>This is a summary of how to compile and boot the Linux kernel on the KVM-qemu virtual machine. It covers how to get a VM running in KVM, how to build a customized kernel, and how to use GDB with the Linux kernel. The experiment is conducted on an amd64 architecture CPU. We use Ubuntu as our testing environment but the steps covered here should apply to other distros as well.&lt;/p>
 &lt;!--description-->
 &lt;h2 id="getting-the-vm-running-in-kvm">Getting the VM running in KVM&lt;/h2>
