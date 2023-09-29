@@ -775,6 +775,8 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;ul>
 &lt;li>Refer to &lt;a href="https://github.com/Hannibal046/Awesome-LLM">Awesome-LLM&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://lilianweng.github.io/posts/2023-01-10-inference-optimization/">Large Transformer Model Inference Optimization &lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2309.06180.pdf">Efficient Memory Management for Large Language Model Serving with PagedAttention&lt;/a>: vLLM&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2309.10285.pdf">Flash-LLM: Enabling Cost-Effective and Highly-Efficient Large Generative Model Inference with Unstructured Sparsity&lt;/a>: load as sparse, compute as dense&lt;/li>
 &lt;/ul>
 &lt;h3 id="ml-compilers">ML Compilers&lt;/h3>
 &lt;ul>
