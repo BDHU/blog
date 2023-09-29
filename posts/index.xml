@@ -2250,11 +2250,17 @@ H^{\dagger} = \begin{pmatrix} \begin{pmatrix}\frac{1}{\sqrt{2}} \begin{bmatrix}
 \]&lt;/p>
 &lt;p>Multiplying the above formula out,&lt;/p>
 &lt;p>\[
-x^Hx - y^Hx - x^Hy + y^Hy = x^HA^HAx - y^HA^HAx - x^HA^HAy + y^HA^HAy
+\begin{align}
+x^Hx - y^Hx - x^Hy + y^Hy &amp;amp;= x^HA^HAx - y^HA^HAx \\
+&amp;amp;\quad - x^HA^HAy + y^HA^HAy
+\end{align}
 \]&lt;/p>
 &lt;p>The alternative definition for \(y^Hx\) is \(\overline{x^Hy}\), so we apply the definition here,&lt;/p>
 &lt;p>\[
-x^Hx - (\overline{x^Hy} + x^Hy) + y^Hy = x^HA^HAx - (\overline{x^HA^HAy} + x^HA^HAy) + y^HA^HAy
+\begin{align}
+x^Hx - (\overline{x^Hy} + x^Hy) + y^Hy &amp;amp;= x^HA^HAx - (\overline{x^HA^HAy} + x^HA^HAy) \\
+&amp;amp;\quad + y^HA^HAy
+\end{align}
 \]&lt;/p>
 &lt;p>We know that \(A\) preserves length, and that \(\frac{\alpha + \overline{\alpha}}{2} = Re(\alpha)\). so we can simplify the above formula as:&lt;/p>
 &lt;p>\[
@@ -3008,7 +3014,7 @@ it is today.&lt;/li>
 &lt;p>Another solution is that the kernel can make a copy of the critical section and execute the critical section itself regardless of what the user thread chooses to do. Therefore, we can guarantee by the time you vector back into user space the lock is no longer held. So the kernel is basically executing the user code! Crazy, right?
 Now we ran into more gotchas. What if the code is written in Java? How to find a locked region in userspace? What if &amp;hellip;&lt;/p>
 &lt;p>Another thing we want to mention is page fault. Page fault indicates that you are missing part of your address. So there will be a notification with a new scheduler activation. Once you do something with it, you will likely touch that same piece in the space and double fault again.&lt;/p>
-&lt;p>What is the solution?&lt;/p></description></item><item><title>Add MathJax v3 Support to Jekyll and Hugo</title><link>https://www.bodunhu.com/blog/posts/add-mathjax-v3-support-to-jekyll-and-hugo/</link><pubDate>Thu, 22 Oct 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/add-mathjax-v3-support-to-jekyll-and-hugo/</guid><description>&lt;p>I was using Mathjax v2 for a while and I heard v3 perform significantly better than v2. Many great tutorials explains explains how to add Mathjax support to &lt;a href="https://jekyllrb.com/">Jekyll&lt;/a> websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website (Recently I&amp;rsquo;ve migrated to &lt;a href="https://gohugo.io/">Hugo&lt;/a> but adding support to Hugo is also pretty similar).&lt;/p>
+&lt;p>What is the solution?&lt;/p></description></item><item><title>Add MathJax Support to Jekyll and Hugo</title><link>https://www.bodunhu.com/blog/posts/add-mathjax-support-to-jekyll-and-hugo/</link><pubDate>Thu, 22 Oct 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/add-mathjax-support-to-jekyll-and-hugo/</guid><description>&lt;p>I was using Mathjax v2 for a while and I heard v3 perform significantly faster than v2. Many great tutorials explains explains how to add Mathjax support to &lt;a href="https://jekyllrb.com/">Jekyll&lt;/a> websites. Some of them only cover Mathjax v2. So here is the brief summary on how to add Mathjax v3 support to your Jekyll website (Recently I&amp;rsquo;ve migrated to &lt;a href="https://gohugo.io/">Hugo&lt;/a> but adding support to Hugo is also pretty similar).&lt;/p>
 &lt;!--description-->
 &lt;ul>
 &lt;li>In the &lt;code>_config.yml&lt;/code> located in your root directory, add this line:&lt;/li>
@@ -3029,7 +3035,7 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;/script&amp;gt;
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;script
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> type=&amp;#34;text/javascript&amp;#34; id=&amp;#34;MathJax-script&amp;#34; async
-&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> src=&amp;#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js&amp;#34;&amp;gt;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> src=&amp;#34;https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js&amp;#34;&amp;gt;
 &lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&amp;lt;/script&amp;gt;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;p>For Hugo website, the script will be exactly the same. The only difference is instead of putting &lt;code>mathjax.html&lt;/code> into &lt;code>_includes/&lt;/code>, you would want to put it inside &lt;code>layouts/partials&lt;/code>. For example, I put my &lt;code>mathjax.html&lt;/code> into the theme directory &lt;code>themes/mini/layouts/partials&lt;/code>.&lt;/p>
 &lt;p>For Jekyll, add this line in your &lt;code>_includes/head.html&lt;/code> before &lt;code>&amp;lt;/head&amp;gt;&lt;/code>:&lt;/p>
@@ -4183,7 +4189,7 @@ Since it&amp;rsquo;s a command, it also shared the luxury of having standard I/O
 &lt;!--description-->
 &lt;h2 id="components-in-the-direction-of-a-vector">Components in the direction of a vector&lt;/h2>
 &lt;p>By Pythagorean theorem, we know that \(b = \chi a + c\) where \(a\) is a unit vector orthogonal to \(c\) and \(\chi\) is a scaler. Then we have&lt;/p>
-&lt;p>$$a^T (b-\chi a) = 0$$&lt;/p>
+&lt;p>\[a^T (b-\chi a) = 0\]&lt;/p>
 &lt;p>Solving it gives us \(\chi = \frac{a^T b}{a^T a}\). We have \(\frac{a^T b}{a^T a}a = \frac{a a^T}{a^T a}b\). And \(\frac{a a^T}{a^T a}\) can map vector \(b\) in the direction of \(a\). The orthogonal component of \(a\) can thus be calculated as \(I-\frac{a a^T}{a^T a}\).&lt;/p>
 &lt;p>The linear transformation can be simplified by letting \(\left\lVert a\right\rVert_{2}=1\) because this will render \(a^T a = 1\).&lt;/p>
 &lt;h2 id="unitary-matrix">Unitary Matrix&lt;/h2>
