@@ -755,6 +755,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://github.com/dfm/extending-jax">Extending JAX with custom C++ and CUDA code&lt;/a>&lt;/li>
 &lt;li>&lt;a href="http://cs231n.stanford.edu/vecDerivs.pdf">Vector, Matrix, and Tensor Derivatives&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://dlsys.cs.washington.edu/pdf/lecture9.pdf">ML Memory Optimization&lt;/a>: slides from UW. Visualization of dataflow graph helps understand how to optimize memory.&lt;/li>
+&lt;li>&lt;a href="https://zhuanlan.zhihu.com/p/652193676">Pytorch模型加速系列（一）——新的Torch-TensorRT以及TorchScript/FX/dynamo&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="posts--blogs">Posts &amp;amp; Blogs&lt;/h2>
 &lt;ul>
