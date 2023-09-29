@@ -756,9 +756,6 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="http://cs231n.stanford.edu/vecDerivs.pdf">Vector, Matrix, and Tensor Derivatives&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://dlsys.cs.washington.edu/pdf/lecture9.pdf">ML Memory Optimization&lt;/a>: slides from UW. Visualization of dataflow graph helps understand how to optimize memory.&lt;/li>
 &lt;li>&lt;a href="https://zhuanlan.zhihu.com/p/652193676">Pytorch模型加速系列（一）——新的Torch-TensorRT以及TorchScript/FX/dynamo&lt;/a>&lt;/li>
-&lt;/ul>
-&lt;h2 id="posts--blogs">Posts &amp;amp; Blogs&lt;/h2>
-&lt;ul>
 &lt;li>&lt;a href="https://www.semianalysis.com/">Semianalysis&lt;/a>: many good posts&lt;/li>
 &lt;li>&lt;a href="https://medium.com/ibm-data-ai/how-to-load-pytorch-models-340-times-faster-with-ray-8be751a6944c">How to Load PyTorch Models 340 Times Faster with Ray&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://zhuanlan.zhihu.com/p/30976469">分布式深度学习系统&lt;/a>&lt;/li>
@@ -769,6 +766,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://ai.googleblog.com/2022/05/alpa-automated-model-parallel-deep.html">Alpa: Automated Model-Parallel Deep Learning&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.telesens.co/2022/04/23/data-transfer-speed-comparison-ray-plasma-store-vs-s3/">Data Transfer Speed Comparison: Ray Plasma Store vs. S3&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://www.zhihu.com/column/giantpandacv">从零开始学深度学习编译器&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://fkong.tech/posts/2023-05-20-dynamo/">一文搞懂 TorchDynamo 原理&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="papers">Papers&lt;/h2>
 &lt;p>This section could potentially be extremely long..&lt;/p>
