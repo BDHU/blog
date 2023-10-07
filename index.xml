@@ -743,6 +743,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;/ul>
 &lt;h2 id="tutorials">Tutorials&lt;/h2>
 &lt;ul>
+&lt;li>&lt;a href="https://jalammar.github.io/illustrated-transformer/">The Illustrated Transformer&lt;/a>: best introduction for transformer&lt;/li>
 &lt;li>&lt;a href="https://d2l.ai/">Dive into Deep Learning&lt;/a>: interactive deep learning book with code, math, and discussions.&lt;/li>
 &lt;li>&lt;a href="https://cs231n.github.io/">CS231n: Convolutional Neural Networks for Visual Recognition&lt;/a>&lt;/li>
 &lt;li>&lt;a href="http://blog.ezyang.com/2019/05/pytorch-internals/">Pytorch-Internals&lt;/a>: must-read for PyTorch basics.&lt;/li>
