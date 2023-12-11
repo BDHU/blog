@@ -812,6 +812,8 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;h3 id="llm-1">LLM&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2303.17580.pdf">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face&lt;/a>: use LLM as the controller to coordinate with exernal models for complicated tasks.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2307.02628.pdf">SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference&lt;/a>: static layer skipping for dynamic sequence length and batched inference.&lt;/li>
+&lt;li>&lt;a href="https://openreview.net/pdf?id=uNrFpDPMyo">MODEL TELLS YOU WHAT TO DISCARD: ADAPTIVE KV CACHE COMPRESSION FOR LLMS&lt;/a>: dynamic KV cached token dropping to long sequence.&lt;/li>
 &lt;/ul>
 &lt;h3 id="dynamic-neural-network">Dynamic Neural Network&lt;/h3>
 &lt;ul>
