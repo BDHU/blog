@@ -773,10 +773,14 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;p>This section could potentially be extremely long..&lt;/p>
 &lt;h3 id="llm">LLM&lt;/h3>
 &lt;ul>
-&lt;li>Refer to &lt;a href="https://github.com/Hannibal046/Awesome-LLM">Awesome-LLM&lt;/a>&lt;/li>
+&lt;li>You an also refer to &lt;a href="https://github.com/Hannibal046/Awesome-LLM">Awesome-LLM&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://lilianweng.github.io/posts/2023-01-10-inference-optimization/">Large Transformer Model Inference Optimization &lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://arxiv.org/pdf/2309.06180.pdf">Efficient Memory Management for Large Language Model Serving with PagedAttention&lt;/a>: vLLM&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2303.17580.pdf">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face&lt;/a>: use LLM as the controller to coordinate with exernal models for complicated tasks&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2309.17453.pdf">Efficient Streaming Language Models with Attention Sinks&lt;/a>: (Stream-LLM)&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2307.02628.pdf">SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference&lt;/a>: monotonically decrease LLM layers to ease KV cache management&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2309.06180.pdf">Efficient Memory Management for Large Language Model Serving with PagedAttention&lt;/a>: (vLLM) allows non-contiguous KV cache&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2309.10285.pdf">Flash-LLM: Enabling Cost-Effective and Highly-Efficient Large Generative Model Inference with Unstructured Sparsity&lt;/a>: load as sparse, compute as dense&lt;/li>
+&lt;li>&lt;a href="https://openreview.net/pdf?id=uNrFpDPMyo">MODEL TELLS YOU WHAT TO DISCARD: ADAPTIVE KV CACHE COMPRESSION FOR LLMS&lt;/a>: dynamic KV cached token dropping to long sequence.&lt;/li>
 &lt;/ul>
 &lt;h3 id="ml-compilers">ML Compilers&lt;/h3>
 &lt;ul>
@@ -808,12 +812,6 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2203.09040.pdf">A Survey of Multi-Tenant Deep Learning Inference on GPU&lt;/a>: efficient resource management for multi-tenant inference.&lt;/li>
 &lt;li>&lt;a href="https://dl.acm.org/doi/pdf/10.1145/3458817.3476143">Enable Simultaneous DNN Services Based on Deterministic Operator Overlap and Precise Latency Prediction&lt;/a>: overlap DNN operators of different models in an online fashion&lt;/li>
 &lt;li>&lt;a href="https://utns.cs.utexas.edu/papers/nsdi20-themis.pdf">THEMIS : Fair and Efficient GPU Cluster Scheduling&lt;/a>: minimize the maximum finish time fairness across all ML apps while efficiently utilizing cluster GPUs&lt;/li>
-&lt;/ul>
-&lt;h3 id="llm-1">LLM&lt;/h3>
-&lt;ul>
-&lt;li>&lt;a href="https://arxiv.org/pdf/2303.17580.pdf">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face&lt;/a>: use LLM as the controller to coordinate with exernal models for complicated tasks.&lt;/li>
-&lt;li>&lt;a href="https://arxiv.org/pdf/2307.02628.pdf">SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference&lt;/a>: static layer skipping for dynamic sequence length and batched inference.&lt;/li>
-&lt;li>&lt;a href="https://openreview.net/pdf?id=uNrFpDPMyo">MODEL TELLS YOU WHAT TO DISCARD: ADAPTIVE KV CACHE COMPRESSION FOR LLMS&lt;/a>: dynamic KV cached token dropping to long sequence.&lt;/li>
 &lt;/ul>
 &lt;h3 id="dynamic-neural-network">Dynamic Neural Network&lt;/h3>
 &lt;ul>
