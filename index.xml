@@ -781,6 +781,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2309.06180.pdf">Efficient Memory Management for Large Language Model Serving with PagedAttention&lt;/a>: (vLLM) allows non-contiguous KV cache&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2309.10285.pdf">Flash-LLM: Enabling Cost-Effective and Highly-Efficient Large Generative Model Inference with Unstructured Sparsity&lt;/a>: load as sparse, compute as dense&lt;/li>
 &lt;li>&lt;a href="https://openreview.net/pdf?id=uNrFpDPMyo">MODEL TELLS YOU WHAT TO DISCARD: ADAPTIVE KV CACHE COMPRESSION FOR LLMS&lt;/a>: dynamic KV cached token dropping to long sequence.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2312.04916.pdf">EE-LLM: Large-Scale Training and Inference of Early-Exit Large Language Models with 3D Parallelism&lt;/a>: Overlapping LLM forward with KV caching computation.&lt;/li>
 &lt;/ul>
 &lt;h3 id="ml-compilers">ML Compilers&lt;/h3>
 &lt;ul>
