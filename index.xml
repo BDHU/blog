@@ -779,6 +779,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2309.17453.pdf">Efficient Streaming Language Models with Attention Sinks&lt;/a>: (Stream-LLM)&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2307.02628.pdf">SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference&lt;/a>: monotonically decrease LLM layers to ease KV cache management&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2309.06180.pdf">Efficient Memory Management for Large Language Model Serving with PagedAttention&lt;/a>: (vLLM) allows non-contiguous KV cache&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2312.07104.pdf">Efficiently Programming Large Language Models using SGLang&lt;/a>: RadixAttention that allows Kv cache sharing in prompt engineering&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2309.10285.pdf">Flash-LLM: Enabling Cost-Effective and Highly-Efficient Large Generative Model Inference with Unstructured Sparsity&lt;/a>: load as sparse, compute as dense&lt;/li>
 &lt;li>&lt;a href="https://openreview.net/pdf?id=uNrFpDPMyo">MODEL TELLS YOU WHAT TO DISCARD: ADAPTIVE KV CACHE COMPRESSION FOR LLMS&lt;/a>: dynamic KV cached token dropping to long sequence.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2312.04916.pdf">EE-LLM: Large-Scale Training and Inference of Early-Exit Large Language Models with 3D Parallelism&lt;/a>: Overlapping LLM forward with KV caching computation.&lt;/li>
