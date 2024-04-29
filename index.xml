@@ -785,6 +785,10 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2312.04916.pdf">EE-LLM: Large-Scale Training and Inference of Early-Exit Large Language Models with 3D Parallelism&lt;/a>: Overlapping LLM forward with KV caching computation.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2401.02669.pdf">Infinite-LLM: Efficient LLM Service for Long Context with DistAttention and Distributed KVCache&lt;/a>: managing KV cache in distributed settings.&lt;/li>
 &lt;/ul>
+&lt;h3 id="datasets">Datasets&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2309.11998">LMSYS-Chat-1M: A Large-Scale Real-World LLM Conversation Dataset&lt;/a>: real-world conversation&lt;/li>
+&lt;/ul>
 &lt;h3 id="ml-compilers">ML Compilers&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/1802.04799.pdf">TVM: An Automated End-to-End Optimizing Compiler for Deep Learning&lt;/a>&lt;/li>
