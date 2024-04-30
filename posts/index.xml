@@ -708,7 +708,8 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;ul>
 &lt;li>&lt;a href="https://github.com/facebookresearch/metaseq">Facebook&amp;rsquo;s external large-scale work&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://docs.nvidia.com/deeplearning/frameworks/support-matrix/index.html">NGC Container Doc&lt;/a>: great for development, without having to manually install CUDA, pytorch, and other dependencies.&lt;/li>
-&lt;li>&lt;a href="https://github.com/HuaizhengZhang/Awesome-System-for-Machine-Learning"> Awesome-System-for-Machine-Learning&lt;/a>: A curated list of research in machine learning systems (MLSys). Paper notes are also provided.&lt;/li>
+&lt;li>&lt;a href="https://github.com/HuaizhengZhang/Awesome-System-for-Machine-Learning">Awesome-System-for-Machine-Learning&lt;/a>: A curated list of research in machine learning systems (MLSys). Paper notes are also provided.&lt;/li>
+&lt;li>&lt;a href="https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/">Mastering LLM Techniques: Inference Optimization&lt;/a>: summary of techniques used for LLM deployment&lt;/li>
 &lt;/ul>
 &lt;h2 id="courses">Courses&lt;/h2>
 &lt;ul>
