@@ -784,6 +784,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://openreview.net/pdf?id=uNrFpDPMyo">MODEL TELLS YOU WHAT TO DISCARD: ADAPTIVE KV CACHE COMPRESSION FOR LLMS&lt;/a>: dynamic KV cached token dropping to long sequence.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2312.04916.pdf">EE-LLM: Large-Scale Training and Inference of Early-Exit Large Language Models with 3D Parallelism&lt;/a>: Overlapping LLM forward with KV caching computation.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2401.02669.pdf">Infinite-LLM: Efficient LLM Service for Long Context with DistAttention and Distributed KVCache&lt;/a>: managing KV cache in distributed settings.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2310.07707">MatFormer: Nested Transformer for Elastic Inference&lt;/a>: adaptive blocks during inference.&lt;/li>
 &lt;/ul>
 &lt;h3 id="datasets">Datasets&lt;/h3>
 &lt;ul>
