@@ -1,4 +1,16 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/posts/</link><description>PhD student at University of Texas at Austin 🤘. Doing systems for ML.</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>SHEPHERD: Serving DNNs in the Wild</title><link>https://www.bodunhu.com/blog/posts/shepherd-serving-dnns-in-the-wild/</link><pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/shepherd-serving-dnns-in-the-wild/</guid><description>&lt;p>Paper link: &lt;a href="https://www.usenix.org/system/files/nsdi23-zhang-hong.pdf">SHEPHERD: Serving DNNs in the Wild&lt;/a>&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/posts/</link><description>PhD student at University of Texas at Austin 🤘. Doing systems for ML.</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog Archive</title><link>https://www.bodunhu.com/blog/posts/blog-archive/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/blog-archive/</guid><description>&lt;p>This is an archive including blogs I find useful or interesting. Hopefully the updates will keep coming.&lt;/p>
+&lt;h2 id="hardware">Hardware&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://www.servethehome.com/">Server the home&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="ml">ML&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://research.google/blog/">Google Research Blog&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.microsoft.com/en-us/research/blog/">Microsoft Research Blog&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://magazine.sebastianraschka.com/">Ahead of AI&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://www.aisnakeoil.com/">AI Snake Oil&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://huggingface.co/blog">Huggingface Blog&lt;/a>&lt;/li>
+&lt;/ul></description></item><item><title>SHEPHERD: Serving DNNs in the Wild</title><link>https://www.bodunhu.com/blog/posts/shepherd-serving-dnns-in-the-wild/</link><pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/shepherd-serving-dnns-in-the-wild/</guid><description>&lt;p>Paper link: &lt;a href="https://www.usenix.org/system/files/nsdi23-zhang-hong.pdf">SHEPHERD: Serving DNNs in the Wild&lt;/a>&lt;/p>
 &lt;p>Achieving scalability, high system goodput and maximize resource utilization,
 &lt;em>at the same time&lt;/em> is hard for an inference system.&lt;/p>
 &lt;blockquote>
