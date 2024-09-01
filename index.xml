@@ -1,4 +1,41 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/</link><description>PhD student at University of Texas at Austin 🤘. Doing systems for ML.</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Blog Archive</title><link>https://www.bodunhu.com/blog/posts/blog-archive/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/blog-archive/</guid><description>&lt;p>This is an archive including blogs I find useful or interesting. Hopefully the updates will keep coming.&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>std::bodun::blog</title><link>https://www.bodunhu.com/blog/</link><description>PhD student at University of Texas at Austin 🤘. Doing systems for ML.</description><generator>Hugo -- gohugo.io</generator><language>en-us</language><atom:link href="https://www.bodunhu.com/blog/index.xml" rel="self" type="application/rss+xml"/><item><title>Stichable Neural Networks</title><link>https://www.bodunhu.com/blog/posts/stichable-neural-networks/</link><pubDate>Sun, 01 Sep 2024 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/stichable-neural-networks/</guid><description>&lt;p>TLDR; the &lt;a href="https://arxiv.org/abs/2302.06586">Stichable Neural Networks&lt;/a> paper includes some interesting concepts. It allows the creation of multiple neural networks with varying complexity and performance trade-offs from a family of pretrained models.&lt;/p>
+&lt;h2 id="key-principles">Key Principles&lt;/h2>
+&lt;ul>
+&lt;li>How to choose &lt;strong>anchors&lt;/strong> from well-performed pretrained models in a model family&lt;/li>
+&lt;li>The design of stitching layers&lt;/li>
+&lt;li>The stitching direction and strategy&lt;/li>
+&lt;li>Simple but effective training strateg&lt;/li>
+&lt;/ul>
+&lt;p>A key question about combining sub-networks from different pretrained models is how to maintain accuracy. The paper concludes that the final performance of these combinations is nearly predictable due to an interpolation-like performance curve between anchors. This predictability allows for selective pre-training of stitches based on various deployment scenarios.&lt;/p>
+&lt;h2 id="the-choice-of-anchors">The Choice of Anchors&lt;/h2>
+&lt;p>Anchors that are pretrained on different tasks can learn very different representations due to the large distribution gap of different domains. Therefore, the selected anchors
+should be consistent in terms of the pretrained domain.&lt;/p>
+&lt;h2 id="the-stitching-layer-and-its-initialization">The Stitching Layer and its Initialization&lt;/h2>
+&lt;p>SN-Net is built upon pretrained models. Therefore, the anchors have already learned good representations, which allows to directly obtain an accurate transformation matrix by solving the least squares problem:&lt;/p>
+&lt;p>$$||AM_o - B|| = min||AM - b||_F$$&lt;/p>
+&lt;p>where $A \in R^{N \times D_1}$ and \(B \in R^{N \times D_2}\) are two feature maps
+of the same spatial size but with different number of hidden
+dimensions.&lt;/p>
+&lt;p>This function indicates a closed form expression based on singular value decomposition, in which case the optimal solution can be achieved through an orthogonal projection in the space of matrices:&lt;/p>
+&lt;p>$$M_o = A^\dagger B$$&lt;/p>
+&lt;p>where $A^\dagger$ denotes the Moore-Penrose pseudoinverse of $A$.&lt;/p>
+&lt;h2 id="where-to-stitch">Where to Stitch&lt;/h2>
+&lt;p>SN-Net takes Fast-to-Slow as the default stitching direction, meaning it will stitch bigger and slower network after smaller and faster networks to achieve better model performance. Besides, it also proposes a &lt;strong>nearest stitching strategy&lt;/strong> by limiting the stitching between two anchors of the nearest model complexity/performance.&lt;/p>
+&lt;h2 id="way-to-stitch">Way to Stitch&lt;/h2>
+&lt;p>Prior works shows neighboring layers dealing with the same scale feature maps share
+similar representations. Therefore, SN-Net uses &lt;strong>slideing window&lt;/strong>: where the same window shares a common stitching layer.&lt;/p>
+&lt;p>&lt;img src="stitching.png" alt="sliding-window">&lt;/p>
+&lt;h2 id="stitching-space">Stitching Space&lt;/h2>
+&lt;p>The stitching space is controlled by the configuring the sliding window kernel size $k$ and step size $s$.&lt;/p>
+&lt;h2 id="training-strategy">Training Strategy&lt;/h2>
+&lt;p>The training algorithm of SN-Net can be described as:&lt;/p>
+&lt;p>&lt;img src="stitch-net-train.png" alt="sn-net-training">&lt;/p>
+&lt;p>The training algorithm can be summarized as:&lt;/p>
+&lt;ol>
+&lt;li>Firstly define a configuration set that contains all possible stitches&lt;/li>
+&lt;li>Initialize all stitching layers with least-squares matching&lt;/li>
+&lt;li>At each training iteration, we randomly sample a stitch and follow the standard training process as in common practices&lt;/li>
+&lt;/ol></description></item><item><title>Blog Archive</title><link>https://www.bodunhu.com/blog/posts/blog-archive/</link><pubDate>Wed, 28 Aug 2024 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/blog-archive/</guid><description>&lt;p>This is an archive including blogs I find useful or interesting. Hopefully the updates will keep coming.&lt;/p>
 &lt;h2 id="hardware">Hardware&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://www.servethehome.com/">Server the home&lt;/a>&lt;/li>
@@ -4930,4 +4967,4 @@ Virtual Address calculation: o&lt;sub>MAX&lt;/sub> x p + o (here o is the offset
 &lt;li>Need to add memory references every allocation.&lt;/li>
 &lt;li>Memory management is a mess.&lt;/li>
 &lt;li>Everyone has the same permission throughout the address space, which can potential create problems.&lt;/li>
-&lt;/ul></description></item><item><title/><link>https://www.bodunhu.com/blog/posts/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/</guid><description/></item></channel></rss>
+&lt;/ul></description></item></channel></rss>
