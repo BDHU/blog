@@ -14,7 +14,7 @@
 &lt;h2 id="security">Security&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://nullprogram.com/">null program&lt;/a>&lt;/li>
-&lt;/ul></description></item><item><title>SHEPHERD: Serving DNNs in the Wild</title><link>https://www.bodunhu.com/blog/posts/shepherd-serving-dnns-in-the-wild/</link><pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/shepherd-serving-dnns-in-the-wild/</guid><description>&lt;p>Paper link: &lt;a href="https://www.usenix.org/system/files/nsdi23-zhang-hong.pdf">SHEPHERD: Serving DNNs in the Wild&lt;/a>&lt;/p>
+&lt;/ul></description></item><item><title>How to Handle KV Cache in vLLM</title><link>https://www.bodunhu.com/blog/posts/how-to-handle-kv-cache-in-vllm/</link><pubDate>Thu, 02 May 2024 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/how-to-handle-kv-cache-in-vllm/</guid><description>&lt;p>&lt;a href="https://github.com/vllm-project/vllm">vLLM&lt;/a> is the state-of-the-art system for efficient key-value (KV) cache management during large language model (LLM) inference. My goal is to gain insights into accessing the KV cache and explore interesting applications. As a starting point, I decided to experiment with copying the KV cache from one node to another. This post will document my findings and experiments.&lt;/p></description></item><item><title>SHEPHERD: Serving DNNs in the Wild</title><link>https://www.bodunhu.com/blog/posts/shepherd-serving-dnns-in-the-wild/</link><pubDate>Wed, 19 Apr 2023 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/shepherd-serving-dnns-in-the-wild/</guid><description>&lt;p>Paper link: &lt;a href="https://www.usenix.org/system/files/nsdi23-zhang-hong.pdf">SHEPHERD: Serving DNNs in the Wild&lt;/a>&lt;/p>
 &lt;p>Achieving scalability, high system goodput and maximize resource utilization,
 &lt;em>at the same time&lt;/em> is hard for an inference system.&lt;/p>
 &lt;blockquote>
@@ -4005,7 +4005,44 @@ wireless local area networks. Degraded transmitting rate is caused by CSMA/CA ch
 &lt;p>This paper has made improvements over previous work in that it studies the performance of 802.11 WLANs, with one host having lower bit rate, whereas many other assume that all hosts communicate using the same bit rate. This is a step forward to capture more realistic situations. Overall, the paper does a good job in terms of proving its point. It captures the most critical information and it&amp;rsquo;s easy to follow the concept. However, the neat structure can make readers without sufficient background to spend more time catching up since the background section may not be enough for starters.&lt;/p>
 &lt;h2 id="conclusion">Conclusion&lt;/h2>
 &lt;p>Overall, this paper brings novel approach to analyze the performance of 802.11 WLANs with varying bit rate. It brings new insights into studying the 802.11 standard. The paper focuses on TCP and UDP protocols. Applying the method discussed in paper to a lesser known protocol such as DCTCP can yield more insights into the different protocols can affect the throughput. Another direction is to generalize this model to multiple bit rate degrading and study their behaviors.&lt;/p>
-&lt;p>The bit rate used in the paper also seems to be pretty low compared to modern standards. With the introduction of 5G network, the bit rate becomes a lot higher, it will be interesting to see how extremely high bit rate can affect the performance of 802.11.&lt;/p></description></item><item><title>Exokernel</title><link>https://www.bodunhu.com/blog/posts/exokernel/</link><pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/exokernel/</guid><description>&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Exokernel">Exokernel&lt;/a> is a term every system researcher has heard of at some point in life. However, according to the &lt;a href="https://pdos.csail.mit.edu/">PDOS&lt;/a> group at MIT, there aren&amp;rsquo;t any exokernel-based operating systems in active use today. It&amp;rsquo;s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice.&lt;/p>
+&lt;p>The bit rate used in the paper also seems to be pretty low compared to modern standards. With the introduction of 5G network, the bit rate becomes a lot higher, it will be interesting to see how extremely high bit rate can affect the performance of 802.11.&lt;/p></description></item><item><title>Stichable Neural Networks</title><link>https://www.bodunhu.com/blog/posts/stichable-neural-networks/</link><pubDate>Sun, 13 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/stichable-neural-networks/</guid><description>&lt;p>TLDR; the &lt;a href="https://arxiv.org/abs/2302.06586">Stichable Neural Networks&lt;/a> paper includes some interesting concepts. It allows the creation of multiple neural networks with varying complexity and performance trade-offs from a family of pretrained models.&lt;/p>
+&lt;h2 id="key-principles">Key Principles&lt;/h2>
+&lt;ul>
+&lt;li>How to choose &lt;strong>anchors&lt;/strong> from well-performed pretrained models in a model family&lt;/li>
+&lt;li>The design of stitching layers&lt;/li>
+&lt;li>The stitching direction and strategy&lt;/li>
+&lt;li>Simple but effective training strateg&lt;/li>
+&lt;/ul>
+&lt;p>A key question about combining sub-networks from different pretrained models is how to maintain accuracy. The paper concludes that the final performance of these combinations is nearly predictable due to an interpolation-like performance curve between anchors. This predictability allows for selective pre-training of stitches based on various deployment scenarios.&lt;/p>
+&lt;h2 id="the-choice-of-anchors">The Choice of Anchors&lt;/h2>
+&lt;p>Anchors that are pretrained on different tasks can learn very different representations due to the large distribution gap of different domains. Therefore, the selected anchors
+should be consistent in terms of the pretrained domain.&lt;/p>
+&lt;h2 id="the-stitching-layer-and-its-initialization">The Stitching Layer and its Initialization&lt;/h2>
+&lt;p>SN-Net is built upon pretrained models. Therefore, the anchors have already learned good representations, which allows to directly obtain an accurate transformation matrix by solving the least squares problem:&lt;/p>
+&lt;p>$$||AM_o - B|| = min||AM - b||_F$$&lt;/p>
+&lt;p>where $A \in R^{N \times D_1}$ and \(B \in R^{N \times D_2}\) are two feature maps
+of the same spatial size but with different number of hidden
+dimensions.&lt;/p>
+&lt;p>This function indicates a closed form expression based on singular value decomposition, in which case the optimal solution can be achieved through an orthogonal projection in the space of matrices:&lt;/p>
+&lt;p>$$M_o = A^\dagger B$$&lt;/p>
+&lt;p>where $A^\dagger$ denotes the Moore-Penrose pseudoinverse of $A$.&lt;/p>
+&lt;h2 id="where-to-stitch">Where to Stitch&lt;/h2>
+&lt;p>SN-Net takes Fast-to-Slow as the default stitching direction, meaning it will stitch bigger and slower network after smaller and faster networks to achieve better model performance. Besides, it also proposes a &lt;strong>nearest stitching strategy&lt;/strong> by limiting the stitching between two anchors of the nearest model complexity/performance.&lt;/p>
+&lt;h2 id="way-to-stitch">Way to Stitch&lt;/h2>
+&lt;p>Prior works shows neighboring layers dealing with the same scale feature maps share
+similar representations. Therefore, SN-Net uses &lt;strong>slideing window&lt;/strong>: where the same window shares a common stitching layer.&lt;/p>
+&lt;p>&lt;img src="stitching.png" alt="sliding-window">&lt;/p>
+&lt;h2 id="stitching-space">Stitching Space&lt;/h2>
+&lt;p>The stitching space is controlled by the configuring the sliding window kernel size $k$ and step size $s$.&lt;/p>
+&lt;h2 id="training-strategy">Training Strategy&lt;/h2>
+&lt;p>The training algorithm of SN-Net can be described as:&lt;/p>
+&lt;p>&lt;img src="stitch-net-train.png" alt="sn-net-training">&lt;/p>
+&lt;p>The training algorithm can be summarized as:&lt;/p>
+&lt;ol>
+&lt;li>Firstly define a configuration set that contains all possible stitches&lt;/li>
+&lt;li>Initialize all stitching layers with least-squares matching&lt;/li>
+&lt;li>At each training iteration, we randomly sample a stitch and follow the standard training process as in common practices&lt;/li>
+&lt;/ol></description></item><item><title>Exokernel</title><link>https://www.bodunhu.com/blog/posts/exokernel/</link><pubDate>Tue, 01 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/exokernel/</guid><description>&lt;p>&lt;a href="https://en.wikipedia.org/wiki/Exokernel">Exokernel&lt;/a> is a term every system researcher has heard of at some point in life. However, according to the &lt;a href="https://pdos.csail.mit.edu/">PDOS&lt;/a> group at MIT, there aren&amp;rsquo;t any exokernel-based operating systems in active use today. It&amp;rsquo;s interesting to discover what ideas exokernels brought to the OS high-level design and some potential drawbacks of such design choice.&lt;/p>
 &lt;p>Perhaps the most important thing to keep in mind is that exokernel operating system architecture pushes management of physical resources to the application level, contrary to what most monolithic kernel would do: providing hardware resource management through some form of abstraction, usually hiding hardware-related details.&lt;/p>
 &lt;h2 id="limitations-of-traditional-approaches">Limitations of Traditional Approaches&lt;/h2>
 &lt;p>Monolithic kernels usually enforce centralized resource management via a set of abstractions. In microkernel-based system, they are usually provided through some form of trusted user-level servers. There are several drawbacks:&lt;/p>
