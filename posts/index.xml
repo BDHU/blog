@@ -822,8 +822,8 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2407.21783">The Llama 3 Herd of Models&lt;/a>: really great paper explaining how SOTA models are trained in real world!&lt;/li>
 &lt;/ul>
 &lt;h3 id="llm">LLM&lt;/h3>
+&lt;p>You an also refer to &lt;a href="https://github.com/Hannibal046/Awesome-LLM">Awesome-LLM&lt;/a>&lt;/p>
 &lt;ul>
-&lt;li>You an also refer to &lt;a href="https://github.com/Hannibal046/Awesome-LLM">Awesome-LLM&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://lilianweng.github.io/posts/2023-01-10-inference-optimization/">Large Transformer Model Inference Optimization &lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2303.17580.pdf">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face&lt;/a>: use LLM as the controller to coordinate with exernal models for complicated tasks&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2309.17453.pdf">Efficient Streaming Language Models with Attention Sinks&lt;/a>: (Stream-LLM)&lt;/li>
