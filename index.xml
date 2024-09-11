@@ -816,6 +816,11 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;/ul>
 &lt;h2 id="papers">Papers&lt;/h2>
 &lt;p>This section could potentially be extremely long..&lt;/p>
+&lt;h3 id="training">Training&lt;/h3>
+&lt;p>Really broad topic&amp;hellip;&lt;/p>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2407.21783">The Llama 3 Herd of Models&lt;/a>: really great paper explaining how SOTA models are trained in real world!&lt;/li>
+&lt;/ul>
 &lt;h3 id="llm">LLM&lt;/h3>
 &lt;ul>
 &lt;li>You an also refer to &lt;a href="https://github.com/Hannibal046/Awesome-LLM">Awesome-LLM&lt;/a>&lt;/li>
@@ -3113,38 +3118,38 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Attribute&lt;/th>
-&lt;th style="text-align:center">Value&lt;/th>
+&lt;th style="text-align: left">Attribute&lt;/th>
+&lt;th style="text-align: center">Value&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>Processor name (BIOS)&lt;/td>
-&lt;td style="text-align:center">Intel(R) Core(TM) i7-6800K CPU @ 3.40GHz&lt;/td>
+&lt;td style="text-align: left">Processor name (BIOS)&lt;/td>
+&lt;td style="text-align: center">Intel(R) Core(TM) i7-6800K CPU @ 3.40GHz&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Cores&lt;/td>
-&lt;td style="text-align:center">6&lt;/td>
+&lt;td style="text-align: left">Cores&lt;/td>
+&lt;td style="text-align: center">6&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Logical processors&lt;/td>
-&lt;td style="text-align:center">12&lt;/td>
+&lt;td style="text-align: left">Logical processors&lt;/td>
+&lt;td style="text-align: center">12&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>TLB/Cache details&lt;/td>
-&lt;td style="text-align:center">64-byte Prefetching Data TLB: 1-GB pages, 4-way set associative, 4 entries Data TLB: 4-KB Pages, 4-way set associative, 64 entries Instruction TLB: 4-KByte pages, 8-way set associative, 64 entries L2 TLB: 1-MB, 4-way set associative, 64-byte line size Shared 2nd-Level TLB: 4-KB / 2-MB pages, 6-way associative, 1536 entries. Plus, 1-GB pages, 4-way, 16 entries&lt;/td>
+&lt;td style="text-align: left">TLB/Cache details&lt;/td>
+&lt;td style="text-align: center">64-byte Prefetching Data TLB: 1-GB pages, 4-way set associative, 4 entries Data TLB: 4-KB Pages, 4-way set associative, 64 entries Instruction TLB: 4-KByte pages, 8-way set associative, 64 entries L2 TLB: 1-MB, 4-way set associative, 64-byte line size Shared 2nd-Level TLB: 4-KB / 2-MB pages, 6-way associative, 1536 entries. Plus, 1-GB pages, 4-way, 16 entries&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>RAM&lt;/td>
-&lt;td style="text-align:center">32GB&lt;/td>
+&lt;td style="text-align: left">RAM&lt;/td>
+&lt;td style="text-align: center">32GB&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Operating System&lt;/td>
-&lt;td style="text-align:center">Ubuntu 20.04.1 LTS&lt;/td>
+&lt;td style="text-align: left">Operating System&lt;/td>
+&lt;td style="text-align: center">Ubuntu 20.04.1 LTS&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Kernel Version&lt;/td>
-&lt;td style="text-align:center">5.4.0-47-generic&lt;/td>
+&lt;td style="text-align: left">Kernel Version&lt;/td>
+&lt;td style="text-align: center">5.4.0-47-generic&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -3155,41 +3160,41 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Cache&lt;/th>
-&lt;th>L1 data&lt;/th>
-&lt;th>L1 instruction&lt;/th>
-&lt;th>L2&lt;/th>
-&lt;th>L3&lt;/th>
+&lt;th style="text-align: left">Cache&lt;/th>
+&lt;th style="text-align: left">L1 data&lt;/th>
+&lt;th style="text-align: left">L1 instruction&lt;/th>
+&lt;th style="text-align: left">L2&lt;/th>
+&lt;th style="text-align: left">L3&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>Size&lt;/td>
-&lt;td>6 x 32 KB&lt;/td>
-&lt;td>6 x 32 KB&lt;/td>
-&lt;td>6 x 256 KB&lt;/td>
-&lt;td>15 MB&lt;/td>
+&lt;td style="text-align: left">Size&lt;/td>
+&lt;td style="text-align: left">6 x 32 KB&lt;/td>
+&lt;td style="text-align: left">6 x 32 KB&lt;/td>
+&lt;td style="text-align: left">6 x 256 KB&lt;/td>
+&lt;td style="text-align: left">15 MB&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Associativity&lt;/td>
-&lt;td>8-way set associative&lt;/td>
-&lt;td>8-way set associative&lt;/td>
-&lt;td>8-way set associative&lt;/td>
-&lt;td>20-way set associative&lt;/td>
+&lt;td style="text-align: left">Associativity&lt;/td>
+&lt;td style="text-align: left">8-way set associative&lt;/td>
+&lt;td style="text-align: left">8-way set associative&lt;/td>
+&lt;td style="text-align: left">8-way set associative&lt;/td>
+&lt;td style="text-align: left">20-way set associative&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Line size:&lt;/td>
-&lt;td>64 bytes&lt;/td>
-&lt;td>64 bytes&lt;/td>
-&lt;td>64 bytes&lt;/td>
-&lt;td>64 bytes&lt;/td>
+&lt;td style="text-align: left">Line size:&lt;/td>
+&lt;td style="text-align: left">64 bytes&lt;/td>
+&lt;td style="text-align: left">64 bytes&lt;/td>
+&lt;td style="text-align: left">64 bytes&lt;/td>
+&lt;td style="text-align: left">64 bytes&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Comments:&lt;/td>
-&lt;td>Direct-mapped&lt;/td>
-&lt;td>Direct-mapped&lt;/td>
-&lt;td>Non-inclusive Direct-mapped&lt;/td>
-&lt;td>Inclusive Shared between all cores&lt;/td>
+&lt;td style="text-align: left">Comments:&lt;/td>
+&lt;td style="text-align: left">Direct-mapped&lt;/td>
+&lt;td style="text-align: left">Direct-mapped&lt;/td>
+&lt;td style="text-align: left">Non-inclusive Direct-mapped&lt;/td>
+&lt;td style="text-align: left">Inclusive Shared between all cores&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -3425,56 +3430,56 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Metrics&lt;/th>
-&lt;th>Mean&lt;/th>
-&lt;th>std dev&lt;/th>
+&lt;th style="text-align: left">Metrics&lt;/th>
+&lt;th style="text-align: left">Mean&lt;/th>
+&lt;th style="text-align: left">std dev&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>utime&lt;/td>
-&lt;td>868629&lt;/td>
-&lt;td>126044&lt;/td>
+&lt;td style="text-align: left">utime&lt;/td>
+&lt;td style="text-align: left">868629&lt;/td>
+&lt;td style="text-align: left">126044&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>stime&lt;/td>
-&lt;td>253586&lt;/td>
-&lt;td>20112&lt;/td>
+&lt;td style="text-align: left">stime&lt;/td>
+&lt;td style="text-align: left">253586&lt;/td>
+&lt;td style="text-align: left">20112&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>maxrss&lt;/td>
-&lt;td>1049691&lt;/td>
-&lt;td>43&lt;/td>
+&lt;td style="text-align: left">maxrss&lt;/td>
+&lt;td style="text-align: left">1049691&lt;/td>
+&lt;td style="text-align: left">43&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>minflt&lt;/td>
-&lt;td>262214&lt;/td>
-&lt;td>1&lt;/td>
+&lt;td style="text-align: left">minflt&lt;/td>
+&lt;td style="text-align: left">262214&lt;/td>
+&lt;td style="text-align: left">1&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>majflt&lt;/td>
-&lt;td>0&lt;/td>
-&lt;td>0&lt;/td>
+&lt;td style="text-align: left">majflt&lt;/td>
+&lt;td style="text-align: left">0&lt;/td>
+&lt;td style="text-align: left">0&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>inblock&lt;/td>
-&lt;td>0&lt;/td>
-&lt;td>0&lt;/td>
+&lt;td style="text-align: left">inblock&lt;/td>
+&lt;td style="text-align: left">0&lt;/td>
+&lt;td style="text-align: left">0&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>oublock&lt;/td>
-&lt;td>0&lt;/td>
-&lt;td>0&lt;/td>
+&lt;td style="text-align: left">oublock&lt;/td>
+&lt;td style="text-align: left">0&lt;/td>
+&lt;td style="text-align: left">0&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>nvcsw&lt;/td>
-&lt;td>0.4&lt;/td>
-&lt;td>0.54&lt;/td>
+&lt;td style="text-align: left">nvcsw&lt;/td>
+&lt;td style="text-align: left">0.4&lt;/td>
+&lt;td style="text-align: left">0.54&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>nivcsw&lt;/td>
-&lt;td>47&lt;/td>
-&lt;td>7&lt;/td>
+&lt;td style="text-align: left">nivcsw&lt;/td>
+&lt;td style="text-align: left">47&lt;/td>
+&lt;td style="text-align: left">7&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -3495,27 +3500,27 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Flag&lt;/th>
-&lt;th>PRIVATE&lt;/th>
-&lt;th>PRIVATE+POPULATE&lt;/th>
-&lt;th>SHARED&lt;/th>
-&lt;th>SHARED+POPULATE&lt;/th>
+&lt;th style="text-align: left">Flag&lt;/th>
+&lt;th style="text-align: left">PRIVATE&lt;/th>
+&lt;th style="text-align: left">PRIVATE+POPULATE&lt;/th>
+&lt;th style="text-align: left">SHARED&lt;/th>
+&lt;th style="text-align: left">SHARED+POPULATE&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>Mean&lt;/td>
-&lt;td>783864673&lt;/td>
-&lt;td>769314361&lt;/td>
-&lt;td>842915231&lt;/td>
-&lt;td>816749524&lt;/td>
+&lt;td style="text-align: left">Mean&lt;/td>
+&lt;td style="text-align: left">783864673&lt;/td>
+&lt;td style="text-align: left">769314361&lt;/td>
+&lt;td style="text-align: left">842915231&lt;/td>
+&lt;td style="text-align: left">816749524&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Std dev&lt;/td>
-&lt;td>77816766&lt;/td>
-&lt;td>53913082&lt;/td>
-&lt;td>54613278&lt;/td>
-&lt;td>60580595&lt;/td>
+&lt;td style="text-align: left">Std dev&lt;/td>
+&lt;td style="text-align: left">77816766&lt;/td>
+&lt;td style="text-align: left">53913082&lt;/td>
+&lt;td style="text-align: left">54613278&lt;/td>
+&lt;td style="text-align: left">60580595&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -3524,27 +3529,27 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Flag&lt;/th>
-&lt;th>PRIVATE&lt;/th>
-&lt;th>PRIVATE+POPULATE&lt;/th>
-&lt;th>SHARED&lt;/th>
-&lt;th>SHARED+POPULATE&lt;/th>
+&lt;th style="text-align: left">Flag&lt;/th>
+&lt;th style="text-align: left">PRIVATE&lt;/th>
+&lt;th style="text-align: left">PRIVATE+POPULATE&lt;/th>
+&lt;th style="text-align: left">SHARED&lt;/th>
+&lt;th style="text-align: left">SHARED+POPULATE&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>Mean&lt;/td>
-&lt;td>3372303&lt;/td>
-&lt;td>3370740&lt;/td>
-&lt;td>3381755&lt;/td>
-&lt;td>3377370&lt;/td>
+&lt;td style="text-align: left">Mean&lt;/td>
+&lt;td style="text-align: left">3372303&lt;/td>
+&lt;td style="text-align: left">3370740&lt;/td>
+&lt;td style="text-align: left">3381755&lt;/td>
+&lt;td style="text-align: left">3377370&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Std dev&lt;/td>
-&lt;td>9884&lt;/td>
-&lt;td>13567&lt;/td>
-&lt;td>17626&lt;/td>
-&lt;td>11776&lt;/td>
+&lt;td style="text-align: left">Std dev&lt;/td>
+&lt;td style="text-align: left">9884&lt;/td>
+&lt;td style="text-align: left">13567&lt;/td>
+&lt;td style="text-align: left">17626&lt;/td>
+&lt;td style="text-align: left">11776&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -3554,48 +3559,48 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Flag&lt;/th>
-&lt;th>PRIVATE&lt;/th>
-&lt;th>PRIVATE+POPULATE&lt;/th>
-&lt;th>SHARED&lt;/th>
-&lt;th>SHARED+POPULATE&lt;/th>
+&lt;th style="text-align: left">Flag&lt;/th>
+&lt;th style="text-align: left">PRIVATE&lt;/th>
+&lt;th style="text-align: left">PRIVATE+POPULATE&lt;/th>
+&lt;th style="text-align: left">SHARED&lt;/th>
+&lt;th style="text-align: left">SHARED+POPULATE&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>Usec/std dev&lt;/td>
-&lt;td>20/0&lt;/td>
-&lt;td>20/0&lt;/td>
-&lt;td>20/0&lt;/td>
-&lt;td>20/0&lt;/td>
+&lt;td style="text-align: left">Usec/std dev&lt;/td>
+&lt;td style="text-align: left">20/0&lt;/td>
+&lt;td style="text-align: left">20/0&lt;/td>
+&lt;td style="text-align: left">20/0&lt;/td>
+&lt;td style="text-align: left">20/0&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>usec/std dev&lt;/td>
-&lt;td>801512/ 78346&lt;/td>
-&lt;td>793452/ 143556&lt;/td>
-&lt;td>872342/ 124124&lt;/td>
-&lt;td>671957/ 229314&lt;/td>
+&lt;td style="text-align: left">usec/std dev&lt;/td>
+&lt;td style="text-align: left">801512/ 78346&lt;/td>
+&lt;td style="text-align: left">793452/ 143556&lt;/td>
+&lt;td style="text-align: left">872342/ 124124&lt;/td>
+&lt;td style="text-align: left">671957/ 229314&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Ssec/std dev&lt;/td>
-&lt;td>0/0&lt;/td>
-&lt;td>0/0&lt;/td>
-&lt;td>0/0&lt;/td>
-&lt;td>0/0&lt;/td>
+&lt;td style="text-align: left">Ssec/std dev&lt;/td>
+&lt;td style="text-align: left">0/0&lt;/td>
+&lt;td style="text-align: left">0/0&lt;/td>
+&lt;td style="text-align: left">0/0&lt;/td>
+&lt;td style="text-align: left">0/0&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>ssec/std dev&lt;/td>
-&lt;td>475977/ 54355&lt;/td>
-&lt;td>475678/ 134253&lt;/td>
-&lt;td>445467/ 99345&lt;/td>
-&lt;td>536041/ 98797&lt;/td>
+&lt;td style="text-align: left">ssec/std dev&lt;/td>
+&lt;td style="text-align: left">475977/ 54355&lt;/td>
+&lt;td style="text-align: left">475678/ 134253&lt;/td>
+&lt;td style="text-align: left">445467/ 99345&lt;/td>
+&lt;td style="text-align: left">536041/ 98797&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>oublock/std dev&lt;/td>
-&lt;td>0/0&lt;/td>
-&lt;td>0/0&lt;/td>
-&lt;td>2997152/ 82256&lt;/td>
-&lt;td>2097152/ 19760&lt;/td>
+&lt;td style="text-align: left">oublock/std dev&lt;/td>
+&lt;td style="text-align: left">0/0&lt;/td>
+&lt;td style="text-align: left">0/0&lt;/td>
+&lt;td style="text-align: left">2997152/ 82256&lt;/td>
+&lt;td style="text-align: left">2097152/ 19760&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -4081,18 +4086,18 @@ hardware mechanisms,software caching, and downloading application code.&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>&lt;strong>Primitive Operations&lt;/strong>&lt;/th>
-&lt;th style="text-align:center">Description&lt;/th>
+&lt;th style="text-align: left">&lt;strong>Primitive Operations&lt;/strong>&lt;/th>
+&lt;th style="text-align: center">Description&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>TLBwr&lt;/td>
-&lt;td style="text-align:center">Insert mapping into TLB&lt;/td>
+&lt;td style="text-align: left">TLBwr&lt;/td>
+&lt;td style="text-align: center">Insert mapping into TLB&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>TLBvadelete&lt;/td>
-&lt;td style="text-align:center">Delete virtual address from TLB&lt;/td>
+&lt;td style="text-align: left">TLBvadelete&lt;/td>
+&lt;td style="text-align: center">Delete virtual address from TLB&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -4100,22 +4105,22 @@ hardware mechanisms,software caching, and downloading application code.&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>&lt;strong>System Call&lt;/strong>&lt;/th>
-&lt;th style="text-align:center">Description&lt;/th>
+&lt;th style="text-align: left">&lt;strong>System Call&lt;/strong>&lt;/th>
+&lt;th style="text-align: center">Description&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>Yield&lt;/td>
-&lt;td style="text-align:center">Yield processor to named process&lt;/td>
+&lt;td style="text-align: left">Yield&lt;/td>
+&lt;td style="text-align: center">Yield processor to named process&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Alloc&lt;/td>
-&lt;td style="text-align:center">Allocation of resources&lt;/td>
+&lt;td style="text-align: left">Alloc&lt;/td>
+&lt;td style="text-align: center">Allocation of resources&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Scall&lt;/td>
-&lt;td style="text-align:center">Synchronous protected control transfer&lt;/td>
+&lt;td style="text-align: left">Scall&lt;/td>
+&lt;td style="text-align: center">Synchronous protected control transfer&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -4395,30 +4400,30 @@ against forgery. Capabilities can be implemented in various ways such as tagged 
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Memory&lt;/th>
-&lt;th style="text-align:center">Type&lt;/th>
-&lt;th style="text-align:right">Cached&lt;/th>
-&lt;th style="text-align:right">Scope&lt;/th>
+&lt;th style="text-align: left">Memory&lt;/th>
+&lt;th style="text-align: center">Type&lt;/th>
+&lt;th style="text-align: right">Cached&lt;/th>
+&lt;th style="text-align: right">Scope&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>Global&lt;/td>
-&lt;td style="text-align:center">R/W&lt;/td>
-&lt;td style="text-align:right">Yes&lt;/td>
-&lt;td style="text-align:right">All Threads&lt;/td>
+&lt;td style="text-align: left">Global&lt;/td>
+&lt;td style="text-align: center">R/W&lt;/td>
+&lt;td style="text-align: right">Yes&lt;/td>
+&lt;td style="text-align: right">All Threads&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Shared&lt;/td>
-&lt;td style="text-align:center">R/W&lt;/td>
-&lt;td style="text-align:right">N/A&lt;/td>
-&lt;td style="text-align:right">Thread Blocks&lt;/td>
+&lt;td style="text-align: left">Shared&lt;/td>
+&lt;td style="text-align: center">R/W&lt;/td>
+&lt;td style="text-align: right">N/A&lt;/td>
+&lt;td style="text-align: right">Thread Blocks&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>Texture&lt;/td>
-&lt;td style="text-align:center">R&lt;/td>
-&lt;td style="text-align:right">Yes&lt;/td>
-&lt;td style="text-align:right">All Threads&lt;/td>
+&lt;td style="text-align: left">Texture&lt;/td>
+&lt;td style="text-align: center">R&lt;/td>
+&lt;td style="text-align: right">Yes&lt;/td>
+&lt;td style="text-align: right">All Threads&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -4430,36 +4435,36 @@ against forgery. Capabilities can be implemented in various ways such as tagged 
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Notation&lt;/th>
-&lt;th style="text-align:center">Description&lt;/th>
-&lt;th style="text-align:right">Notation&lt;/th>
-&lt;th style="text-align:right">Description&lt;/th>
+&lt;th style="text-align: left">Notation&lt;/th>
+&lt;th style="text-align: center">Description&lt;/th>
+&lt;th style="text-align: right">Notation&lt;/th>
+&lt;th style="text-align: right">Description&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>C&lt;/td>
-&lt;td style="text-align:center">Cache Size&lt;/td>
-&lt;td style="text-align:right">N&lt;/td>
-&lt;td style="text-align:right">array size&lt;/td>
+&lt;td style="text-align: left">C&lt;/td>
+&lt;td style="text-align: center">Cache Size&lt;/td>
+&lt;td style="text-align: right">N&lt;/td>
+&lt;td style="text-align: right">array size&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>b&lt;/td>
-&lt;td style="text-align:center">cache line size&lt;/td>
-&lt;td style="text-align:right">s&lt;/td>
-&lt;td style="text-align:right">stride size&lt;/td>
+&lt;td style="text-align: left">b&lt;/td>
+&lt;td style="text-align: center">cache line size&lt;/td>
+&lt;td style="text-align: right">s&lt;/td>
+&lt;td style="text-align: right">stride size&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>a&lt;/td>
-&lt;td style="text-align:center">cache associativity&lt;/td>
-&lt;td style="text-align:right">k&lt;/td>
-&lt;td style="text-align:right">iterations&lt;/td>
+&lt;td style="text-align: left">a&lt;/td>
+&lt;td style="text-align: center">cache associativity&lt;/td>
+&lt;td style="text-align: right">k&lt;/td>
+&lt;td style="text-align: right">iterations&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>T&lt;/td>
-&lt;td style="text-align:center">number of cache set&lt;/td>
-&lt;td style="text-align:right">r&lt;/td>
-&lt;td style="text-align:right">cache miss rate&lt;/td>
+&lt;td style="text-align: left">T&lt;/td>
+&lt;td style="text-align: center">number of cache set&lt;/td>
+&lt;td style="text-align: right">r&lt;/td>
+&lt;td style="text-align: right">cache miss rate&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
@@ -4539,54 +4544,54 @@ preheat out such as&lt;/p>
 &lt;table>
 &lt;thead>
 &lt;tr>
-&lt;th>Set1&lt;/th>
-&lt;th style="text-align:center">Set2&lt;/th>
-&lt;th style="text-align:right">Set3&lt;/th>
-&lt;th style="text-align:right">Set4&lt;/th>
+&lt;th style="text-align: left">Set1&lt;/th>
+&lt;th style="text-align: center">Set2&lt;/th>
+&lt;th style="text-align: right">Set3&lt;/th>
+&lt;th style="text-align: right">Set4&lt;/th>
 &lt;/tr>
 &lt;/thead>
 &lt;tbody>
 &lt;tr>
-&lt;td>1-8&lt;/td>
-&lt;td style="text-align:center">33-40&lt;/td>
-&lt;td style="text-align:right">65-72&lt;/td>
-&lt;td style="text-align:right">97-104&lt;/td>
+&lt;td style="text-align: left">1-8&lt;/td>
+&lt;td style="text-align: center">33-40&lt;/td>
+&lt;td style="text-align: right">65-72&lt;/td>
+&lt;td style="text-align: right">97-104&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>9-16&lt;/td>
-&lt;td style="text-align:center">41-48&lt;/td>
-&lt;td style="text-align:right">&amp;hellip;&lt;/td>
-&lt;td style="text-align:right">&amp;hellip;&lt;/td>
+&lt;td style="text-align: left">9-16&lt;/td>
+&lt;td style="text-align: center">41-48&lt;/td>
+&lt;td style="text-align: right">&amp;hellip;&lt;/td>
+&lt;td style="text-align: right">&amp;hellip;&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>17-24&lt;/td>
-&lt;td style="text-align:center">46-56&lt;/td>
-&lt;td style="text-align:right">&amp;hellip;&lt;/td>
-&lt;td style="text-align:right">&amp;hellip;&lt;/td>
+&lt;td style="text-align: left">17-24&lt;/td>
+&lt;td style="text-align: center">46-56&lt;/td>
+&lt;td style="text-align: right">&amp;hellip;&lt;/td>
+&lt;td style="text-align: right">&amp;hellip;&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>25-32&lt;/td>
-&lt;td style="text-align:center">57-64&lt;/td>
-&lt;td style="text-align:right">89-96&lt;/td>
-&lt;td style="text-align:right">121-128&lt;/td>
+&lt;td style="text-align: left">25-32&lt;/td>
+&lt;td style="text-align: center">57-64&lt;/td>
+&lt;td style="text-align: right">89-96&lt;/td>
+&lt;td style="text-align: right">121-128&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>129-136&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>&lt;/td>
-&lt;td>&lt;/td>
+&lt;td style="text-align: left">129-136&lt;/td>
+&lt;td style="text-align: left">&lt;/td>
+&lt;td style="text-align: left">&lt;/td>
+&lt;td style="text-align: left">&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>&amp;hellip;&lt;/td>
-&lt;td style="text-align:center">&amp;hellip;&lt;/td>
-&lt;td style="text-align:right">&amp;hellip;&lt;/td>
-&lt;td style="text-align:right">&amp;hellip;&lt;/td>
+&lt;td style="text-align: left">&amp;hellip;&lt;/td>
+&lt;td style="text-align: center">&amp;hellip;&lt;/td>
+&lt;td style="text-align: right">&amp;hellip;&lt;/td>
+&lt;td style="text-align: right">&amp;hellip;&lt;/td>
 &lt;/tr>
 &lt;tr>
-&lt;td>2969-2976&lt;/td>
-&lt;td style="text-align:center">3001-3008&lt;/td>
-&lt;td style="text-align:right">3033-3040&lt;/td>
-&lt;td style="text-align:right">3065-3072&lt;/td>
+&lt;td style="text-align: left">2969-2976&lt;/td>
+&lt;td style="text-align: center">3001-3008&lt;/td>
+&lt;td style="text-align: right">3033-3040&lt;/td>
+&lt;td style="text-align: right">3065-3072&lt;/td>
 &lt;/tr>
 &lt;/tbody>
 &lt;/table>
