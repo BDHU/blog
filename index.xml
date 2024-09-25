@@ -52,6 +52,10 @@ similar representations. Therefore, SN-Net uses &lt;strong>slideing window&lt;/s
 &lt;h2 id="security">Security&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://nullprogram.com/">null program&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h2 id="datacenter">Datacenter&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://www.semianalysis.com/">SemiAnalysis&lt;/a>&lt;/li>
 &lt;/ul></description></item><item><title>TensorIR Transformation</title><link>https://www.bodunhu.com/blog/posts/tensorir-transformation/</link><pubDate>Tue, 30 Aug 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/tensorir-transformation/</guid><description>&lt;p>In the previous &lt;a href="https://www.bodunhu.com/blog/blog/posts/dive-into-tensorir/">post&lt;/a>, we&amp;rsquo;ve explored how to write primitive functions in TensorIR. Here, we will see how to transform TensorIR into other (potentially more performant) variants. The content is drived from the &lt;a href="https://mlc.ai/summer22/">mlc&lt;/a> course taught by &lt;a href="https://tqchen.com/">Tianqi Chen&lt;/a>.&lt;/p>
 &lt;h2 id="batched-bmm-relu">Batched BMM ReLu&lt;/h2>
 &lt;p>A batched matrix multiplication followed by a ReLu operation can be expressed using numpy as:&lt;/p>
