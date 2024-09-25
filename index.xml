@@ -917,6 +917,11 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2307.09702">Efficient Guided Generation for Large Language Models&lt;/a>: Outline&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2212.06094">Prompting Is Programming: A Query Language for Large Language Models&lt;/a>&lt;/li>
+&lt;/ul>
+&lt;h3 id="async-training">Async Training&lt;/h3>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2208.03306">Branch-Train-Merge: Embarrassingly Parallel Training of Expert Language Models&lt;/a>: training individual LMs before merging&lt;/li>
+&lt;li>&lt;a href="DistBelief">Large Scale Distributed Deep Networks&lt;/a>: parameter server&lt;/li>
 &lt;/ul></description></item><item><title>Megatron with FastMoE</title><link>https://www.bodunhu.com/blog/posts/megatron-with-fastmoe/</link><pubDate>Wed, 01 Dec 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/megatron-with-fastmoe/</guid><description>&lt;p>This is a guide on setting up &lt;a href="https://github.com/NVIDIA/Megatron-LM">Megatron-LM&lt;/a> with &lt;a href="https://github.com/laekov/fastmoe">FastMoE&lt;/a>. Megatron is a transformer developed by the Applied Deep Learning Research team at NVIDIA. FastMoE enables PyTorch support for the Mixture of Experts (MoE) models. We use the FastMoE layer to replace the MLP layers in the transformer language model.&lt;/p>
 &lt;h2 id="prerequisites">Prerequisites&lt;/h2>
 &lt;h3 id="docker">Docker&lt;/h3>
