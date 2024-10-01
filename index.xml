@@ -819,6 +819,10 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://www.zhihu.com/column/giantpandacv">从零开始学深度学习编译器&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://fkong.tech/posts/2023-05-20-dynamo/">一文搞懂 TorchDynamo 原理&lt;/a>&lt;/li>
 &lt;/ul>
+&lt;h2 id="seminars">Seminars&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://mlsys.stanford.edu/">Stanford MLSys Seminar&lt;/a>&lt;/li>
+&lt;/ul>
 &lt;h2 id="papers">Papers&lt;/h2>
 &lt;p>This section could potentially be extremely long..&lt;/p>
 &lt;h3 id="training">Training&lt;/h3>
@@ -826,21 +830,23 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2407.21783">The Llama 3 Herd of Models&lt;/a>: really great paper explaining how SOTA models are trained in real world!&lt;/li>
 &lt;/ul>
-&lt;h3 id="llm">LLM&lt;/h3>
+&lt;h2 id="llm">LLM&lt;/h2>
 &lt;p>You an also refer to &lt;a href="https://github.com/Hannibal046/Awesome-LLM">Awesome-LLM&lt;/a>&lt;/p>
 &lt;ul>
 &lt;li>&lt;a href="https://lilianweng.github.io/posts/2023-01-10-inference-optimization/">Large Transformer Model Inference Optimization &lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2303.17580.pdf">HuggingGPT: Solving AI Tasks with ChatGPT and its Friends in Hugging Face&lt;/a>: use LLM as the controller to coordinate with exernal models for complicated tasks&lt;/li>
-&lt;li>&lt;a href="https://arxiv.org/pdf/2309.17453.pdf">Efficient Streaming Language Models with Attention Sinks&lt;/a>: (Stream-LLM)&lt;/li>
-&lt;li>&lt;a href="https://arxiv.org/pdf/2307.02628.pdf">SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference&lt;/a>: monotonically decrease LLM layers to ease KV cache management&lt;/li>
-&lt;li>&lt;a href="https://arxiv.org/pdf/2309.06180.pdf">Efficient Memory Management for Large Language Model Serving with PagedAttention&lt;/a>: (vLLM) allows non-contiguous KV cache&lt;/li>
-&lt;li>&lt;a href="https://arxiv.org/pdf/2312.07104.pdf">Efficiently Programming Large Language Models using SGLang&lt;/a>: RadixAttention that allows Kv cache sharing in prompt engineering&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2309.10285.pdf">Flash-LLM: Enabling Cost-Effective and Highly-Efficient Large Generative Model Inference with Unstructured Sparsity&lt;/a>: load as sparse, compute as dense&lt;/li>
-&lt;li>&lt;a href="https://openreview.net/pdf?id=uNrFpDPMyo">MODEL TELLS YOU WHAT TO DISCARD: ADAPTIVE KV CACHE COMPRESSION FOR LLMS&lt;/a>: dynamic KV cached token dropping to long sequence.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2312.04916.pdf">EE-LLM: Large-Scale Training and Inference of Early-Exit Large Language Models with 3D Parallelism&lt;/a>: Overlapping LLM forward with KV caching computation.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2401.02669.pdf">Infinite-LLM: Efficient LLM Service for Long Context with DistAttention and Distributed KVCache&lt;/a>: managing KV cache in distributed settings.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2310.07707">MatFormer: Nested Transformer for Elastic Inference&lt;/a>: adaptive blocks during inference.&lt;/li>
+&lt;/ul>
+&lt;h3 id="kv-cache">KV Cache&lt;/h3>
+&lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2310.07240">CacheGen: KV Cache Compression and Streaming for Fast Language Model Serving&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2309.06180.pdf">Efficient Memory Management for Large Language Model Serving with PagedAttention&lt;/a>: (vLLM) allows non-contiguous KV cache&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2312.07104.pdf">Efficiently Programming Large Language Models using SGLang&lt;/a>: RadixAttention that allows Kv cache sharing in prompt engineering&lt;/li>
+&lt;li>&lt;a href="https://openreview.net/pdf?id=uNrFpDPMyo">MODEL TELLS YOU WHAT TO DISCARD: ADAPTIVE KV CACHE COMPRESSION FOR LLMS&lt;/a>: dynamic KV cached token dropping to long sequence.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2309.17453.pdf">Efficient Streaming Language Models with Attention Sinks&lt;/a>: (Stream-LLM)&lt;/li>
 &lt;/ul>
 &lt;h3 id="datasets">Datasets&lt;/h3>
 &lt;ul>
@@ -869,6 +875,9 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://www.usenix.org/system/files/conference/nsdi17/nsdi17-crankshaw.pdf">Clipper: A Low-Latency Online Prediction Serving System&lt;/a>: a nice overview of inference system. Not SOTA but a good starter.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2209.00159.pdf">Orloj: Predictably Serving Unpredictable DNNs&lt;/a>: shares similarity to Clipper, but targeting models that may yield unpredictable performance.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2302.11665.pdf">AlpaServe: Statistical Multiplexing with Model Parallelism for Deep Learning Serving&lt;/a>: how to multiplex devices to serve multiple model while meeting latency constraint.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2310.18481">MOSEL: Inference Serving Using Dynamic Modality Selection&lt;/a>: dynamic modality selections for accuracy and SLO tradeoff&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2404.18322">BlockLLM: Multi-tenant Finer-grained Serving for Large Language Models&lt;/a>: finer-grained LLM serving&lt;/li>
+&lt;li>&lt;a href="https://www.usenix.org/conference/osdi22/presentation/yu">Orca: A Distributed Serving System for Transformer-Based Generative Models&lt;/a>: iteration-based LLM inference&lt;/li>
 &lt;/ul>
 &lt;h3 id="multitenancy">Multitenancy&lt;/h3>
 &lt;ul>
@@ -883,6 +892,8 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2204.00102.pdf">Dynamic Multimodal Fusion&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2106.04426.pdf">Hash Layers For Large Sparse Models&lt;/a>: Using hashing for MoE gating.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2205.12755.pdf">An Evolutionary Approach to Dynamic Introduction of Tasks in Large-scale Multitask Learning Systems&lt;/a>: use evolution algorithm to update model structure during the training phase.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2404.03865">FFN-SkipLLM: A Hidden Gem for Autoregressive Decoding with Adaptive Feed Forward Skipping&lt;/a>: dynamically skip FFN layers in Transformers suing cosine similarity.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2307.02628.pdf">SkipDecode: Autoregressive Skip Decoding with Batching and Caching for Efficient LLM Inference&lt;/a>: monotonically decrease LLM layers to ease KV cache management&lt;/li>
 &lt;/ul>
 &lt;h3 id="auto-placement">Auto Placement&lt;/h3>
 &lt;ul>
