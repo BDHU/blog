@@ -879,6 +879,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2310.18481">MOSEL: Inference Serving Using Dynamic Modality Selection&lt;/a>: dynamic modality selections for accuracy and SLO tradeoff&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2404.18322">BlockLLM: Multi-tenant Finer-grained Serving for Large Language Models&lt;/a>: finer-grained LLM serving&lt;/li>
 &lt;li>&lt;a href="https://www.usenix.org/conference/osdi22/presentation/yu">Orca: A Distributed Serving System for Transformer-Based Generative Models&lt;/a>: iteration-based LLM inference&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2406.01566">Helix: Distributed Serving of Large Language Models via Max-Flow on Heterogeneous GPUs&lt;/a>: inference on heterogeneous accelerators using max-flow&lt;/li>
 &lt;/ul>
 &lt;h3 id="multitenancy">Multitenancy&lt;/h3>
 &lt;ul>
