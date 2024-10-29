@@ -852,6 +852,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2205.14135">FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2311.01282">FlashDecoding++: Faster Large Language Model Inference on GPUs&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://pytorch.org/blog/flexattention/">FlexAttention: The Flexibility of PyTorch with the Performance of FlashAttention&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2405.04437">vAttention: Dynamic Memory Management for Serving LLMs without PagedAttention&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h3 id="datasets">Datasets&lt;/h3>
 &lt;ul>
@@ -884,6 +885,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2404.18322">BlockLLM: Multi-tenant Finer-grained Serving for Large Language Models&lt;/a>: finer-grained LLM serving&lt;/li>
 &lt;li>&lt;a href="https://www.usenix.org/conference/osdi22/presentation/yu">Orca: A Distributed Serving System for Transformer-Based Generative Models&lt;/a>: iteration-based LLM inference&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2406.01566">Helix: Distributed Serving of Large Language Models via Max-Flow on Heterogeneous GPUs&lt;/a>: inference on heterogeneous accelerators using max-flow&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2401.09670v2">DistServe: Disaggregating Prefill and Decoding for Goodput-optimized Large Language Model Serving&lt;/a>: automatic configuration of inter and intra-node parallelism for model for both prefill and decoding.&lt;/li>
 &lt;/ul>
 &lt;h3 id="multitenancy">Multitenancy&lt;/h3>
 &lt;ul>
