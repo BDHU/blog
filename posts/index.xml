@@ -401,7 +401,7 @@ similar representations. Therefore, SN-Net uses &lt;strong>slideing window&lt;/s
 &lt;script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js">&lt;/script>
 &lt;script>
 let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-let mermaidTheme = (isDark) ? 'light' : 'default';
+let mermaidTheme = (isDark) ? 'dark' : 'default';
 let mermaidConfig = {
 theme: mermaidTheme,
 logLevel: 'fatal',
@@ -470,7 +470,7 @@ Device-Topology-->Parallelization-Strategy;
 &lt;script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js">&lt;/script>
 &lt;script>
 let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-let mermaidTheme = (isDark) ? 'light' : 'default';
+let mermaidTheme = (isDark) ? 'dark' : 'default';
 let mermaidConfig = {
 theme: mermaidTheme,
 logLevel: 'fatal',
@@ -639,7 +639,7 @@ Parallelization-Strategy-->Task-Graph;
 &lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/div>&lt;script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js">&lt;/script>
 &lt;script>
 let isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-let mermaidTheme = (isDark) ? 'light' : 'default';
+let mermaidTheme = (isDark) ? 'dark' : 'default';
 let mermaidConfig = {
 theme: mermaidTheme,
 logLevel: 'fatal',
