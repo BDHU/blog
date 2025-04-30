@@ -802,6 +802,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://people.csail.mit.edu/ghobadi/">Manya Ghobadi @ MIT&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://wuklab.io/">WukLab @ UCSD&lt;/a>&lt;/li>
 &lt;li>&lt;a href="https://hao-ai-lab.github.io/">Hao AI Lab @ UCSD&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://people.cs.uchicago.edu/~junchenj/">Junchen Jiang&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h2 id="tutorials">Tutorials&lt;/h2>
 &lt;ul>
