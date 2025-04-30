@@ -852,6 +852,12 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2401.02669.pdf">Infinite-LLM: Efficient LLM Service for Long Context with DistAttention and Distributed KVCache&lt;/a>: managing KV cache in distributed settings.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2310.07707">MatFormer: Nested Transformer for Elastic Inference&lt;/a>: adaptive blocks during inference.&lt;/li>
 &lt;/ul>
+&lt;h2 id="diffusion">Diffusion&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2502.01776">Sparse VideoGen: Accelerating Video Diffusion Transformers with Spatial-Temporal Sparsity&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2502.06155">EFFICIENT-VDIT: Efficient Video Diffusion Transformers with Attention Tile&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2411.19108">Timestep Embedding Tells: It’s Time to Cache for Video Diffusion Model&lt;/a>&lt;/li>
+&lt;/ul>
 &lt;h3 id="kv-cache">KV Cache&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2310.07240">CacheGen: KV Cache Compression and Streaming for Fast Language Model Serving&lt;/a>&lt;/li>
