@@ -927,7 +927,12 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;h3 id="auto-placement">Auto Placement&lt;/h3>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2201.12023.pdf">Alpa: Automating Inter- and Intra-Operator Parallelism for Distributed Deep Learning&lt;/a>&lt;/li>
-&lt;li>&lt;a href="https://arxiv.org/pdf/1807.05358.pdf">Beyond Data and Model Parallelism for Deep Neural Networks&lt;/a>: called FlexFlow.&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/1807.05358.pdf">Beyond Data and Model Parallelism for Deep Neural Networks&lt;/a>: FlexFlow.&lt;/li>
+&lt;/ul>
+&lt;h2 id="reasoning-llm">Reasoning LLM&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2501.12948">DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning&lt;/a>&lt;/li>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2505.00949">Llama-Nemotron: Efficient Reasoning Models&lt;/a>&lt;/li>
 &lt;/ul>
 &lt;h3 id="federated-learning">Federated Learning&lt;/h3>
 &lt;ul>
