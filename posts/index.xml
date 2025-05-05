@@ -857,6 +857,10 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li>&lt;a href="https://arxiv.org/pdf/2401.02669.pdf">Infinite-LLM: Efficient LLM Service for Long Context with DistAttention and Distributed KVCache&lt;/a>: managing KV cache in distributed settings.&lt;/li>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2310.07707">MatFormer: Nested Transformer for Elastic Inference&lt;/a>: adaptive blocks during inference.&lt;/li>
 &lt;/ul>
+&lt;h2 id="nas">NAS&lt;/h2>
+&lt;ul>
+&lt;li>&lt;a href="https://arxiv.org/pdf/2411.19146">Puzzle: Distillation-Based NAS for Inference-Optimized LLMs&lt;/a>: Applying block-wise local distillation to every alternative subblock replacement in parallel and scoring its quality and inference cost to build a &amp;ldquo;library&amp;rdquo; of blocks. Then, using Mixed-Integer-Programming to assemble a heterogeneous architecture that optimizes quality under constraints such as throughput, latency and memory usage.&lt;/li>
+&lt;/ul>
 &lt;h2 id="diffusion">Diffusion&lt;/h2>
 &lt;ul>
 &lt;li>&lt;a href="https://arxiv.org/pdf/2502.01776">Sparse VideoGen: Accelerating Video Diffusion Transformers with Spatial-Temporal Sparsity&lt;/a>&lt;/li>
