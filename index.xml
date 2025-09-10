@@ -838,7 +838,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li&gt;&lt;a href="https://www.zhihu.com/column/giantpandacv"&gt;从零开始学深度学习编译器&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://fkong.tech/posts/2023-05-20-dynamo/"&gt;一文搞懂 TorchDynamo 原理&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
-&lt;h3&gt;&lt;/h3&gt;
+&lt;h3 id="llm-optimization"&gt;LLM Optimization&lt;/h3&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://abderrahmanskiredj.github.io/the-illustrated-grpo/#fn:5"&gt;The Illustrated GRPO: Group Relative Policy Optimization Explained&lt;/a&gt;: very good tutorial showing how GRPO works with examples.&lt;/li&gt;
 &lt;/ul&gt;
