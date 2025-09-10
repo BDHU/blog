@@ -840,7 +840,7 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;/ul&gt;
 &lt;h3 id="llm-optimization"&gt;LLM Optimization&lt;/h3&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="https://abderrahmanskiredj.github.io/the-illustrated-grpo/#fn:5"&gt;The Illustrated GRPO: Group Relative Policy Optimization Explained&lt;/a&gt;: very good tutorial showing how GRPO works with examples.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://abderrahmanskiredj.github.io/the-illustrated-grpo/"&gt;The Illustrated GRPO: Group Relative Policy Optimization Explained&lt;/a&gt;: very good tutorial showing how GRPO works with examples.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h3 id="communication"&gt;Communication&lt;/h3&gt;
 &lt;ul&gt;
