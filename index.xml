@@ -72,6 +72,10 @@ similar representations. Therefore, SN-Net uses &lt;strong&gt;slideing window&lt
 &lt;h2 id="tech-news"&gt;Tech News&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;a href="https://www.ruanyifeng.com/blog/"&gt;阮一峰的网络日志&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2 id="personal-blog"&gt;Personal Blog&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="https://antirez.com/latest/0"&gt;Antirez&lt;/a&gt;: author of Redis.&lt;/li&gt;
 &lt;/ul&gt;</description></item><item><title>TensorIR Transformation</title><link>https://www.bodunhu.com/blog/posts/tensorir-transformation/</link><pubDate>Tue, 30 Aug 2022 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/tensorir-transformation/</guid><description>&lt;p&gt;In the previous &lt;a href="https://www.bodunhu.com/blog/posts/dive-into-tensorir/"&gt;post&lt;/a&gt;, we&amp;rsquo;ve explored how to write primitive functions in TensorIR. Here, we will see how to transform TensorIR into other (potentially more performant) variants. The content is drived from the &lt;a href="https://mlc.ai/summer22/"&gt;mlc&lt;/a&gt; course taught by &lt;a href="https://tqchen.com/"&gt;Tianqi Chen&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id="batched-bmm-relu"&gt;Batched BMM ReLu&lt;/h2&gt;
 &lt;p&gt;A batched matrix multiplication followed by a ReLu operation can be expressed using numpy as:&lt;/p&gt;
