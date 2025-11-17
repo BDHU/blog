@@ -389,7 +389,8 @@ similar representations. Therefore, SN-Net uses &lt;strong&gt;slideing window&lt
 &lt;h2 id="deadlock"&gt;Deadlock&lt;/h2&gt;
 &lt;p&gt;Single-Controller brings back &lt;em&gt;gang-scheduling&lt;/em&gt; and &lt;em&gt;centralized coordinator&lt;/em&gt;. The reason to use &lt;em&gt;gang-scheduling&lt;/em&gt; and &lt;em&gt;centralized coordinator&lt;/em&gt; is to help preventing deadlocks. However, the rational behind this design decision is hard to interpret from reading the paper. I&amp;rsquo;m going to use the &lt;a href="https://zhuanlan.zhihu.com/p/495592456"&gt;post&lt;/a&gt; from Jinhui Yan (the developer behind &lt;a href="https://github.com/Oneflow-Inc/oneflow"&gt;OneFlow&lt;/a&gt;) to explain why &lt;em&gt;gang-scheduling&lt;/em&gt; and &lt;em&gt;centralized coordinator&lt;/em&gt; prevent deadlocks.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Gang-scheduling is essential in the case of TPUs, since they are single-threaded and only run non-preemptible kernels, so the system will deadlock if communicating computations are not enqueued in a consistent order.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Gang-scheduling is essential in the case of TPUs, since they are single-threaded and only run non-preemptible kernels, so the system will deadlock if communicating computations are not enqueued in a consistent order.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;We can think of a computing device as a FIFO task queue (e,g. CUDA streams, TPU, or CPU&amp;hellip;). Each FIFO task queue essentially have a stream of tasks to process.&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_pics/posts/pathways/fifo.jpg" alt="FIFO-queue"&gt;&lt;/p&gt;
 &lt;center&gt;Src. Jinhui Yan&lt;/center&gt;
@@ -796,6 +797,8 @@ p(w_i|x) = \frac{count(w_i,x) + 1}{count(x) + |V|}
 &lt;li&gt;&lt;a href="https://www.cs.utexas.edu/~akella/CS378/F24/index.html"&gt;CS 378: Systems for Machine Learning&lt;/a&gt;: offered by &lt;a href="https://www.cs.utexas.edu/~akella/"&gt;Aditya Akella&lt;/a&gt; at UT.&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://ucbrise.github.io/cs294-ai-sys-fa19/"&gt;Machine Learning Systems (Fall 2019)&lt;/a&gt;: from UCB&lt;/li&gt;
 &lt;li&gt;&lt;a href="https://sites.utexas.edu/neeraja/sysml-computer-systems-and-machine-learning-interplay-spring-2023/"&gt;ECE 382V SysML: Computer Systems and Machine Learning Interplay&lt;/a&gt;: taught by &lt;a href="https://sites.utexas.edu/neeraja/"&gt;Neeraja Yadwadkar&lt;/a&gt; at UT.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://hao-ai-lab.github.io/cse234-w25/"&gt;CSE 234 Data Systems for Machine Learning from UCSD&lt;/a&gt;.&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://stanford-cs336.github.io/spring2025/"&gt;CS336: Language Modeling from Scratch from Stanford&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="labs--faculties"&gt;Labs &amp;amp; Faculties&lt;/h2&gt;
 &lt;ul&gt;
@@ -1197,7 +1200,8 @@ all commute, \(p\)-free will, in fact, leads the system to a &amp;lsquo;&amp;lsq
 &lt;p&gt;The most primitive notion of consistency is &lt;em&gt;global consistency&lt;/em&gt;. It means we have some history of events that is totally ordered.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;It is (globally) consistency if it respects the intended sequential semantics of the events.&lt;/p&gt;
-&lt;p&gt;&amp;ndash; &lt;em&gt;Kenneth McMillan&lt;/em&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; &lt;em&gt;Kenneth McMillan&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Take read/write as an example, we have a sequence of write operations to the same memory location \(12\) at various timestamps, and we want to read values from the this location:&lt;/p&gt;
 &lt;p&gt;\[
 \texttt{write}(0, 12, 2) \rightarrow \texttt{write}(1, 12, 3) \rightarrow \texttt{read}(2, 12, 3)
@@ -1847,10 +1851,12 @@ RF(rd(p,a,v)) = wr(p&amp;rsquo;,a&amp;rsquo;,v&amp;rsquo;) \rightarrow a=a&amp;r
 &lt;/ul&gt;
 &lt;p&gt;Now we convert liveness to safety by explicitly defining the moment hen the eventuality should hold.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Liveness property means a good thing eventually happens. A liveness property can be &lt;em&gt;refuted&lt;/em&gt; by finite execution. Safety property means a bad thing never happens. A safety property can always be refuted by a finite execution.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Liveness property means a good thing eventually happens. A liveness property can be &lt;em&gt;refuted&lt;/em&gt; by finite execution. Safety property means a bad thing never happens. A safety property can always be refuted by a finite execution.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;To see how replicated file specification plays in action, we use the example given in &lt;a href="http://mcmil.net/wordpress/"&gt;Prof. McMillan&lt;/a&gt;&amp;rsquo;s presentation. The code is written in &lt;a href="http://microsoft.github.io/ivy/language.html"&gt;Ivy&lt;/a&gt; and is pretty self-explanatory. In this demo we only have two processes.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;To install Ivy, simply execute &lt;code&gt;virtualenv ivyenv &amp;amp;&amp;amp; source ivyenv/bin/activate &amp;amp;&amp;amp; pip install ms-ivy&lt;/code&gt;. This is tested on Ubuntu 18.04 LTS and may vary slight on other distros.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;To install Ivy, simply execute &lt;code&gt;virtualenv ivyenv &amp;amp;&amp;amp; source ivyenv/bin/activate &amp;amp;&amp;amp; pip install ms-ivy&lt;/code&gt;. This is tested on Ubuntu 18.04 LTS and may vary slight on other distros.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-haskell" data-lang="haskell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="o"&gt;#&lt;/span&gt;&lt;span class="n"&gt;lang&lt;/span&gt; &lt;span class="n"&gt;ivy1&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="mi"&gt;8&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nf"&gt;include&lt;/span&gt; &lt;span class="n"&gt;numbers&lt;/span&gt;
@@ -1919,7 +1925,8 @@ RF(rd(p,a,v)) = wr(p&amp;rsquo;,a&amp;rsquo;,v&amp;rsquo;) \rightarrow a=a&amp;r
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What happens is the program generates tests that randomizes message arrival times and we can see a delivered message may arrive after its target sends another message, therefore creating corrupted file contents.&lt;/p&gt;
 &lt;p&gt;Notice that here we are actually running on real network to find counter examples, the downside is the test may be arbitrary long depending on the randomized testing cases. Instead, we will use bounded model checking (BMC) to test if the specification is correct. This way we can reply purely on the logic of our specification instead of running on the real network. The Ivy checker uses &lt;a href="https://en.wikipedia.org/wiki/Z3_Theorem_Prover"&gt;Z3 Theorem Prover&lt;/a&gt;.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;BMC construct a boolean formula that is satisfiable if and only if the underlying state transition system can realize a finite sequence of state transitions that reaches certain states of interest.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;BMC construct a boolean formula that is satisfiable if and only if the underlying state transition system can realize a finite sequence of state transitions that reaches certain states of interest.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;To tell Ivy using bounded model checking, we add the following lines to &lt;code&gt;append.ivy&lt;/code&gt;:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-haskell" data-lang="haskell"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nf"&gt;axiom&lt;/span&gt; &lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt; &lt;span class="o"&gt;~=&lt;/span&gt; &lt;span class="n"&gt;host&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;sock&lt;/span&gt;&lt;span class="o"&gt;.&lt;/span&gt;&lt;span class="n"&gt;id&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;
@@ -2012,7 +2019,8 @@ RF(rd(p,a,v)) = wr(p&amp;rsquo;,a&amp;rsquo;,v&amp;rsquo;) \rightarrow a=a&amp;r
 &lt;/span&gt;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Finally, make sure you create a file named &lt;code&gt;.nojekyll&lt;/code&gt; in the root directory of the public repository to prevent GitHub Pages from building the site using Jekyll.&lt;/p&gt;
 &lt;p&gt;Every time you make commits to the private repository, the site will be automatically generated and published on the public repository.&lt;/p&gt;</description></item><item><title>Quantum State in a Nutshell</title><link>https://www.bodunhu.com/blog/posts/quantum-state-in-a-nutshell/</link><pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/quantum-state-in-a-nutshell/</guid><description>&lt;p&gt;There are thousands of articles trying to explain what exactly a quantum state is. Many of them boiled down to &amp;ldquo;the state of a qubit is 0, 1, or 0 and 1 at the same time&amp;rdquo;. This statement leads to both confusion and misinterpretation. The explanation I found on &lt;a href="https://quantum.country/qcvc"&gt;Quantum computing for the very curious&lt;/a&gt; is by far the most elegant and simplest:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The state of a qubit is a vector in a two-dimensional vector space. This vector space is known as state space.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;The state of a qubit is a vector in a two-dimensional vector space. This vector space is known as state space.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;I will use many of great content from &lt;a href="https://quantum.country/qcvc"&gt;Quantum computing for the very curious&lt;/a&gt; to explain things.&lt;/p&gt;
 &lt;h2 id="mapping-qubits-to-classical-bits"&gt;Mapping qubits to classical bits&lt;/h2&gt;
 &lt;p&gt;We&amp;rsquo;ve described what a qubit state is, but provided no link between a qubit state and a classical bit state. There are two possible states for a classical bit: 0 and 1. The corresponding states for a qubit is slightly fancier: \(|0\rangle \) and \(|1\rangle \).&lt;/p&gt;
@@ -2040,7 +2048,8 @@ RF(rd(p,a,v)) = wr(p&amp;rsquo;,a&amp;rsquo;,v&amp;rsquo;) \rightarrow a=a&amp;r
 &lt;p&gt;Since amplitudes can be complex numbers, the state space really becomes a sphere. Summing all these up:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;the quantum state of a qubit is a vector of unit length in a two-dimensional complex vector space known as state space.&lt;/p&gt;
-&lt;p&gt;&amp;ndash; &lt;em&gt;Quantum computing for the very curious&lt;/em&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; &lt;em&gt;Quantum computing for the very curious&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="measuring-a-qubit"&gt;Measuring a qubit&lt;/h2&gt;
 &lt;p&gt;Suppose we have qubit in a quantum state \(\alpha |0\rangle + \beta |1\rangle\). We want to observe the state of this specific qubit. It turns out the law of physics prohibits us from figuring out the the amplitudes \(\alpha\) and \(\beta\) if they start out unknown. In short, the quantum state of any system is not directly observable.&lt;/p&gt;
 &lt;p&gt;To figure out the quantum state. We rely on a process called &lt;em&gt;measurement in the computational basis&lt;/em&gt;. Suppose a qubit is in the state \(\alpha |0\rangle + \beta |1\rangle\). Measuring the state of this qubit gives us the outcome \(0\) with probability \(|\alpha|^2\), or 1 with probability \(|\beta|^2\). The state of the qubit after the measurement is thus either \(|0\rangle\) or \(|1\rangle\). After the measurement, \(\alpha\) and \(\beta\) are gone.&lt;/p&gt;</description></item><item><title>Writing in the Sciences - Writing Process</title><link>https://www.bodunhu.com/blog/posts/writing-in-the-sciences-writing-process/</link><pubDate>Mon, 09 Aug 2021 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/writing-in-the-sciences-writing-process/</guid><description>&lt;p&gt;This post covers the topics mentioned in &lt;a href="https://www.coursera.org/learn/sciwrite"&gt;Writing in the Sciences&lt;/a&gt; offered on &lt;a href="https://www.coursera.org/"&gt;Coursera&lt;/a&gt;.&lt;/p&gt;
@@ -2092,7 +2101,8 @@ RF(rd(p,a,v)) = wr(p&amp;rsquo;,a&amp;rsquo;,v&amp;rsquo;) \rightarrow a=a&amp;r
 &lt;h2 id="the-writing"&gt;The Writing&lt;/h2&gt;
 &lt;p&gt;This is hardest step for most people. This where you pop up a blank windows and start up writing. The biggest tips is to &lt;em&gt;not be a perfectionist&lt;/em&gt;. The first draft should aims to get the ideas down in complete sentences in order. You should even purposefully set a low bar to get the first draft out quickly.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Focus on logical organization more than sentence-level details.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Focus on logical organization more than sentence-level details.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;The recommended order for writing a manuscript is:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Tables and Figures&lt;/li&gt;
@@ -2196,7 +2206,8 @@ RF(rd(p,a,v)) = wr(p&amp;rsquo;,a&amp;rsquo;,v&amp;rsquo;) \rightarrow a=a&amp;r
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;A dash is a mark of separation stronger than a comma, less formal than a colon, and more relaxed than parentheses.&lt;/p&gt;
-&lt;p&gt;&amp;ndash; Strunk and White&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; Strunk and White&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h3 id="semicolon"&gt;Semicolon&lt;/h3&gt;
 &lt;p&gt;It &lt;em&gt;connects&lt;/em&gt; two independent clauses (a clause always contains a subject and predicate; an independent clause can stand alone as complete sentence.)&lt;/p&gt;
 &lt;p&gt;Here is an example: &amp;lsquo;&amp;lsquo;It was the best of times; it was the worst of times.&amp;rsquo;&amp;rsquo;&lt;/p&gt;
@@ -2207,19 +2218,23 @@ RF(rd(p,a,v)) = wr(p&amp;rsquo;,a&amp;rsquo;,v&amp;rsquo;) \rightarrow a=a&amp;r
 &lt;p&gt;Colons are used after an independent clause to introduce a list, quote, explanation, conclusion, or amplification.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;The colon has more effect than the comma, less power to separate than the semicolon, and more formality than the dash.&lt;/p&gt;
-&lt;p&gt;&amp;ndash; Strunk and White&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; Strunk and White&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="dash"&gt;Dash&lt;/h2&gt;
 &lt;p&gt;Dash can add emphasis or insert an abrupt definition of description almost anywhere in the sentence.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Use a dash only when a more common mark of punctuation seems inadequate.&lt;/p&gt;
-&lt;p&gt;&amp;ndash; Strunk and White&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; Strunk and White&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Here is an example illustrating how dash emphasizes and adds information: &amp;lsquo;&amp;lsquo;Researchers who study shipworms say these mislabeled animals&amp;ndash;they are clams, not worms&amp;ndash;are actually a scientific treasure&amp;rsquo;&amp;rsquo;.&lt;/p&gt;
 &lt;p&gt;I like the example provided in the class to illustrate how to use dash to join and condense a sentence. The original sentence is:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Finally, the lessons of clinical epidemiology are not meant to be limited to academic physician-epidemiologists, &lt;u&gt;who&lt;/u&gt; sometimes have more interest in analyzing data than caring for patents. &lt;u&gt;Clinical&lt;/u&gt; epidemiology holds the promise of providing clinicians with the tools necessary to improve the outcomes of their patients.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Finally, the lessons of clinical epidemiology are not meant to be limited to academic physician-epidemiologists, &lt;u&gt;who&lt;/u&gt; sometimes have more interest in analyzing data than caring for patents. &lt;u&gt;Clinical&lt;/u&gt; epidemiology holds the promise of providing clinicians with the tools necessary to improve the outcomes of their patients.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;By using dash, we can connect these two sentences together, whiling maintaining the description on physician-epidemiologists:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Finally, clinical epidemiology is not limited to academic physician-epidemiologists&amp;ndash;who are sometimes more interested in analyzing data than caring for patients&amp;ndash;but provides clinicians with tools to improve their patients&amp;rsquo; outcomes.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Finally, clinical epidemiology is not limited to academic physician-epidemiologists&amp;ndash;who are sometimes more interested in analyzing data than caring for patients&amp;ndash;but provides clinicians with tools to improve their patients&amp;rsquo; outcomes.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="parallelism"&gt;Parallelism&lt;/h2&gt;
 &lt;p&gt;It is often better&amp;ndash;in scientific writing&amp;ndash;to write paris of ideas joined by &amp;lsquo;&amp;lsquo;and&amp;rsquo;&amp;rsquo;, &amp;lsquo;&amp;lsquo;or&amp;rsquo;&amp;rsquo;, or &amp;lsquo;&amp;lsquo;but&amp;rsquo;&amp;rsquo; in parallel form.&lt;/p&gt;
 &lt;p&gt;Here is an example sentence with a list of things in parallel form: &amp;lsquo;&amp;lsquo;NASA&amp;rsquo;s intrepid Mars rover, Curiosity, has been through a lot in the past year. It flew 354 million miles, blasted through the Mars atmosphere, deployed a supersonic parachute, unfurled a giant sky crane, and touched down gently on the surface of Mars&amp;rsquo;&amp;rsquo;.&lt;/p&gt;
@@ -2268,7 +2283,8 @@ RF(rd(p,a,v)) = wr(p&amp;rsquo;,a&amp;rsquo;,v&amp;rsquo;) \rightarrow a=a&amp;r
 designing experiments, and they are present in the laboratory.
 Writing awkward phrases to avoid admitting their responsibility and
 their presence is an odd way of being objective.&lt;/p&gt;
-&lt;p&gt;&amp;ndash; Jane J. Robinson, &lt;em&gt;Science&lt;/em&gt; 7 June 1957: 1160.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; Jane J. Robinson, &lt;em&gt;Science&lt;/em&gt; 7 June 1957: 1160.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="write-with-verbs"&gt;Write with Verbs&lt;/h2&gt;
 &lt;h3 id="verbs-with-embedded-meaning"&gt;Verbs with Embedded Meaning&lt;/h3&gt;
 &lt;p&gt;For example, phrases like &amp;lsquo;&amp;lsquo;reports that approximately&amp;rsquo;&amp;rsquo; can be shortened to &amp;lsquo;&amp;rsquo;estimates&amp;rsquo;&amp;rsquo; with &amp;lsquo;&amp;lsquo;approximately&amp;rsquo;&amp;rsquo; as its embedded meaning. They can make a big difference in sentences.&lt;/p&gt;
@@ -2280,15 +2296,18 @@ their presence is an odd way of being objective.&lt;/p&gt;
 &lt;h3 id="dont-bury-the-main-verb"&gt;Don&amp;rsquo;t Bury the Main Verb&lt;/h3&gt;
 &lt;p&gt;The principle is to keep the predicate close to the subject. Here is a sentence:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&amp;lsquo;&amp;rsquo;&lt;u&gt;one study of 930 adults with multiple sclerosis (MS) receiving care and one of two managed care settings or in a fee-for-service setting&lt;/u&gt; &lt;u&gt;found that&lt;/u&gt; only two-thirds of those needing to contact a neurologist for an MS-related problem in the prior 6 months had done so&amp;rsquo;&amp;rsquo;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;lsquo;&amp;rsquo;&lt;u&gt;one study of 930 adults with multiple sclerosis (MS) receiving care and one of two managed care settings or in a fee-for-service setting&lt;/u&gt; &lt;u&gt;found that&lt;/u&gt; only two-thirds of those needing to contact a neurologist for an MS-related problem in the prior 6 months had done so&amp;rsquo;&amp;rsquo;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Readers struggle to understand the sentence due the clutter between the subject and the predicate. Moving &amp;lsquo;&amp;lsquo;found&amp;rsquo;&amp;rsquo; to the front of the sentence gives us &amp;lsquo;&amp;lsquo;One study found that&amp;hellip;&amp;rsquo;&amp;rsquo;. The reader are less bothered by the descriptive stuff as long as he/she has gotten the verb.&lt;/p&gt;
 &lt;h2 id="example"&gt;Example&lt;/h2&gt;
 &lt;p&gt;Here is a great example provided in the course:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Important studies to examine the descriptive epidemiology of autism, including the prevalence and changes in the characteristics of the population over time, have begun.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Important studies to examine the descriptive epidemiology of autism, including the prevalence and changes in the characteristics of the population over time, have begun.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;There are multiple problems in this sentence. 1) the main verb appears at the very end of the sentence while the main subject &amp;lsquo;&amp;lsquo;studies&amp;rsquo;&amp;rsquo; is placed at the beginning.; 2) fluff words like &amp;lsquo;&amp;lsquo;important&amp;rsquo;&amp;rsquo;. 3) redundant phrases: &amp;lsquo;&amp;lsquo;changes&amp;rsquo;&amp;rsquo; almost always happen &amp;lsquo;&amp;lsquo;over time&amp;rsquo;&amp;rsquo;; 4) &amp;lsquo;&amp;lsquo;of the population&amp;rsquo;&amp;rsquo; sounds vague. After addressing those issues, the sentence becomes:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Studies have begun to describe the epidemiology of autism, including recent changes in the disorder&amp;rsquo;s prevalence and characteristics.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Studies have begun to describe the epidemiology of autism, including recent changes in the disorder&amp;rsquo;s prevalence and characteristics.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="grammar-tips"&gt;Grammar Tips&lt;/h2&gt;
 &lt;p&gt;Data is/are:&lt;/p&gt;
 &lt;ul&gt;
@@ -2306,7 +2325,8 @@ their presence is an odd way of being objective.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Careful writers, watchful for small conveniences, go witch-hunting, remove the defining which-es, and by doing so improve their work.&lt;/p&gt;
-&lt;p&gt;&amp;ndash; &lt;em&gt;Strunk and White&lt;/em&gt;&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; &lt;em&gt;Strunk and White&lt;/em&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Singular antecedents:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;Do not use &amp;lsquo;&amp;rsquo;they&amp;rsquo;&amp;rsquo; or &amp;lsquo;&amp;rsquo;their&amp;rsquo;&amp;rsquo; when the subject is singular. To avoid gender choice, turn to a plural.&lt;/li&gt;
@@ -2319,7 +2339,8 @@ every adverb that carries the same meaning that&amp;rsquo;s already in the verb,
 every passive construction that leaves the reader unsure of who is doing what.
 These are the thousand and one adulterants that weaken the strength of a sentence.
 And they usually occur in proportion to the education and rank.&lt;/p&gt;
-&lt;p&gt;&amp;ndash; William Zinssler in &lt;em&gt;On Writing Well,&lt;/em&gt; 1976&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; William Zinssler in &lt;em&gt;On Writing Well,&lt;/em&gt; 1976&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="cutting-extra-words"&gt;Cutting Extra words&lt;/h2&gt;
 &lt;p&gt;Here are some common clutters:&lt;/p&gt;
 &lt;ul&gt;
@@ -2337,7 +2358,8 @@ And they usually occur in proportion to the education and rank.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;I have only made this letter rather
 long because I have not had time to make it shorter&lt;/p&gt;
-&lt;p&gt;&amp;ndash; Lettres provinciales, 16, Dec. 14, 1656&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;&amp;ndash; Lettres provinciales, 16, Dec. 14, 1656&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="little-tricks"&gt;Little Tricks&lt;/h2&gt;
 &lt;p&gt;Here are a few other small tricks:&lt;/p&gt;
 &lt;ul&gt;
@@ -2426,7 +2448,8 @@ e_i A^HA e_i = \left\lVert Ae_i \right\rVert^2 = \left\lVert e_i \right\rVert^2 
 &lt;li&gt;&lt;a href="https://en.wikipedia.org/wiki/Border_Gateway_Protocol"&gt;internal BGP (iBGP)&lt;/a&gt;: informs each non-gateway router&lt;/li&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Gateway: A &lt;strong&gt;gateway&lt;/strong&gt; is defined as a router that is connected to computer in two or more ASes.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Gateway: A &lt;strong&gt;gateway&lt;/strong&gt; is defined as a router that is connected to computer in two or more ASes.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Abstractly, each router has a BGP routing table in the form of:&lt;/p&gt;
 &lt;p&gt;\[(\text{prefix in another AS},\ \text{best ngh (next gateway hop) to reach prefix})\]&lt;/p&gt;
 &lt;h2 id="ebgp"&gt;eBGP&lt;/h2&gt;
@@ -2438,7 +2461,8 @@ e_i A^HA e_i = \left\lVert Ae_i \right\rVert^2 = \left\lVert e_i \right\rVert^2 
 &lt;p&gt;These gateway pairs sent &lt;strong&gt;route advertisements&lt;/strong&gt; in the following form (represented as a tuple):&lt;/p&gt;
 &lt;p&gt;\[(prefix,\ AS\text{-}path,\ next\text{-}hop)\]&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The BGP next-hop attribute is the next hop IP address that is going to be used to reach a certain destination.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;The BGP next-hop attribute is the next hop IP address that is going to be used to reach a certain destination.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Here is an example illustrating how one AS lets other ASes know the route leading to itself. Assume we have three ASes. AS1 wants other ASes to know how to reach itself:&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.cs.utexas.edu/~gouda/CS%20356%20slides/CS%20356%20slides%20(53-86)/slides-53-86.pdf"&gt;&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/route-adv.jpg#center" alt="eBGP"&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;AS1 is trying to broadcast the path to reach itself, it sends the first route advertisement message (1) as:&lt;/p&gt;
@@ -2456,7 +2480,8 @@ e_i A^HA e_i = \left\lVert Ae_i \right\rVert^2 = \left\lVert e_i \right\rVert^2 
 &lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/how-bgp-works/iBGP.png#center" alt="iBGP"&gt;&lt;/p&gt;
 &lt;p&gt;The normal eBGP advertisement will be something like \((pf,\ (AS_1,\ &amp;hellip;,\ AS_j),\ x)\).&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;For iBGP, the protocol states that the next hop advertised by eBGP should be carried into iBGP. Therefore, for all routers \(C_1,\ &amp;hellip;,\ C_n\), the next hop to reach \(pf\) will be \(x\) which is provided by \(AS_i\). It&amp;rsquo;s your job to make sure \(x\) is reachable via &lt;a href="https://en.wikipedia.org/wiki/Interior_gateway_protocol"&gt;IGP&lt;/a&gt;.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;For iBGP, the protocol states that the next hop advertised by eBGP should be carried into iBGP. Therefore, for all routers \(C_1,\ &amp;hellip;,\ C_n\), the next hop to reach \(pf\) will be \(x\) which is provided by \(AS_i\). It&amp;rsquo;s your job to make sure \(x\) is reachable via &lt;a href="https://en.wikipedia.org/wiki/Interior_gateway_protocol"&gt;IGP&lt;/a&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;For the iBGP advertisement, it will only be \((pf,\ x)\). Intuitively, this makes sense, because we only need to worry about the next best hop to reach \(pf\) without worrying about changing the AS. All the routers (\(C_1,\ &amp;hellip;,\ C_n\)) receiving the advertisement from \(A\) will add the information to their routing table as:&lt;/p&gt;
 &lt;p&gt;\[
 (pf,\ \text{best ngh to }x)
@@ -2566,7 +2591,8 @@ p_F \bigwedge_{(G=G_1\circ G_2)\in S_F} CNF(p_g \leftrightarrow p_{g_1} \circ p_
 &lt;p&gt;The singly most important factor in a Ph.D. application is perhaps your research experience. The general thumb is &amp;lsquo;&amp;rsquo;the earlier, the better&amp;quot;. You should absolutely start getting involved in research as early as possible. Throughout this experience, you will eventually find out if research is your thing and whether you want to continue the path in academia.&lt;/p&gt;
 &lt;p&gt;The general rule of thumb is &amp;lsquo;&amp;rsquo;the earlier, the better&amp;quot;. Practically speaking, you will likely have something to put on your resume or your statement of purpose by the time you start Ph.D. applications. Since grad school is all about research, having as many research experiences as possible is only going to make your profile look stronger.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The earlier, the better&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;The earlier, the better&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;More importantly, grad school applications, especially in Computer Science, has become extremely competitive over the years. The admission rate for most top CS departments is well below 10 percent. Having publications, or even just research experiences, is likely gonna decide whether you are getting accepted. To some extent, &amp;ldquo;publish or perish&amp;rdquo; also applies to Ph.D. application.&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/cs-phd-application/publish-or-perish.jpg" alt="publish-or-perish"&gt;&lt;/p&gt;
 &lt;p&gt;I had friends who asked me whether they should wait until junior or senior years to get started in research because by then they will have taken enough courses and are better equipped with the background. My suggestion is no. First, part of research is about learning: you settle on a problem and you find ways to solve it. Learning happens throughout this process. My advisor Chris always says you learn more by doing research. My personal experience has reenforced this statement. Second, there simply might not be enough time for you to finish the research project by the time application process starts. It&amp;rsquo;s possible to pull a rabbit out of the hat in some areas like theory or machine learning. But for areas like systems, the sheer amount of workloads makes submission cycle really long. This is exacerbated by the relatively small number of top conferences. In addition, there will be several months before you are notified of the final decision.&lt;/p&gt;
@@ -2588,7 +2614,8 @@ p_F \bigwedge_{(G=G_1\circ G_2)\in S_F} CNF(p_g \leftrightarrow p_{g_1} \circ p_
 &lt;p&gt;After spending three years in academic research, I see my goal to seek a Ph.D. in Computer Science,
 more specifically in systems, as a continuation of my increasing involvement with the field, and as a
 requirement to pursue my research interests and solve related problems in systems as a professor. In
-particular, I am interested in &lt;strong&gt;operating systems, heterogeneity, networking, machine learning systems, and architecture&lt;/strong&gt;.&lt;/p&gt;&lt;/blockquote&gt;
+particular, I am interested in &lt;strong&gt;operating systems, heterogeneity, networking, machine learning systems, and architecture&lt;/strong&gt;.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Avoid writing every accomplishment in your life. I get it, everyone wants to show off their proud moments. I made the mistake in my first draft by going over all my research projects, including those outside of systems, as well as my side projects. In the end, my essay turned into a hodgepodge with no real focus. It also goes way over the page limit. In the end, I had to cut down all stuffs that are not &amp;lsquo;&amp;lsquo;system-related&amp;quot; to make rooms for more important contents. If you want a sample, I&amp;rsquo;d be glad to share you a copy upon request.&lt;/p&gt;
 &lt;h2 id="the-interview"&gt;The Interview&lt;/h2&gt;
 &lt;p&gt;Now that you submitted all the applications, and interviews start to come in. My general suggestion for preparing for an interview is to keep things simple. First, there are only 30 minutes. Your priority, as a student, is to make the most out of this 30 minutes. It&amp;rsquo;s important to discuss your research and know what you are talking about, but don&amp;rsquo;t go over too much into the details because&lt;/p&gt;
@@ -2862,7 +2889,8 @@ language &lt;strong&gt;IMP&lt;/strong&gt;.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Quick question: for if statement, why don&amp;rsquo;t we instead use verification condition generation rule: \( C \Rightarrow VC(s_1, Q) \land \neg C \Rightarrow VC(s_2, Q) \)?&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Quick question: for if statement, why don&amp;rsquo;t we instead use verification condition generation rule: \( C \Rightarrow VC(s_1, Q) \land \neg C \Rightarrow VC(s_2, Q) \)?&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Here is a counter example. Suppose we have \( S = if\ (x &amp;gt; 0) \ while (*) x - -; else \ skip\), and we have given loop invariant \(x \geq 0\).&lt;/p&gt;
 &lt;p&gt;If we use the original rule \( VC(s_1, Q) \land VC(s_2, Q) \), according to the verification condition generation rule for while loop, we would have to verify the loop invariant \(I\) is correct, and thus \(VC(S, I) \equiv \{ x \geq 0 \} x - - \{ x \geq 0 \} \), obviously, this not true, and we can use this VC.&lt;/p&gt;
 &lt;p&gt;However, if we instead use the rule \( C \Rightarrow VC(s_1, Q) \land \neg C \Rightarrow VC(s_2, Q) \). The VC would become \( x &amp;gt; 0 \Rightarrow (\{ x \geq 0 \} x - - \{ x \geq 0 \}) \), which is valid, and we will include the wrong VC. Thus we can&amp;rsquo;t use this VC generation rule.&lt;/p&gt;
@@ -3463,7 +3491,8 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="nf"&gt;ioctl&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;fd&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;PERF_EVENT_IOC_ENABLE&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;What it does is resetting the event count specified by the file descriptor argument to zero, then enables the individual event specified by the file descriptor argument. After &lt;code&gt;do_mem_access(p, size)&lt;/code&gt; is executed, we call &lt;code&gt;ioctl(fd, PERF_EVENT_IOC_DISABLE, 0)&lt;/code&gt; to disable the event and then read the result by &lt;code&gt;read(fd, &amp;amp;result, sizeof(long long))&lt;/code&gt;. How result is defined is up to how &lt;code&gt;PERF_FORMAT_*&lt;/code&gt; was specified. You can also check &lt;a href="https://elixir.bootlin.com/linux/latest/source/kernel/events/core.c#L1833"&gt;lxr&lt;/a&gt; to see how &lt;code&gt;__perf_event_read_size&lt;/code&gt; calculates the size of event that is read. In our case, it&amp;rsquo;s simple a &lt;code&gt;u64&lt;/code&gt;.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Be aware that simply executing the binary might cause &lt;code&gt;perf_event_open&lt;/code&gt; to fail (in which case will always return -1). Using &lt;code&gt;sudo&lt;/code&gt; is one workaround. Execute &lt;code&gt;cat /proc/sys/kernel/perf_event_paranoid&lt;/code&gt; and see what returns. &lt;code&gt;-1&lt;/code&gt; means you have raw access to kernel tracepoints. Otherwise, you might have trouble accessing the performance counter without root privilege. Check this &lt;a href="https://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar"&gt;stackexchange post&lt;/a&gt; for more details.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Be aware that simply executing the binary might cause &lt;code&gt;perf_event_open&lt;/code&gt; to fail (in which case will always return -1). Using &lt;code&gt;sudo&lt;/code&gt; is one workaround. Execute &lt;code&gt;cat /proc/sys/kernel/perf_event_paranoid&lt;/code&gt; and see what returns. &lt;code&gt;-1&lt;/code&gt; means you have raw access to kernel tracepoints. Otherwise, you might have trouble accessing the performance counter without root privilege. Check this &lt;a href="https://unix.stackexchange.com/questions/14227/do-i-need-root-admin-permissions-to-run-userspace-perf-tool-perf-events-ar"&gt;stackexchange post&lt;/a&gt; for more details.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;To be even more careful about generating repeatable results we should flush the level 1 data cache before enabling the performance counters. We will do this by reading a memory buffer larger than per-core L1 data cache size&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-c" data-lang="c"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kt"&gt;size_t&lt;/span&gt; &lt;span class="n"&gt;buffer_size&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;32&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt; &lt;span class="o"&gt;+&lt;/span&gt; &lt;span class="mi"&gt;1024&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
 &lt;/span&gt;&lt;/span&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;&lt;span class="kt"&gt;char&lt;/span&gt; &lt;span class="o"&gt;*&lt;/span&gt;&lt;span class="n"&gt;buff&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nf"&gt;malloc&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="n"&gt;buffer_size&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
@@ -3547,7 +3576,8 @@ Now we ran into more gotchas. What if the code is written in Java? How to find a
 &lt;p&gt;Then, we try to use &lt;code&gt;mmap()&lt;/code&gt; to create mapping in the virtual address space backed by a file instead of using &lt;code&gt;MAP_ANONYMOUS&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;We first test &lt;code&gt;mmap&lt;/code&gt; with &lt;code&gt;MAP_PRIVATE&lt;/code&gt;. According to the man page, this flags means creating a private copy-on-write mapping. Updates to the mapping are not visible to other processes mapping the same file, and are not carried through to the underlying file. It is unspecified whether changes made to the file after the mmap() call are visible in the mapped region.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Note we should call &lt;code&gt;fallocate()&lt;/code&gt; for the newly created file, otherwise mmap is gonna throw bur error.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Note we should call &lt;code&gt;fallocate()&lt;/code&gt; for the newly created file, otherwise mmap is gonna throw bur error.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;When we measure the L1 data cache miss, it&amp;rsquo;s around 946128512 (std dev 956148031), nothing special happens. When we use &lt;code&gt;MAP_SHARED&lt;/code&gt; flag, the result was similar. The result seems to fluctuates as time passes, but overall they are not much different. After all, it&amp;rsquo;s just reading from the memory, whether the address is backed by a file or not doesn&amp;rsquo;t play a big role in affecting the cache miss rate. The L1 data cache misses is shown below:&lt;/p&gt;
 &lt;table&gt;
 &lt;thead&gt;
@@ -3837,13 +3867,15 @@ nivcsw: 8(7)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;We can see that the most of the pattern follow the previous result after the modified kernel is installed. One main difference is majflt value is reduced back down.&lt;/p&gt;</description></item><item><title>Memory Resource Management in VMware ESX Server</title><link>https://www.bodunhu.com/blog/posts/memory-resource-management-in-vmware-esx-server/</link><pubDate>Mon, 21 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/memory-resource-management-in-vmware-esx-server/</guid><description>&lt;p&gt;&lt;a href="https://www.vmware.com/products/esxi-and-esx.html"&gt;VMWare ESX Server&lt;/a&gt; is a software layer designed to multiplex hardware resources among virtual machines running unmodified commodity operating systems. ESX Server, different to &lt;a href="https://www.vmware.com/products/workstation-pro.html"&gt;VMware Workstation&lt;/a&gt;, is a type 1 hypervisor, which means it runs directly on bare metal. ESX Server focuses on running guest VMs without modifying the guest OSes at all, which is challenging.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Memory Virtualization is done by interposing an extra abstraction layer between a &lt;code&gt;physical address&lt;/code&gt; from the VM&amp;rsquo;s point of view, and a &lt;code&gt;machine address&lt;/code&gt; which represents the actual hardware memory. ESX Server maintains a &lt;em&gt;pmap&lt;/em&gt; data structure for each VM to translate PPMs to MPNs. A separate &lt;em&gt;shadow page table&lt;/em&gt;, consistent with the physical-to-machine mappings, is used to map virtual-to-machine page mappings. This avoids additional overheads as the hardware TLB will cache direct virtual-to-machine address translations read from the shadow page table.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Memory Virtualization is done by interposing an extra abstraction layer between a &lt;code&gt;physical address&lt;/code&gt; from the VM&amp;rsquo;s point of view, and a &lt;code&gt;machine address&lt;/code&gt; which represents the actual hardware memory. ESX Server maintains a &lt;em&gt;pmap&lt;/em&gt; data structure for each VM to translate PPMs to MPNs. A separate &lt;em&gt;shadow page table&lt;/em&gt;, consistent with the physical-to-machine mappings, is used to map virtual-to-machine page mappings. This avoids additional overheads as the hardware TLB will cache direct virtual-to-machine address translations read from the shadow page table.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="key-features"&gt;Key features&lt;/h2&gt;
 &lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/ESXServer/ballooning.png" alt="vmware-esx-server-memory"&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Ballooning&lt;/strong&gt; is a technique used by the server to achieve memory reclamation. As its name suggests, the hypervisor inflates the balloon by instructing the balloon driver module to allocate pinned physical pages and deflates it by instructing it to deallocate previously-allocated pages. The idea behind this technique is that the hypervisor is unaware of the specific usage patterns of policies of its guests, therefore the making page replacement decisions is best done in the guest VM. When the hypervisor over commits memory, it needs some way to claim memories from the VMs. By consuming some of the memory that the guest OS believes is physically present in the virtual machine. The guest OS will then swap memory to disk reducing the load on the host&amp;rsquo;s physical memory. The host will them reallocate that memory to other VMs. A details description of ballooning can be found in this &lt;a href="https://www.vladan.fr/what-is-vmware-memory-ballooning/"&gt;post&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;a href="https://www.vmware.com/pdf/usenix_resource_mgmt.pdf"&gt;&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/ESXServer/pghash.png#center" alt="vmware-esx-server-page-coloring"&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Page Coloring can be used to reduce cache misses or partition resources. But it might complicates memory management, especially with the presence of huge pages. Because coloring enforces ownership, thus might result in distinct L2 cache entries.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Page Coloring can be used to reduce cache misses or partition resources. But it might complicates memory management, especially with the presence of huge pages. Because coloring enforces ownership, thus might result in distinct L2 cache entries.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;&lt;strong&gt;Sharing memory&lt;/strong&gt; is achieved by comparing the content of each page, since modifying guest operating system internals is not possible. Because comparing each page would be \(O(n^2)\), hashing is used to identify pages to make the progress more efficiently. By letting VMs share pages based the contents, the host can potentially save spaces dramatically. For example, the presence of zero pages is a great opportunity for page sharing by mapping one zero page to multiple VMs. Hint is hash hit, but it doesn&amp;rsquo;t guarantee the content of the page doesn&amp;rsquo;t change at that moment.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;Idle Memory&lt;/strong&gt; presents a problem in pure proportional-share algorithms because they do not incorporate any information about active memory usage. More specifically, the memory demand might change dynamically. ESX Server collects &lt;em&gt;idle memory tax&lt;/em&gt; from VMs to mitigate this issue. A client is charged more for an idle page than the active one. The cost of idle memory is inflated by tax rate. The metrics of idles pages in guests is collected by hypervisor without guests&amp;rsquo; involvement. The idle page information in virtual page table inside VMs is periodically sampled on random bases.&lt;/p&gt;
 &lt;h2 id="questions"&gt;Questions&lt;/h2&gt;
@@ -3852,7 +3884,8 @@ b. Do content-based sharing pose security vulnerabilities?&lt;br&gt;
 c. Remapping hot I/O pages to low memory can be a bottleneck if the page number is high. How does modern hypervisor solution cope with this issue?&lt;/p&gt;</description></item><item><title>Xen and the Art of Virtualization</title><link>https://www.bodunhu.com/blog/posts/xen-and-the-art-of-virtualization/</link><pubDate>Wed, 16 Sep 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/xen-and-the-art-of-virtualization/</guid><description>&lt;p&gt;&lt;img src="https://cdn.jsdelivr.net/gh/BDHU/Page_Pics/posts/Xen/Xen.png#center" alt="xen-architecture"&gt;&lt;/p&gt;
 &lt;p&gt;Xen is an x86 virtual machine monitor which allows multiple commodity operating systems to share conventional hardware in a safe and resource managed fashion, without sacrificing either performance or functionality. Xen is type I hypervisor, which directly runs on top of bare metal. We will summarize what Xen is what its attributes are.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;paravirtualization - presents a virtual machine abstraction that is similar but not identical to the underlying hardware.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;paravirtualization - presents a virtual machine abstraction that is similar but not identical to the underlying hardware.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="the-virtual-machine-interface"&gt;The Virtual Machine Interface&lt;/h2&gt;
 &lt;p&gt;&lt;strong&gt;Memory&lt;/strong&gt; is hard to virtualize mostly because x86 doesn&amp;rsquo;t support software-managed TLB. A tagged TLB entry allows both guest OS and hypervisor to coexist because it can be associated with an address-space identifier. This is not possible on x86, thus address space changing likely requires flushing the TLB. Thus, to achieve better performance, guest OSes are responsible to managing hardware page tables. Batching can be used by the guest OS to reduce constantly requesting new pages from the hypervisor when new processes are created.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;CPU&lt;/strong&gt; virtualization has implications for guest OSes. Principally, OS the most privileged entity on top of hardware. A hypervisor in the middle means the guests OSes must be modified to run a lower privilege level. On x86, this is not a problem since OSes executes in ring 0 while applications execute in ring 3, leaving ring 1 and ring 2 unused.
@@ -4010,7 +4043,8 @@ b. How does Xen exists in 64MB section at the top of every address space avoid T
 &lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If we need to break the execution only when a given program is executed, we can use the program PID to as the condition. The problem is, how do we get the program PID if it doesn&amp;rsquo;t last for long?&lt;/p&gt;
 &lt;p&gt;We could instead first set a breakpoint on &lt;code&gt;fork&lt;/code&gt;. We can break its kernel call at &lt;code&gt;_do_fork&lt;/code&gt; which is defined &lt;a href="https://elixir.bootlin.com/linux/v5.8.6/source/kernel/fork.c#L2416"&gt;here&lt;/a&gt;. After that, we can simply continue executing the kernel until we run the program.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Note: we need to compile the program and open a new terminal first. Since they both involves forking new processes, which will hit &lt;code&gt;_do_fork&lt;/code&gt; before our program runs.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Note: we need to compile the program and open a new terminal first. Since they both involves forking new processes, which will hit &lt;code&gt;_do_fork&lt;/code&gt; before our program runs.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Then we print the process PID using &lt;code&gt;p $lx_current().pid&lt;/code&gt;. We then use this value as the condition for &lt;code&gt;b _raw_spin_lock if $lx_current().pid == pid_value&lt;/code&gt; inside gdb.&lt;/p&gt;
 &lt;p&gt;If we want &lt;code&gt;_raw_spin_lock&lt;/code&gt; to break under different contexts, we can simply use PID as different contexts. We can also set break points in functions in different contexts that calls &lt;code&gt;spin_lock&lt;/code&gt; and see what they do. For example, we can set break point at &lt;code&gt;expand_downwards&lt;/code&gt; defined in &lt;a href="https://elixir.bootlin.com/linux/v5.8.6/source/mm/mmap.c#L2428"&gt;here&lt;/a&gt;, if we back trace this function, we will get a series of calls, we mention the important ones here&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre tabindex="0" class="chroma"&gt;&lt;code class="language-text" data-lang="text"&gt;&lt;span class="line"&gt;&lt;span class="cl"&gt;#1 0xffffffff81284c4e in expand_stack
@@ -4195,7 +4229,8 @@ hardware mechanisms,software caching, and downloading application code.&lt;/p&gt
 &lt;p&gt;The most prominent feature about library OS is that it manages operating system abstractions at application level.&lt;/p&gt;
 &lt;p&gt;The GEMM operation on both ExOS and Ultrix (a monolithic kernel OS) doesn&amp;rsquo;t seem to have much difference since GEMM doesn&amp;rsquo;t use any special abilities of both OSes. It does indicates that the performance gain from the minimal design of exokernel is somewhat cancelled out by the application-space overhead.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;The exokernel paper mentions that in the context of networking, the major reason for ExOS to download code is that the network buffers on our machines cannot be easily mapped into application space in a secure way. Downloading the code into the kernel allows applications integrating operations such as checksum during the copy of the message from these buffers to user space. However, I&amp;rsquo;m a little bit skeptical of this statement today. Usually a highly performant TCP stack will be implemented in userspace, along with some polling (DPDK for example). But it will be interesting to compare the exokernel approach to the gigantic Linux TCP stack. The second reason is downloaded code is bounded, thus allowed full context switch to an unscheduled application.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;The exokernel paper mentions that in the context of networking, the major reason for ExOS to download code is that the network buffers on our machines cannot be easily mapped into application space in a secure way. Downloading the code into the kernel allows applications integrating operations such as checksum during the copy of the message from these buffers to user space. However, I&amp;rsquo;m a little bit skeptical of this statement today. Usually a highly performant TCP stack will be implemented in userspace, along with some polling (DPDK for example). But it will be interesting to compare the exokernel approach to the gigantic Linux TCP stack. The second reason is downloaded code is bounded, thus allowed full context switch to an unscheduled application.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;I do find the graph in the exokernel paper interesting. It shows that when application-level message handlers are downloaded into the kernel, the roundtrip latency is almost not affected by the number of processes. Since the operation is performed inside kernel upon message arrival, no handling is needed from the application. This has the advantage that application handler is subject to scheduling, which has performance implications. (The choice of scheduler is the key bottleneck here.)&lt;/p&gt;
 &lt;p align="center"&gt;
 &lt;a href="https://pdos.csail.mit.edu/6.828/2008/readings/engler95exokernel.pdf"&gt;
@@ -4221,14 +4256,16 @@ is reflected in the design of Unix.&lt;/p&gt;
 &lt;/ul&gt;
 &lt;blockquote&gt;
 &lt;p&gt;&lt;em&gt;linking&lt;/em&gt; allows the same non-directory file to appear in several directories under possibly different names; a directory entry for a file is sometimes called a link. All links to a file have equal rights. A directory entry for a file consists merely of its name and a pointer to the file metadata. Therefore a file exists independently of any
-directory entry. Directory can be considered as link.&lt;/p&gt;&lt;/blockquote&gt;
+directory entry. Directory can be considered as link.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;strong&gt;Special Files&lt;/strong&gt;: perhaps the most prominent feature of the &amp;ldquo;everything is a file&amp;rdquo; principle. They are read and written just like ordinary disk files, but requests to read and write will result in activation of the I/O device. It blurs the line between file and device I/O since they share identical interfaces and are subject to the same protection mechanism.&lt;/li&gt;
 &lt;/ul&gt;
 &lt;h2 id="removable-file-system"&gt;Removable File System&lt;/h2&gt;
 &lt;p&gt;The Unix file system has a &lt;em&gt;mount&lt;/em&gt; system request which, in effect, replaces a leaf of the hierarchy tree (the ordinary file) by a whole new subtree (the hierarchy stored on the removable volume). It provides a unified abstraction of the file system hierarchy where the underlying storage components become transparent to the user.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;One exception to the identical treatment of files on different devices: no link may exist between one file sys hierarchy and another. Otherwise, some form of bookkeeping would be required to when a removable volume is dismounted from one file system but not the other.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;One exception to the identical treatment of files on different devices: no link may exist between one file sys hierarchy and another. Otherwise, some form of bookkeeping would be required to when a removable volume is dismounted from one file system but not the other.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="protection"&gt;Protection&lt;/h2&gt;
 &lt;p&gt;Each user is assigned a unique user ID. A file, upon its creation, is marked with the user ID of its owner. Also given for new files is a set of seven protection bits. Six of these specify independently read, write, and execute permission for the owner of the file and for all other users. This is a perfect example of ACL (access control list) system.&lt;/p&gt;
 &lt;h2 id="io-calls"&gt;I/O Calls&lt;/h2&gt;
@@ -4238,10 +4275,12 @@ directory entry. Directory can be considered as link.&lt;/p&gt;&lt;/blockquote&g
 &lt;h2 id="implementation"&gt;Implementation&lt;/h2&gt;
 &lt;p&gt;As we&amp;rsquo;ve already known, a directory entry contains only a name for the associated file and a pointer to the file itself. This pointer is an integer called the &lt;em&gt;i-number&lt;/em&gt;. When the file is accessed, its i-number is used as an index into a system table (the i-list) stored in a known part of the device on which the directory resides.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Directory entry -&amp;gt; (File Name, i-number) -&amp;gt; i-list -&amp;gt; i-node -&amp;gt; description of the file&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Directory entry -&amp;gt; (File Name, i-number) -&amp;gt; i-list -&amp;gt; i-node -&amp;gt; description of the file&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;Because the file is described by its corresponding i-node, any copy and deleting operations are circulating around modifying directory entry or i-node link-count field without actually touching the bulk of the file itself.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;It important to distinguish between file descriptor and inode. By definition, files are represented by inodes. The inode of a file is a structure kept by the filesystem which holds information about a file, like its type, owner, permissions, inode links count and so on. Other other hand, the file descriptor is the value returned by an open call is termed a file descriptor and is essentially an index into an array of open files kept by the kernel. There is an inode in the i-list but every process can have its own file descriptor for one file.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;It important to distinguish between file descriptor and inode. By definition, files are represented by inodes. The inode of a file is a structure kept by the filesystem which holds information about a file, like its type, owner, permissions, inode links count and so on. Other other hand, the file descriptor is the value returned by an open call is termed a file descriptor and is essentially an index into an array of open files kept by the kernel. There is an inode in the i-list but every process can have its own file descriptor for one file.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="processes"&gt;Processes&lt;/h2&gt;
 &lt;p&gt;A process is the execution of an image. An image is a computer execution environment. It includes a core image, general register values, status of open files, current directory, and the like. An image is the current state of a pseudo computer. You can imagine the image as a motionless snapshot of current state of the processor, or you can image as the content saved to the main memory when a currently executing process is preemptied by another one.&lt;/p&gt;
 &lt;p&gt;The user-core part of an image has three logical segments. The program text segments starting from location 0. At the first 8K byte boundary above the text segment is a non-shared, writable data segment. The highest address in the virtual address space is a stack segment.&lt;/p&gt;
@@ -4253,7 +4292,8 @@ directory entry. Directory can be considered as link.&lt;/p&gt;&lt;/blockquote&g
 &lt;blockquote&gt;
 &lt;p&gt;It&amp;rsquo;s worth noting the shell is itself a command, and may be called recursively.&lt;br&gt;
 Since it&amp;rsquo;s a command, it also shared the luxury of having standard I/O file descriptor. Thus, command such as:&lt;br&gt;
-&lt;strong&gt;sh &amp;lt; file_containing_shell_commands&lt;/strong&gt; would work.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;strong&gt;sh &amp;lt; file_containing_shell_commands&lt;/strong&gt; would work.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;The last step in the initialization of UNIX is the creation of a single process and the invocation of a program called &lt;em&gt;init&lt;/em&gt;. &lt;em&gt;init&lt;/em&gt; have various sub-instances prompting for user login information. If the login succeeds, &lt;em&gt;init&lt;/em&gt; performs an &lt;em&gt;execute&lt;/em&gt; of the Shell. Essentially, &lt;em&gt;init&lt;/em&gt; is the parent process of Shell.&lt;/p&gt;</description></item><item><title>Monads in Haskell</title><link>https://www.bodunhu.com/blog/posts/monads-in-haskell/</link><pubDate>Sun, 01 Mar 2020 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/monads-in-haskell/</guid><description>&lt;p&gt;I&amp;rsquo;ve scratched my head for quite a while trying to understand the concept of monad in Haskell. This is a brief summary of monads. I take William Cook&amp;rsquo;s &lt;a href="http://www.cs.utexas.edu/~wcook/anatomy/anatomy.htm"&gt;Anatomy of Programming Languages&lt;/a&gt; as my reference.&lt;/p&gt;
 &lt;h2 id="definitions-of-monads"&gt;Definitions of Monads&lt;/h2&gt;
 &lt;p&gt;A monad is defined as a computational structure that involves three parts:&lt;/p&gt;
@@ -4362,7 +4402,8 @@ Since it&amp;rsquo;s a command, it also shared the luxury of having standard I/O
 &lt;p&gt;Now we can see that master Q&amp;rsquo;s clock time when P receives the response is bounded in the interval \([T+min(1-\rho), T+2D(1+2\rho )-min(1+\rho)]\). The take away here is that we can&amp;rsquo;t use real time t in a distributed system because it&amp;rsquo;s merely an abstract concept since all systems in a network essentially rely on their own clock time. We need to find the relationship between T and master&amp;rsquo;s clock cycle because P will rely on T, not real time \(t\).&lt;/p&gt;</description></item><item><title>How to Put Papers on ArXiv</title><link>https://www.bodunhu.com/blog/posts/how-to-put-papers-on-arxiv/</link><pubDate>Tue, 25 Jun 2019 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/how-to-put-papers-on-arxiv/</guid><description>&lt;p&gt;Recently, I was trying to put my research paper draft on ArXiv. I thought it would be as simple as submitting the pdf file, which should take approximately less than ten minutes. I was wrong. It took several hours to figure what was going on. I included some tips here to prevent mistakes I made from happening again.&lt;/p&gt;
 &lt;p&gt;The first mistake I made was assuming a single submission of pdf file would be sufficient. ArXiv apparently has mechanisms detecting whether the submitted pdf file is generated using Tex/Latex. According to ArXiv:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;a PDF file created from a TeX/LaTeX file will be rejected. There are &lt;a href="https://arxiv.org/help/faq/whytex"&gt;good reasons&lt;/a&gt; why arXiv insists on TeX/LaTeX source if it is available. arXiv produces PDF automatically from all TeX submitted source. For information on viewing the PDF provided by arXiv, see our PDF browsing help.&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;a PDF file created from a TeX/LaTeX file will be rejected. There are &lt;a href="https://arxiv.org/help/faq/whytex"&gt;good reasons&lt;/a&gt; why arXiv insists on TeX/LaTeX source if it is available. arXiv produces PDF automatically from all TeX submitted source. For information on viewing the PDF provided by arXiv, see our PDF browsing help.&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;So, the first thing I came up with was to somehow make the pdf appearing &amp;ldquo;anonymous&amp;rdquo; to ArXiv. The were several methods but none of them appear to be practical. If you are interested there is a &lt;a href="https://tex.stackexchange.com/questions/95080/making-an-anonymous-pdf-file-using-pdflatex/95109"&gt;link&lt;/a&gt; to some methods that might be useful. &lt;a href="https://ctan.org/pkg/pdfprivacy"&gt;pdfprivacy&lt;/a&gt; is package used to remove or suppress pdf meta-data and it sounds promising but I haven&amp;rsquo;t tried yet.&lt;/p&gt;
 &lt;p&gt;So the only option left was to follow the restriction described. It was confusing at the beginning because the everything worked like a charm on Overleaf but it completely fell apart when I tried to compile the sources locally. I was under the impression that if it worked on Overleaf i should work everywhere else, which cause many hours of searching for potential problems related to local environment.&lt;/p&gt;
 &lt;p&gt;After hours of frustration, it started to appear that there was nothing wrong with my local environment. The pdf produced by Overleaf was only &amp;ldquo;appearing&amp;rdquo; correct. There were several syntax issue in my .bib file, mostly caused by careless copy-and-paste and duplicate records. Overleaf simple suppressed some of those errors, which leads me to think everything was fine.&lt;/p&gt;
@@ -4720,7 +4761,8 @@ block is the smallest unit writable by a disk or ﬁle system. Everything a ﬁl
 &lt;h2 id="fat-file-system-file-allocation-table"&gt;FAT File System (File Allocation Table)&lt;/h2&gt;
 &lt;p&gt;FAT32 file system is very important file system created by Microsoft. It was introduced the solve the volume problem posed by FAT16. Although named FAT32, only 28 of the 32 bits are actually used and the remaining 4 bits are &amp;ldquo;reserved for future use&amp;rdquo;. As a result, a FAT32 partition has a maximum cluster count of (268,435,455)2^28-1. I found this description about FAT32 on &lt;a href="https://superuser.com/questions/983139/why-is-fat32-limited-to-just-under-228-clusters"&gt;StackExchange&lt;/a&gt; that is useful:&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Although VFAT was a clever system, it did not address the limitations of With the appearance of the FAT32 file system, the maximum number of clusters per partition went increased from 65535 to 268,435,455 (228-1). FAT32 thus allows much bigger partitions (up to 8 terabytes). Although the maximum theoretical size of a FAT32 partition is 8 TB, Microsoft has voluntarily limited it to 32 GB on Windows 9x systems to promote NTFS&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Although VFAT was a clever system, it did not address the limitations of With the appearance of the FAT32 file system, the maximum number of clusters per partition went increased from 65535 to 268,435,455 (228-1). FAT32 thus allows much bigger partitions (up to 8 terabytes). Although the maximum theoretical size of a FAT32 partition is 8 TB, Microsoft has voluntarily limited it to 32 GB on Windows 9x systems to promote NTFS&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;p&gt;FAT32 is implemented in a completely different way . Unlike FFS in UNIX, each entry in in the MTF merely represents a block of data. Each block is able to point to another block, with multiple entries in the table to represent a file represented multiple blocks. Each file&amp;rsquo;s file number is indicated using the index of the first entry in the MTF. Thus, in order to locate a specific block of a file, we need to search the MTF sequentially.&lt;/p&gt;</description></item><item><title>Disk Introduction</title><link>https://www.bodunhu.com/blog/posts/disk-introduction/</link><pubDate>Wed, 25 Oct 2017 00:00:00 +0000</pubDate><guid>https://www.bodunhu.com/blog/posts/disk-introduction/</guid><description>&lt;p&gt;This chapter is all about disk. Before we start. We won&amp;rsquo;t go deep into the mechanical part of disk operation; rather we will be focusing on general concept related to disk and algorithms to improve disk performance.&lt;/p&gt;
 &lt;p&gt;&lt;img src="https://www.cs.uic.edu/~jbell/CourseNotes/OperatingSystems/images/Chapter10/10_01_DiskMechanism.jpg" alt="disk-structure"&gt;&lt;/p&gt;
 &lt;h2 id="the-evaluation-criteria"&gt;The Evaluation Criteria&lt;/h2&gt;
@@ -4757,7 +4799,8 @@ memory and disk buffer&lt;/li&gt;
 optimization: the head is reset when no more requests exist between the current head position and the approaching edge of the disk (called C-LOOK
 scheduling).&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;Note the only difference between SCAN and C-SCAN is that in C-SCAN, after the head reaches one edge, an optimized jump implemented by the hardware is used to directly move the head to the opposite edge instead of reversing the movement direction.)&lt;/p&gt;&lt;/blockquote&gt;
+&lt;p&gt;Note the only difference between SCAN and C-SCAN is that in C-SCAN, after the head reaches one edge, an optimized jump implemented by the hardware is used to directly move the head to the opposite edge instead of reversing the movement direction.)&lt;/p&gt;
+&lt;/blockquote&gt;
 &lt;h2 id="partitioning"&gt;Partitioning&lt;/h2&gt;
 &lt;p&gt;Disks are partitioned in order to minize the largest seek possible time since each partition is a logically seperate disk. (It&amp;rsquo;s just merely a collection of cylinders.) More information covering partitioning will be covered in file system.&lt;/p&gt;
 &lt;h2 id="other-techniques-to-reduce-overhead"&gt;Other Techniques to Reduce Overhead&lt;/h2&gt;
